@@ -776,7 +776,7 @@ MonoBehaviour:
   animator: {fileID: 1122644177}
   zoomBool: Zoom In
   trigger: Zoom
-  fpsCam: {fileID: 963194227}
+  playerCam: {fileID: 963194227}
   muzzleFlash: {fileID: 2121852179}
   impactEffect: {fileID: 84780248}
   impactForce: 30
@@ -785,6 +785,9 @@ MonoBehaviour:
   shootClip: {fileID: 8300000, guid: 524d2ffc2d49a8d48ba43f6ec43b779a, type: 3}
   reloadClip: {fileID: 0}
   gunControls: {fileID: -944628639613478452, guid: 9269ee16b3aa1f0448f0710a2c982dcc, type: 3}
+  targetZoomFOV: 25
+  transitionDuration: 0.3
+  coneAngle: 5
 --- !u!95 &1122644177
 Animator:
   serializedVersion: 5

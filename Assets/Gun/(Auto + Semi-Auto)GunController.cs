@@ -6,9 +6,9 @@ using UnityEngine.UI;
 public class AutoAndSemiAutoGunController : MonoBehaviour
 {
     [Header("Gun Attributes")]
-    public int maxAmmo = 30;
-    public float reloadTime = 1f;
-    public bool automatic = false;
+    [SerializeField] private int maxAmmo = 30;
+    [SerializeField] private float reloadTime = 1f;
+    [SerializeField] private bool automatic = false;
 
     private bool isReloading = false;
     private bool canShoot = true;
@@ -17,47 +17,57 @@ public class AutoAndSemiAutoGunController : MonoBehaviour
 
     [Space(20)]
     [Header("Shooting Attributes")]
-    public GameObject bulletSpawn;
-    public GameObject projectilePrefab;
-    public float fireRate = 15f;
-    public float bulletSpeed = 20f;
+    [SerializeField] private GameObject bulletSpawn;
+    [SerializeField] private GameObject projectilePrefab;
+    [SerializeField] private float fireRate = 15f;
+    [SerializeField] private float bulletSpeed = 20f;
 
     private float nextTimeToFire = 0f;
 
 
     [Space(20)]
     [Header("Animations")]
-    public Animator animator;
-    public string zoomBool;
-    public string trigger;
+    [SerializeField] private Animator animator;
+    [SerializeField] private string zoomBool;
+    [SerializeField] private string trigger;
 
 
     [Space(20)]
     [Header("Effects")]
-    public Camera fpsCam;
-    public ParticleSystem muzzleFlash;
-    public GameObject impactEffect;
-    public float impactForce = 30f;
+    [SerializeField] private Camera playerCam;
+    [SerializeField] private ParticleSystem muzzleFlash;
+    [SerializeField] private GameObject impactEffect;
+    [SerializeField] private float impactForce = 30f;
 
 
     [Space(20)]
     [Header("UI")]
-    public Text ammoText;
+    [SerializeField] private Text ammoText;
 
 
     [Space(20)]
     [Header("Audio")]
-    public AudioSource gunAudioSource;
-    public AudioClip shootClip;
-    public AudioClip reloadClip;
+    [SerializeField] private AudioSource gunAudioSource;
+    [SerializeField] private AudioClip shootClip;
+    [SerializeField] private AudioClip reloadClip;
 
 
     [Space(20)]
-    [Header("Inputs")]
-    public InputActionAsset gunControls;
+    [Header("Other")]
+    [SerializeField] private InputActionAsset gunControls;
+    [SerializeField] private float targetZoomFOV = 40;
+    [SerializeField] private float transitionDuration = 1f;
+    [SerializeField] private float coneAngle;
+
     private InputAction shoot;
     private InputAction reload;
     private InputAction zoomInOrOut;
+
+    private float zoomSpeed = 8f;
+    private float zoomLevel = 0f;
+
+    private Coroutine fovCoroutine;
+    private float originalFOV;
 
     void Start()
     {
@@ -71,8 +81,18 @@ public class AutoAndSemiAutoGunController : MonoBehaviour
         shoot.Enable();
         reload.Enable();
         zoomInOrOut.Enable();
-
         reload.performed += ctx => StartCoroutine(Reload());
+
+        zoomInOrOut.performed += ctx => ChangeFOV(targetZoomFOV);
+        zoomInOrOut.canceled += ctx => ChangeFOV(originalFOV);
+    }
+    private void Awake()
+    {
+        if (playerCam == null)
+        {
+            playerCam = Camera.main;
+        }
+        originalFOV = playerCam.fieldOfView;
     }
 
     void OnEnable()
@@ -87,9 +107,6 @@ public class AutoAndSemiAutoGunController : MonoBehaviour
 
         if (automatic && shoot.ReadValue<float>() > 0 && Time.time >= nextTimeToFire)
         {
-            muzzleFlash.Play();
-            gunAudioSource.PlayOneShot(shootClip);
-
             nextTimeToFire = Time.time + 1f / fireRate;
             Shoot();
         }
@@ -98,30 +115,51 @@ public class AutoAndSemiAutoGunController : MonoBehaviour
         {
             if (!automatic && canShoot == true)
             {
-                muzzleFlash.Play();
-                gunAudioSource.PlayOneShot(shootClip);
-
                 Shoot();
                 canShoot = false;
             }
         };
 
-        //Zoom in/out
-        if (zoomInOrOut.ReadValue<float>() < 1)
+        GunSight();
+    }
+
+    private void GunSight()
+    {
+        float zoomInput = zoomInOrOut.ReadValue<float>();
+        float targetZoom = zoomInput > 0.5f ? 1f : 0f;
+
+        zoomLevel = Mathf.Lerp(zoomLevel, targetZoom, Time.deltaTime * zoomSpeed);
+        animator.SetFloat("ZoomBlend", zoomLevel);
+    }
+    public void ChangeFOV(float newFOV)
+    {
+        if (fovCoroutine != null)
         {
-            animator.SetTrigger(zoomBool);
+            StopCoroutine(fovCoroutine);
         }
-        else if (zoomInOrOut.ReadValue<float>() > 0)
+        fovCoroutine = StartCoroutine(SmoothFOVChange(newFOV));
+    }
+
+    private IEnumerator SmoothFOVChange(float newFOV)
+    {
+        float startFOV = playerCam.fieldOfView;
+        float elapsedTime = 0f;
+
+        while (elapsedTime < transitionDuration)
         {
-            animator.SetTrigger(trigger);
+            elapsedTime += Time.deltaTime;
+            playerCam.fieldOfView = Mathf.Lerp(startFOV, newFOV, elapsedTime / transitionDuration);
+            yield return null;
         }
+
+        playerCam.fieldOfView = newFOV;
     }
 
     IEnumerator Reload()
     {
         isReloading = true;
-        //gunAudioSource.PlayOneShot(reloadClip);
-        //gun reload animation
+        // gunAudioSource.PlayOneShot(reloadClip);
+        // gun reload animation
         yield return new WaitForSeconds(reloadTime);
         currentAmmo = maxAmmo;
         isReloading = false;
@@ -130,24 +168,41 @@ public class AutoAndSemiAutoGunController : MonoBehaviour
 
     void Shoot()
     {
-        //this is important to make semi auto work
+        // This is important to make semi auto work
         Invoke("CanShootReset", 0.2f);
 
         if (currentAmmo == 0)
         {
             StartCoroutine(Reload());
-            return;
         }
 
+        if (currentAmmo >= 1)
+        {
+            // Recoil and shoot animations
+            currentAmmo--;
+            UpdateAmmoText();
+            // Spawn and shoot the bullet
+            GameObject projectile = Instantiate(projectilePrefab, bulletSpawn.transform.position, bulletSpawn.transform.rotation);
+            muzzleFlash.Play();
+            gunAudioSource.PlayOneShot(shootClip);
+            Rigidbody rb = projectile.GetComponent<Rigidbody>();
+            Vector3 bulletDirection = GetConeSpreadDirection(bulletSpawn.transform.forward, coneAngle);
+            rb.velocity = bulletDirection * bulletSpeed;
+        }
+    }
+    private Vector3 GetConeSpreadDirection(Vector3 forwardDirection, float maxAngle)
+    {
+        float maxAngleRad = maxAngle * Mathf.Deg2Rad;
+        float randomAngle = Random.Range(0, 2 * Mathf.PI);
+        float randomRadius = Mathf.Sin(maxAngleRad) * Random.Range(0f, 1f);
 
-        //recoil and shoot animations
-        currentAmmo--;
-        UpdateAmmoText();
-
-        // Spawn and shoot the bullet
-        GameObject projectile = Instantiate(projectilePrefab, bulletSpawn.transform.position, bulletSpawn.transform.rotation);
-        Rigidbody rb = projectile.GetComponent<Rigidbody>();
-        rb.velocity = bulletSpawn.transform.forward * bulletSpeed;
+        Vector3 randomSpread = new Vector3(
+            randomRadius * Mathf.Cos(randomAngle),
+            randomRadius * Mathf.Sin(randomAngle),
+            Mathf.Cos(maxAngleRad)
+        );
+        Quaternion rotation = Quaternion.LookRotation(forwardDirection);
+        return (rotation * randomSpread).normalized;
     }
     void CanShootReset()
     {
