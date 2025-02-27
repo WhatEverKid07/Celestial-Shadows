@@ -1,42 +1,39 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
+using UnityEngine;
 
 public class Character1Movement : MonoBehaviour
 {
     [Header("Inputs")]
-    [SerializeField] private PlayerControls playerCntrls;
-    [SerializeField] private InputAction playerMove;
+    [SerializeField] private InputActionReference playerCntrls;
 
     [Header("Properties")]
     [SerializeField] Rigidbody rb;
-
-    [Header("Calculating Movement")]
-    private Vector3 moveDir;
     [SerializeField] private float walkSpeed;
 
-    private void Awake()
-    {
-        playerCntrls = new PlayerControls();
-    }
+    [Header("Camera")]
+    [SerializeField] private GameObject cam;
 
-    private void OnEnable()
-    {
-        playerMove = playerCntrls.Player.Movement;
-        playerMove.Enable();
-    }
+    private Vector3 moveDir;
 
     private void Update()
     {
-        
+        moveDir = playerCntrls.action.ReadValue<Vector3>(); 
     }
 
     private void FixedUpdate()
     {
-        moveDir = playerMove.ReadValue<Vector3>();
-        rb.velocity = new Vector3((moveDir.x * walkSpeed), rb.velocity.y, (moveDir.z * walkSpeed));
-        
+        Vector3 cameraForward = cam.transform.forward;
+        Vector3 cameraRight = cam.transform.right;
+
+        // Flatten the forward and right vectors to ignore vertical components
+        cameraForward.y = 0f;
+        cameraRight.y = 0f;
+        cameraForward.Normalize();
+        cameraRight.Normalize();
+
+        // Calculate the movement direction based on camera orientation
+        Vector3 move = cameraForward * moveDir.z + cameraRight * moveDir.x;
+
+        rb.velocity = new Vector3(move.x * walkSpeed, rb.velocity.y, move.z * walkSpeed);
     }
 }

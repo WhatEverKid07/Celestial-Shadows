@@ -136,6 +136,7 @@ GameObject:
   - component: {fileID: 20194408}
   - component: {fileID: 20194407}
   - component: {fileID: 20194406}
+  - component: {fileID: 20194411}
   m_Layer: 0
   m_Name: PlayerPhys
   m_TagString: Untagged
@@ -170,73 +171,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 59ed49c6a5ad1614fbc5d19b7ee8d423, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerMove:
-    m_Name: Player Move
-    m_Type: 0
-    m_ExpectedControlType: 
-    m_Id: 2ef7e915-ebbb-4747-bba7-344586efcedb
-    m_Processors: 
-    m_Interactions: 
-    m_SingletonActionBindings:
-    - m_Name: 3D Vector
-      m_Id: f8a0abde-fe5f-415e-8cd2-156e1a12127d
-      m_Path: 3DVector
-      m_Interactions: 
-      m_Processors: 
-      m_Groups: 
-      m_Action: Player Move
-      m_Flags: 4
-    - m_Name: up
-      m_Id: 4a86825d-b108-4026-b30b-2274d3e341e7
-      m_Path: <Keyboard>/w
-      m_Interactions: 
-      m_Processors: 
-      m_Groups: 
-      m_Action: Player Move
-      m_Flags: 8
-    - m_Name: down
-      m_Id: 047953b4-fa2f-49c6-8bc8-4ee24a703d41
-      m_Path: <Keyboard>/s
-      m_Interactions: 
-      m_Processors: 
-      m_Groups: 
-      m_Action: Player Move
-      m_Flags: 8
-    - m_Name: left
-      m_Id: daa002ca-a208-4900-b5e6-b168ceb3f348
-      m_Path: <Keyboard>/a
-      m_Interactions: 
-      m_Processors: 
-      m_Groups: 
-      m_Action: Player Move
-      m_Flags: 8
-    - m_Name: right
-      m_Id: fa705851-2fc8-4823-ad89-c53da4e700ee
-      m_Path: <Keyboard>/d
-      m_Interactions: 
-      m_Processors: 
-      m_Groups: 
-      m_Action: Player Move
-      m_Flags: 8
-    - m_Name: forward
-      m_Id: 39dcd09d-81c5-4272-8c61-9b4fbfe1561b
-      m_Path: <Keyboard>/w
-      m_Interactions: 
-      m_Processors: 
-      m_Groups: 
-      m_Action: Player Move
-      m_Flags: 8
-    - m_Name: backward
-      m_Id: 9df176ad-8ea1-422f-9748-7a3e4b3ec10c
-      m_Path: <Keyboard>/s
-      m_Interactions: 
-      m_Processors: 
-      m_Groups: 
-      m_Action: Player Move
-      m_Flags: 8
-    m_Flags: 0
+  playerCntrls: {fileID: 8219257814868728328, guid: 6126e80c064e030429ec21c4ef4ffc4d, type: 3}
   rb: {fileID: 20194407}
-  walkSpeed: 2
+  walkSpeed: 4
+  cam: {fileID: 1941573217}
 --- !u!54 &20194407
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -262,7 +200,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 2
-  m_Constraints: 112
+  m_Constraints: 80
   m_CollisionDetection: 1
 --- !u!136 &20194408
 CapsuleCollider:
@@ -337,6 +275,36 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 20194404}
   m_Mesh: {fileID: 10208, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &20194411
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 20194404}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 62899f850307741f2a39c98a8b639597, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Actions: {fileID: -944628639613478452, guid: 6126e80c064e030429ec21c4ef4ffc4d, type: 3}
+  m_NotificationBehavior: 0
+  m_UIInputModule: {fileID: 0}
+  m_DeviceLostEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_DeviceRegainedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_ControlsChangedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_ActionEvents: []
+  m_NeverAutoSwitchControlSchemes: 0
+  m_DefaultControlScheme: 
+  m_DefaultActionMap: Player
+  m_SplitScreenIndex: -1
+  m_Camera: {fileID: 1941573219}
 --- !u!1 &210434414
 GameObject:
   m_ObjectHideFlags: 0
@@ -645,6 +613,7 @@ GameObject:
   - component: {fileID: 1941573220}
   - component: {fileID: 1941573219}
   - component: {fileID: 1941573218}
+  - component: {fileID: 1941573221}
   m_Layer: 0
   m_Name: PlayerCam
   m_TagString: MainCamera
@@ -726,6 +695,23 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1351133893}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1941573221
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1941573217}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5839269342fb66947acea945e6d8d6a6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  player: {fileID: 20194404}
+  axisX: {fileID: 446297968139386490, guid: 6126e80c064e030429ec21c4ef4ffc4d, type: 3}
+  axisY: {fileID: -2871428396282351197, guid: 6126e80c064e030429ec21c4ef4ffc4d, type: 3}
+  sensX: 20
+  sensY: 20
 --- !u!1 &2085935761
 GameObject:
   m_ObjectHideFlags: 0
