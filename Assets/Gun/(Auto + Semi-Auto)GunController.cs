@@ -55,7 +55,6 @@ public class AutoAndSemiAutoGunController : MonoBehaviour
     [Space(20)]
     [Header("Inputs")]
     public InputActionAsset gunControls;
-    private InputActionMap gunControlsActionMap;
     private InputAction shoot;
     private InputAction reload;
     private InputAction zoomInOrOut;
@@ -65,7 +64,15 @@ public class AutoAndSemiAutoGunController : MonoBehaviour
         currentAmmo = maxAmmo;
         UpdateAmmoText();
 
+        shoot = gunControls.FindActionMap("Gun Controls").FindAction("Shoot");
+        reload = gunControls.FindActionMap("Gun Controls").FindAction("Reload");
+        zoomInOrOut = gunControls.FindActionMap("Gun Controls").FindAction("Zoom in/out");
 
+        shoot.Enable();
+        reload.Enable();
+        zoomInOrOut.Enable();
+
+        reload.performed += ctx => StartCoroutine(Reload());
     }
 
     void OnEnable()
@@ -78,29 +85,33 @@ public class AutoAndSemiAutoGunController : MonoBehaviour
         if (isReloading)
             return;
 
-        if (automatic == true && Input.GetButton("Fire1") && Time.time >= nextTimeToFire)
+        if (automatic && shoot.ReadValue<float>() > 0 && Time.time >= nextTimeToFire)
         {
+            muzzleFlash.Play();
+            gunAudioSource.PlayOneShot(shootClip);
+
             nextTimeToFire = Time.time + 1f / fireRate;
             Shoot();
         }
 
-        if (automatic == false && Input.GetButtonDown("Fire1") && canShoot == true)
+        shoot.performed += ctx =>
         {
-            Shoot();
-            canShoot = false;
-        }
-        //Reload
-        if (Input.GetKeyDown(KeyCode.R))
-        {
-            StartCoroutine(Reload());
-        }
+            if (!automatic && canShoot == true)
+            {
+                muzzleFlash.Play();
+                gunAudioSource.PlayOneShot(shootClip);
+
+                Shoot();
+                canShoot = false;
+            }
+        };
 
         //Zoom in/out
-        if (Input.GetMouseButtonDown(1))
+        if (zoomInOrOut.ReadValue<float>() < 1)
         {
             animator.SetTrigger(zoomBool);
         }
-        else if (Input.GetMouseButtonUp(1))
+        else if (zoomInOrOut.ReadValue<float>() > 0)
         {
             animator.SetTrigger(trigger);
         }
@@ -128,8 +139,7 @@ public class AutoAndSemiAutoGunController : MonoBehaviour
             return;
         }
 
-        muzzleFlash.Play();
-        gunAudioSource.PlayOneShot(shootClip);
+
         //recoil and shoot animations
         currentAmmo--;
         UpdateAmmoText();

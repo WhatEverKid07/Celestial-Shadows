@@ -769,9 +769,9 @@ MonoBehaviour:
   maxAmmo: 30
   reloadTime: 1
   automatic: 1
-  fireRate: 10
   bulletSpawn: {fileID: 684268469}
   projectilePrefab: {fileID: 62845616038060607, guid: e17c8dcf082fe794192f1e1e88065e15, type: 3}
+  fireRate: 10
   bulletSpeed: 70
   animator: {fileID: 1122644177}
   zoomBool: Zoom In
@@ -784,6 +784,7 @@ MonoBehaviour:
   gunAudioSource: {fileID: 1284785367}
   shootClip: {fileID: 8300000, guid: 524d2ffc2d49a8d48ba43f6ec43b779a, type: 3}
   reloadClip: {fileID: 0}
+  gunControls: {fileID: -944628639613478452, guid: 9269ee16b3aa1f0448f0710a2c982dcc, type: 3}
 --- !u!95 &1122644177
 Animator:
   serializedVersion: 5
