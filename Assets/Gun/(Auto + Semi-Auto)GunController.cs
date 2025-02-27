@@ -1,32 +1,36 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 public class AutoAndSemiAutoGunController : MonoBehaviour
 {
     [Header("Gun Attributes")]
     public int maxAmmo = 30;
-    private int currentAmmo;
     public float reloadTime = 1f;
-    private bool isReloading = false;
     public bool automatic = false;
+
+    private bool isReloading = false;
     private bool canShoot = true;
+    private int currentAmmo;
+
 
     [Space(20)]
     [Header("Shooting Attributes")]
-    //public float damage = 10f;
-    //public float range = 100f;
-    public float fireRate = 15f;
-    private float nextTimeToFire = 0f;
     public GameObject bulletSpawn;
-    public GameObject projectilePrefab; // Projectile prefab to fire
-    public float bulletSpeed = 20f; // Speed of the projectile
+    public GameObject projectilePrefab;
+    public float fireRate = 15f;
+    public float bulletSpeed = 20f;
+
+    private float nextTimeToFire = 0f;
+
 
     [Space(20)]
     [Header("Animations")]
     public Animator animator;
     public string zoomBool;
     public string trigger;
+
 
     [Space(20)]
     [Header("Effects")]
@@ -35,9 +39,11 @@ public class AutoAndSemiAutoGunController : MonoBehaviour
     public GameObject impactEffect;
     public float impactForce = 30f;
 
+
     [Space(20)]
     [Header("UI")]
     public Text ammoText;
+
 
     [Space(20)]
     [Header("Audio")]
@@ -45,10 +51,21 @@ public class AutoAndSemiAutoGunController : MonoBehaviour
     public AudioClip shootClip;
     public AudioClip reloadClip;
 
+
+    [Space(20)]
+    [Header("Inputs")]
+    public InputActionAsset gunControls;
+    private InputActionMap gunControlsActionMap;
+    private InputAction shoot;
+    private InputAction reload;
+    private InputAction zoomInOrOut;
+
     void Start()
     {
         currentAmmo = maxAmmo;
         UpdateAmmoText();
+
+
     }
 
     void OnEnable()
@@ -61,32 +78,24 @@ public class AutoAndSemiAutoGunController : MonoBehaviour
         if (isReloading)
             return;
 
-        if (currentAmmo <= 0)
-        {
-            StartCoroutine(Reload());
-            return;
-        }
-
         if (automatic == true && Input.GetButton("Fire1") && Time.time >= nextTimeToFire)
         {
             nextTimeToFire = Time.time + 1f / fireRate;
             Shoot();
-            //muzzleFlash.Play();
         }
 
         if (automatic == false && Input.GetButtonDown("Fire1") && canShoot == true)
         {
             Shoot();
             canShoot = false;
-            //muzzleFlash.Play();
-
         }
-
+        //Reload
         if (Input.GetKeyDown(KeyCode.R))
         {
             StartCoroutine(Reload());
         }
 
+        //Zoom in/out
         if (Input.GetMouseButtonDown(1))
         {
             animator.SetTrigger(zoomBool);
@@ -101,8 +110,8 @@ public class AutoAndSemiAutoGunController : MonoBehaviour
     {
         isReloading = true;
         //gunAudioSource.PlayOneShot(reloadClip);
-        yield return new WaitForSeconds(reloadTime - 0.25f);
-        yield return new WaitForSeconds(0.25f);
+        //gun reload animation
+        yield return new WaitForSeconds(reloadTime);
         currentAmmo = maxAmmo;
         isReloading = false;
         UpdateAmmoText();
@@ -110,31 +119,30 @@ public class AutoAndSemiAutoGunController : MonoBehaviour
 
     void Shoot()
     {
+        //this is important to make semi auto work
         Invoke("CanShootReset", 0.2f);
-        if (currentAmmo <= 0)
-            return;
 
+        if (currentAmmo == 0)
+        {
+            StartCoroutine(Reload());
+            return;
+        }
+
+        muzzleFlash.Play();
+        gunAudioSource.PlayOneShot(shootClip);
+        //recoil and shoot animations
         currentAmmo--;
         UpdateAmmoText();
-
-        
-        
-        muzzleFlash.Play();
-
-        gunAudioSource.PlayOneShot(shootClip);
-        
 
         // Spawn and shoot the bullet
         GameObject projectile = Instantiate(projectilePrefab, bulletSpawn.transform.position, bulletSpawn.transform.rotation);
         Rigidbody rb = projectile.GetComponent<Rigidbody>();
         rb.velocity = bulletSpawn.transform.forward * bulletSpeed;
-        
     }
     void CanShootReset()
     {
         canShoot = true;
     }
-
     void UpdateAmmoText()
     {
         ammoText.text = currentAmmo.ToString() + " / " + maxAmmo.ToString();
