@@ -22,7 +22,6 @@ public class AutoAndSemiAutoGunController : MonoBehaviour
     [SerializeField] private GameObject projectilePrefab;
     [SerializeField] private float fireRate = 15f;
     [SerializeField] private float bulletSpeed = 20f;
-    [SerializeField] private Vector3 upRecoil;
 
     private float nextTimeToFire = 0f;
 
@@ -69,8 +68,13 @@ public class AutoAndSemiAutoGunController : MonoBehaviour
     private Coroutine fovCoroutine;
     private float originalFOV;
 
+    private WeaponRecoil weaponRecoil;
+
     void Start()
     {
+        weaponRecoil = GetComponentInParent<WeaponRecoil>();
+        if (weaponRecoil == null) { Debug.LogWarning("WeaponRecoil Not Linked"); }
+
         currentAmmo = maxAmmo;
         UpdateAmmoText();
 
@@ -107,6 +111,7 @@ public class AutoAndSemiAutoGunController : MonoBehaviour
 
         if (automatic && shoot.ReadValue<float>() > 0 && Time.time >= nextTimeToFire)
         {
+            //weaponRecoil.ApplyRecoil();
             nextTimeToFire = Time.time + 1f / fireRate;
             Shoot();
         }
@@ -115,11 +120,11 @@ public class AutoAndSemiAutoGunController : MonoBehaviour
         {
             if (!automatic && canShoot == true)
             {
+                //weaponRecoil.ApplyRecoil();
                 Shoot();
                 canShoot = false;
             }
         };
-
         GunSight();
     }
 
@@ -179,6 +184,7 @@ public class AutoAndSemiAutoGunController : MonoBehaviour
         if (currentAmmo >= 1)
         {
             // Recoil and shoot animations
+            weaponRecoil.AddRecoil();
             currentAmmo--;
             UpdateAmmoText();
             // Spawn and shoot the bullet

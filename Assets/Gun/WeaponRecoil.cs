@@ -1,41 +1,32 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class WeaponRecoil : MonoBehaviour
 {
-    [SerializeField] private float recoilSpeed = 0.1f; // Speed of recoil effect
-    [SerializeField] private Transform gunRoot;
-    [SerializeField] private float recoilAmount = 10f; //control kickback
-    private Quaternion originalRotation; // To store the original rotation of the gun
+    public Vector3 upRecoil;
+    Vector3 originalRotation;
 
     private void Start()
     {
-        originalRotation = gunRoot.transform.localRotation;
+        originalRotation = transform.localEulerAngles;
     }
-    public void CallRecoilShake()
+    private void Update()
     {
-        StartCoroutine(RecoilShake());
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            AddRecoil();
+        }
     }
-    private IEnumerator RecoilShake()
+
+    public void AddRecoil()
     {
-        float time = 0f;
+        transform.localEulerAngles += upRecoil;
+    }
 
-        while (time < recoilSpeed)
-        {
-            // Apply recoil
-            gunRoot.gameObject.transform.localRotation = Quaternion.Lerp(gunRoot.gameObject.transform.localRotation, originalRotation * Quaternion.Euler(-recoilAmount, 0, 0), time * recoilSpeed);
-            time += Time.deltaTime;
-            yield return null;
-        }
-
-        time = 0f;
-        while (time < recoilSpeed)
-        {
-            // Return to original position
-            gunRoot.gameObject.transform.localRotation = Quaternion.Lerp(gunRoot.gameObject.transform.localRotation, originalRotation, time * recoilSpeed);
-            time += Time.deltaTime;
-            yield return null;
-        }
+    public void StopRecoil()
+    {
+        transform.localEulerAngles = originalRotation;
     }
 }
