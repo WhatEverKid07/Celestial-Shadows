@@ -2,6 +2,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
+using static UnityEngine.InputSystem.LowLevel.InputStateHistory;
 
 public class AutoAndSemiAutoGunController : MonoBehaviour
 {
@@ -21,6 +22,7 @@ public class AutoAndSemiAutoGunController : MonoBehaviour
     [SerializeField] private GameObject projectilePrefab;
     [SerializeField] private float fireRate = 15f;
     [SerializeField] private float bulletSpeed = 20f;
+    [SerializeField] private Vector3 upRecoil;
 
     private float nextTimeToFire = 0f;
 
@@ -62,15 +64,16 @@ public class AutoAndSemiAutoGunController : MonoBehaviour
     private InputAction shoot;
     private InputAction reload;
     private InputAction zoomInOrOut;
-
     private float zoomSpeed = 8f;
     private float zoomLevel = 0f;
-
     private Coroutine fovCoroutine;
     private float originalFOV;
+    private Vector3 originalRotation;
 
     void Start()
     {
+        originalRotation = transform.localEulerAngles;
+
         currentAmmo = maxAmmo;
         UpdateAmmoText();
 
@@ -189,6 +192,7 @@ public class AutoAndSemiAutoGunController : MonoBehaviour
             Vector3 bulletDirection = GetConeSpreadDirection(bulletSpawn.transform.forward, coneAngle);
             rb.velocity = bulletDirection * bulletSpeed;
         }
+        //else { StopRecoil(); }
     }
     private Vector3 GetConeSpreadDirection(Vector3 forwardDirection, float maxAngle)
     {

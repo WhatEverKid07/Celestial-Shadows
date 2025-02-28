@@ -773,6 +773,7 @@ MonoBehaviour:
   projectilePrefab: {fileID: 62845616038060607, guid: e17c8dcf082fe794192f1e1e88065e15, type: 3}
   fireRate: 10
   bulletSpeed: 70
+  upRecoil: {x: -2, y: 0, z: 0}
   animator: {fileID: 1122644177}
   zoomBool: Zoom In
   trigger: Zoom
@@ -787,7 +788,7 @@ MonoBehaviour:
   gunControls: {fileID: -944628639613478452, guid: 9269ee16b3aa1f0448f0710a2c982dcc, type: 3}
   targetZoomFOV: 25
   transitionDuration: 0.3
-  coneAngle: 5
+  coneAngle: 4
 --- !u!95 &1122644177
 Animator:
   serializedVersion: 5
