@@ -181,8 +181,11 @@ MonoBehaviour:
     m_Bits: 64
   groundChecker: {fileID: 899487249}
   cam: {fileID: 1941573217}
-  walkSpeed: 10
-  jumpPower: 5
+  walkSpeed: 7
+  jumpPower: 2
+  fallMulti: 2
+  coyoteTime: 0.2
+  jumpBuffTime: 0
 --- !u!54 &20194407
 Rigidbody:
   m_ObjectHideFlags: 0

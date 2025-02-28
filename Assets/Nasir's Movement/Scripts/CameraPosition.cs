@@ -25,10 +25,14 @@ public class CameraPosition : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
     }
-    private void Update()
+
+    private void LateUpdate()
     {
-        mouseX = axisX.action.ReadValue<float>();
-        mouseY = axisY.action.ReadValue<float>();
+        if (Cursor.lockState == CursorLockMode.Locked)
+        {
+            mouseX = axisX.action.ReadValue<float>();
+            mouseY = axisY.action.ReadValue<float>();
+        }
 
         float rotationX = mouseX * (sensX * Time.deltaTime);
         float rotationY = mouseY * (sensY * Time.deltaTime);
@@ -40,6 +44,7 @@ public class CameraPosition : MonoBehaviour
         cameraRotation.y += rotationX;
 
         transform.rotation = Quaternion.Euler(cameraRotation.x, cameraRotation.y, 0);
+
         player.transform.rotation = Quaternion.Euler(0, cameraRotation.y , 0);
         transform.position = new Vector3(player.transform.position.x, player.transform.position.y, player.transform.position.z);
     }

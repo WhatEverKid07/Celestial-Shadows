@@ -21,9 +21,16 @@ public class Character1Movement : MonoBehaviour
     [SerializeField] private float walkSpeed;
 
     [Header("Jumping")]
+    [Range(1f, 5f)]
     [SerializeField] private float jumpPower;
-    private bool canJump;
-    private bool holdingJump;
+    [Range(1f, 3f)]
+    [SerializeField] private float fallMulti;
+    [SerializeField] private float coyoteTime;
+    [SerializeField] private float jumpBuffTime;
+    private float setCoyoteTime;
+    private float setJumpBuffTime;
+
+
 
     private void Start()
     {
@@ -40,6 +47,7 @@ public class Character1Movement : MonoBehaviour
     private void Update()
     {
         moveDir = playerCntrls.action.ReadValue<Vector3>();
+        Debug.Log(setCoyoteTime);
     }
 
     private void FixedUpdate()
@@ -55,29 +63,37 @@ public class Character1Movement : MonoBehaviour
 
         // Calculate the movement direction based on camera orientation
         Vector3 move = cameraForward * moveDir.z + cameraRight * moveDir.x;
+        rb.velocity = new Vector3(move.x * walkSpeed, rb.velocity.y, move.z * walkSpeed);
 
         if (jump.ReadValue<float>() > 0)
         {
-            holdingJump = true;
+            setJumpBuffTime = jumpBuffTime;
             Jump();
         }
-
-        jump.performed += ctx =>
+        else
         {
-            Jump();
-            if (jump.ReadValue<float>() < 0 && canJump)
-            {
-         
-            }
-        };
+            setJumpBuffTime -= Time.deltaTime;
+            if (setJumpBuffTime <= 0) { setJumpBuffTime = 0; }
+        }
+
+        if (!IsGrounded())
+        {
+            rb.velocity += Vector3.up * Physics.gravity.y * (fallMulti - 1) * Time.deltaTime;
+
+            setCoyoteTime -= Time.deltaTime;
+        }
+        else
+        {
+            setCoyoteTime = coyoteTime;
+        }
 
     }
 
     private void Jump()
     {
-        if (IsGrounded())
+        if (setJumpBuffTime > 0f && setCoyoteTime > 0f)
         {
-            rb.AddForce(0, jumpPower, 0, ForceMode.Impulse);
+            rb.AddForce(rb.velocity.x, jumpPower, rb.velocity.z, ForceMode.Impulse);
         }
     }
 
