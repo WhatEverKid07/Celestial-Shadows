@@ -68,12 +68,9 @@ public class AutoAndSemiAutoGunController : MonoBehaviour
     private float zoomLevel = 0f;
     private Coroutine fovCoroutine;
     private float originalFOV;
-    private Vector3 originalRotation;
 
     void Start()
     {
-        originalRotation = transform.localEulerAngles;
-
         currentAmmo = maxAmmo;
         UpdateAmmoText();
 
@@ -192,7 +189,6 @@ public class AutoAndSemiAutoGunController : MonoBehaviour
             Vector3 bulletDirection = GetConeSpreadDirection(bulletSpawn.transform.forward, coneAngle);
             rb.velocity = bulletDirection * bulletSpeed;
         }
-        //else { StopRecoil(); }
     }
     private Vector3 GetConeSpreadDirection(Vector3 forwardDirection, float maxAngle)
     {
