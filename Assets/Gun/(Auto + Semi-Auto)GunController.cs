@@ -10,10 +10,12 @@ public class AutoAndSemiAutoGunController : MonoBehaviour
     [SerializeField] private int maxAmmo = 30;
     [SerializeField] private float reloadTime = 1f;
     [SerializeField] private bool automatic = false;
+    [SerializeField] private Vector3 upRecoil;
 
     private bool isReloading = false;
     private bool canShoot = true;
     private int currentAmmo;
+    private Vector3 originalRotation;
 
 
     [Space(20)]
@@ -68,12 +70,9 @@ public class AutoAndSemiAutoGunController : MonoBehaviour
     private Coroutine fovCoroutine;
     private float originalFOV;
 
-    private WeaponRecoil weaponRecoil;
-
     void Start()
     {
-        weaponRecoil = GetComponentInParent<WeaponRecoil>();
-        if (weaponRecoil == null) { Debug.LogWarning("WeaponRecoil Not Linked"); }
+        originalRotation = transform.localEulerAngles;
 
         currentAmmo = maxAmmo;
         UpdateAmmoText();
@@ -111,7 +110,6 @@ public class AutoAndSemiAutoGunController : MonoBehaviour
 
         if (automatic && shoot.ReadValue<float>() > 0 && Time.time >= nextTimeToFire)
         {
-            //weaponRecoil.ApplyRecoil();
             nextTimeToFire = Time.time + 1f / fireRate;
             Shoot();
         }
@@ -120,11 +118,11 @@ public class AutoAndSemiAutoGunController : MonoBehaviour
         {
             if (!automatic && canShoot == true)
             {
-                //weaponRecoil.ApplyRecoil();
                 Shoot();
                 canShoot = false;
             }
         };
+        shoot.canceled += ctx => { StopRecoil(); };
         GunSight();
     }
 
@@ -134,7 +132,7 @@ public class AutoAndSemiAutoGunController : MonoBehaviour
         float targetZoom = zoomInput > 0.5f ? 1f : 0f;
 
         zoomLevel = Mathf.Lerp(zoomLevel, targetZoom, Time.deltaTime * zoomSpeed);
-        animator.SetFloat("ZoomBlend", zoomLevel);
+        //animator.SetFloat("ZoomBlend", zoomLevel);
     }
     public void ChangeFOV(float newFOV)
     {
@@ -163,6 +161,7 @@ public class AutoAndSemiAutoGunController : MonoBehaviour
     IEnumerator Reload()
     {
         isReloading = true;
+        StopRecoil();
         // gunAudioSource.PlayOneShot(reloadClip);
         // gun reload animation
         yield return new WaitForSeconds(reloadTime);
@@ -183,8 +182,8 @@ public class AutoAndSemiAutoGunController : MonoBehaviour
 
         if (currentAmmo >= 1)
         {
-            // Recoil and shoot animations
-            weaponRecoil.AddRecoil();
+            // Shoot animations
+            AddRecoil();
             currentAmmo--;
             UpdateAmmoText();
             // Spawn and shoot the bullet
@@ -209,6 +208,15 @@ public class AutoAndSemiAutoGunController : MonoBehaviour
         );
         Quaternion rotation = Quaternion.LookRotation(forwardDirection);
         return (rotation * randomSpread).normalized;
+    }
+    private void AddRecoil()
+    {
+        transform.localEulerAngles += upRecoil;
+    }
+
+    private void StopRecoil()
+    {
+        transform.localEulerAngles = originalRotation;
     }
     void CanShootReset()
     {

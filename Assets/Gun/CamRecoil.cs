@@ -1,9 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Data.Common;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class WeaponRecoil : MonoBehaviour
+public class CamRecoil : MonoBehaviour
 {
     public Vector3 upRecoil;
     Vector3 originalRotation;
@@ -19,7 +20,6 @@ public class WeaponRecoil : MonoBehaviour
             AddRecoil();
         }
     }
-
     public void AddRecoil()
     {
         transform.localEulerAngles += upRecoil;
