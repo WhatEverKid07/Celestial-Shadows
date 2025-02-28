@@ -14,7 +14,10 @@ public class CameraPosition : MonoBehaviour
 
     private float mouseX;
     private float mouseY;
+
+    [Range(20f, 100f)]
     [SerializeField] private float sensX;
+    [Range(20f, 100f)]
     [SerializeField] private float sensY;
 
     private void Start()

@@ -136,6 +136,7 @@ GameObject:
   - component: {fileID: 20194408}
   - component: {fileID: 20194407}
   - component: {fileID: 20194406}
+  - component: {fileID: 20194412}
   - component: {fileID: 20194411}
   m_Layer: 0
   m_Name: PlayerPhys
@@ -156,7 +157,8 @@ Transform:
   m_LocalPosition: {x: 0, y: 1.2, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 899487250}
   m_Father: {fileID: 1351133893}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &20194406
@@ -172,10 +174,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerCntrls: {fileID: 8219257814868728328, guid: 6126e80c064e030429ec21c4ef4ffc4d, type: 3}
+  plyCntrlsAss: {fileID: -944628639613478452, guid: 6126e80c064e030429ec21c4ef4ffc4d, type: 3}
   rb: {fileID: 20194407}
+  ground:
+    serializedVersion: 2
+    m_Bits: 64
+  groundChecker: {fileID: 899487249}
   cam: {fileID: 1941573217}
-  walkSpeed: 4
-  jumpPower: 0
+  walkSpeed: 10
+  jumpPower: 5
 --- !u!54 &20194407
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -303,9 +310,21 @@ MonoBehaviour:
   m_ActionEvents: []
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
-  m_DefaultActionMap: Player
+  m_DefaultActionMap: Player Controls
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 1941573219}
+--- !u!114 &20194412
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 20194404}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c3c52ceaed8c65f4ea8d71bd2241e63e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &210434414
 GameObject:
   m_ObjectHideFlags: 0
@@ -431,6 +450,37 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1351133893}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &899487249
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 899487250}
+  m_Layer: 0
+  m_Name: GroundChecker
+  m_TagString: Untagged
+  m_Icon: {fileID: 7866945982896999795, guid: 0000000000000000d000000000000000, type: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &899487250
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 899487249}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: -1, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 20194405}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1028637728
 GameObject:
   m_ObjectHideFlags: 0
@@ -509,7 +559,7 @@ GameObject:
   - component: {fileID: 1828704146}
   - component: {fileID: 1828704145}
   - component: {fileID: 1828704144}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Place.Floor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -711,8 +761,8 @@ MonoBehaviour:
   player: {fileID: 20194404}
   axisX: {fileID: 446297968139386490, guid: 6126e80c064e030429ec21c4ef4ffc4d, type: 3}
   axisY: {fileID: -2871428396282351197, guid: 6126e80c064e030429ec21c4ef4ffc4d, type: 3}
-  sensX: 20
-  sensY: 20
+  sensX: 40
+  sensY: 40
 --- !u!1 &2085935761
 GameObject:
   m_ObjectHideFlags: 0

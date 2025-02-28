@@ -6,10 +6,13 @@ public class Character1Movement : MonoBehaviour
 {
     [Header("Inputs")]
     [SerializeField] private InputActionReference playerCntrls;
+    [SerializeField] private InputActionAsset plyCntrlsAss;
     private InputAction jump;
 
     [Header("Properties")]
-    [SerializeField] Rigidbody rb;
+    [SerializeField] private Rigidbody rb;
+    [SerializeField] private LayerMask ground;
+    [SerializeField] private GameObject groundChecker;
 
     [Header("Camera")]
     [SerializeField] private GameObject cam;
@@ -18,17 +21,15 @@ public class Character1Movement : MonoBehaviour
     [SerializeField] private float walkSpeed;
 
     [Header("Jumping")]
-    private LayerMask ground;
     [SerializeField] private float jumpPower;
-    private float jumpPowerOver;
     private bool canJump;
+    private bool holdingJump;
 
     private void Start()
     {
-        jump.Enable();
-        jump.performed += ctx => StartCoroutine(Jump());
+        jump = plyCntrlsAss.FindActionMap("Player Controls").FindAction("Jump");
 
-        jumpPowerOver = jumpPower * Time.deltaTime;
+        jump.Enable();
     }
 
     private void OnEnable()
@@ -38,8 +39,7 @@ public class Character1Movement : MonoBehaviour
 
     private void Update()
     {
-        moveDir = playerCntrls.action.ReadValue<Vector3>(); 
-
+        moveDir = playerCntrls.action.ReadValue<Vector3>();
     }
 
     private void FixedUpdate()
@@ -56,28 +56,34 @@ public class Character1Movement : MonoBehaviour
         // Calculate the movement direction based on camera orientation
         Vector3 move = cameraForward * moveDir.z + cameraRight * moveDir.x;
 
+        if (jump.ReadValue<float>() > 0)
+        {
+            holdingJump = true;
+            Jump();
+        }
 
-        rb.velocity = new Vector3(move.x * walkSpeed, rb.velocity.y, move.z * walkSpeed);
-        
+        jump.performed += ctx =>
+        {
+            Jump();
+            if (jump.ReadValue<float>() < 0 && canJump)
+            {
+         
+            }
+        };
+
     }
 
-    private IEnumerator Jump()
+    private void Jump()
     {
-        if (canJump)
+        if (IsGrounded())
         {
-            if (IsGrounded())
-            {
-                rb.velocity = new Vector3(rb.velocity.x, (rb.velocity.y * jumpPowerOver), rb.velocity.z);
-                canJump = false;
-            }
+            rb.AddForce(0, jumpPower, 0, ForceMode.Impulse);
         }
-        yield return new WaitUntil(() => canJump);
-       
     }
 
     private bool IsGrounded()
     {
-        return Physics.CheckSphere(transform.position, .5f, ground);
+        return Physics.CheckSphere(groundChecker.transform.position, .5f, ground);
     }
 
 }
