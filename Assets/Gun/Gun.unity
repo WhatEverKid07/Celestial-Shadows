@@ -169,6 +169,7 @@ MonoBehaviour:
   reloadTime: 1
   automatic: 1
   upRecoil: {x: -2, y: 0, z: 0}
+  sideRecoil: {x: 0, y: 3, z: 0}
   bulletSpawn: {fileID: 26827960}
   projectilePrefab: {fileID: 62845616038060607, guid: e17c8dcf082fe794192f1e1e88065e15, type: 3}
   fireRate: 10
@@ -178,8 +179,6 @@ MonoBehaviour:
   trigger: Zoom
   playerCam: {fileID: 1061397732}
   muzzleFlash: {fileID: 2608259522467716464}
-  impactEffect: {fileID: 0}
-  impactForce: 30
   ammoText: {fileID: 1485698973}
   gunAudioSource: {fileID: 1284785367}
   shootClip: {fileID: 8300000, guid: 524d2ffc2d49a8d48ba43f6ec43b779a, type: 3}
@@ -361,7 +360,6 @@ GameObject:
   - component: {fileID: 1061397734}
   - component: {fileID: 1061397732}
   - component: {fileID: 1061397733}
-  - component: {fileID: 1061397735}
   - component: {fileID: 1061397736}
   m_Layer: 0
   m_Name: New Cam
@@ -445,19 +443,6 @@ Transform:
   - {fileID: 543450653310206551}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: -175.023, z: 0}
---- !u!114 &1061397735
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1061397731}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a0f902bc4680d784cbaa65f1f8956aca, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  upRecoil: {x: -0.8, y: 0, z: 0}
 --- !u!114 &1061397736
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -472,6 +457,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 10
   sensitivity: 5
+  upRecoil: {x: -2, y: 0, z: 0}
+  sideRecoil: {x: 0, y: 2, z: 0}
+  recoilCooldown: 0.1
+  recoilRecoverySpeed: 2
 --- !u!1 &1262118333
 GameObject:
   m_ObjectHideFlags: 0

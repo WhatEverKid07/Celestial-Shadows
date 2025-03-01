@@ -11,6 +11,7 @@ public class AutoAndSemiAutoGunController : MonoBehaviour
     [SerializeField] private float reloadTime = 1f;
     [SerializeField] private bool automatic = false;
     [SerializeField] private Vector3 upRecoil;
+    [SerializeField] private Vector3 sideRecoil;
 
     private bool isReloading = false;
     private bool canShoot = true;
@@ -39,8 +40,6 @@ public class AutoAndSemiAutoGunController : MonoBehaviour
     [Header("Effects")]
     [SerializeField] private Camera playerCam;
     [SerializeField] private ParticleSystem muzzleFlash;
-    [SerializeField] private GameObject impactEffect;
-    [SerializeField] private float impactForce = 30f;
 
 
     [Space(20)]
@@ -211,7 +210,9 @@ public class AutoAndSemiAutoGunController : MonoBehaviour
     }
     private void AddRecoil()
     {
-        transform.localEulerAngles += upRecoil;
+        float sideAmount = Random.Range(-sideRecoil.y, sideRecoil.y);
+
+        transform.localEulerAngles += new Vector3(upRecoil.x, sideAmount, 0f);
     }
 
     private void StopRecoil()
