@@ -174,21 +174,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerCntrls: {fileID: 8219257814868728328, guid: 6126e80c064e030429ec21c4ef4ffc4d, type: 3}
-  plyCntrlsAss: {fileID: -944628639613478452, guid: 6126e80c064e030429ec21c4ef4ffc4d, type: 3}
+  playerCntrlsAss: {fileID: -944628639613478452, guid: 6126e80c064e030429ec21c4ef4ffc4d, type: 3}
   rb: {fileID: 20194407}
   ground:
     serializedVersion: 2
     m_Bits: 64
   groundChecker: {fileID: 899487249}
   cam: {fileID: 1941573217}
-  walkSpeed: 5
-  runSpeed: 7
-  jumpPower: 1.5
+  walkSpeed: 7
+  runSpeed: 10
+  jumpPower: 3
   fallMulti: 2.5
   coyoteTime: 0.2
   enableDash: 1
-  dashPower: 15
-  maxDashTime: 0
+  dashPower: 3
+  DashTime: 1
 --- !u!54 &20194407
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -213,7 +213,7 @@ Rigidbody:
   m_ImplicitTensor: 1
   m_UseGravity: 1
   m_IsKinematic: 0
-  m_Interpolate: 2
+  m_Interpolate: 1
   m_Constraints: 80
   m_CollisionDetection: 1
 --- !u!136 &20194408
@@ -582,7 +582,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1.5, y: 1, z: 1.5}
+  m_LocalScale: {x: 3, y: 1, z: 3}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1028637729}
@@ -719,7 +719,7 @@ Camera:
     height: 1
   near clip plane: 0.3
   far clip plane: 1000
-  field of view: 60
+  field of view: 90
   orthographic: 0
   orthographic size: 5
   m_Depth: -1
