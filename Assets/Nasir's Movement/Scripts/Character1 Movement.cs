@@ -8,6 +8,8 @@ public class Character1Movement : MonoBehaviour
     [SerializeField] private InputActionReference playerCntrls;
     [SerializeField] private InputActionAsset plyCntrlsAss;
     private InputAction jump;
+    private InputAction run;
+    private InputAction dash;
 
     [Header("Properties")]
     [SerializeField] private Rigidbody rb;
@@ -19,6 +21,7 @@ public class Character1Movement : MonoBehaviour
 
     private Vector3 moveDir;
     [SerializeField] private float walkSpeed;
+    [SerializeField] private float runSpeed;
 
     [Header("Jumping")]
     [Range(1f, 5f)]
@@ -26,17 +29,26 @@ public class Character1Movement : MonoBehaviour
     [Range(1f, 3f)]
     [SerializeField] private float fallMulti;
     [SerializeField] private float coyoteTime;
-    [SerializeField] private float jumpBuffTime;
     private float setCoyoteTime;
-    private float setJumpBuffTime;
+
+    [Header("Dashing")]
+    [SerializeField] private bool enableDash;
+    [SerializeField] private float dashPower;
+    private bool canDash;
+    [SerializeField] private float maxDashTime;
+    private float dashTime;
 
 
 
     private void Start()
     {
         jump = plyCntrlsAss.FindActionMap("Player Controls").FindAction("Jump");
+        run = plyCntrlsAss.FindActionMap("Player Controls").FindAction("Run");
+        dash = plyCntrlsAss.FindActionMap("Player Controls").FindAction("Dash");
 
         jump.Enable();
+        run.Enable();
+        dash.Enable();
     }
 
     private void OnEnable()
@@ -47,11 +59,22 @@ public class Character1Movement : MonoBehaviour
     private void Update()
     {
         moveDir = playerCntrls.action.ReadValue<Vector3>();
-        Debug.Log(setCoyoteTime);
+        
+        if (!canDash)
+        {
+            dashTime = maxDashTime;
+            dashTime -= Time.deltaTime;
+            if (dashTime <= 0f) { dashTime = 0f; }
+            if (dashTime == 0f)
+            {
+                canDash = true;
+            }
+        }
     }
 
     private void FixedUpdate()
     {
+        //CAM DIRECTIONS
         Vector3 cameraForward = cam.transform.forward;
         Vector3 cameraRight = cam.transform.right;
 
@@ -63,40 +86,68 @@ public class Character1Movement : MonoBehaviour
 
         // Calculate the movement direction based on camera orientation
         Vector3 move = cameraForward * moveDir.z + cameraRight * moveDir.x;
-        rb.velocity = new Vector3(move.x * walkSpeed, rb.velocity.y, move.z * walkSpeed);
 
-        if (jump.ReadValue<float>() > 0)
+        //WALKING & RUNNING
+        if (run.ReadValue<float>() > 0)
         {
-            setJumpBuffTime = jumpBuffTime;
-            Jump();
+            rb.velocity = new Vector3(move.x * runSpeed, rb.velocity.y, move.z * runSpeed);
         }
         else
         {
-            setJumpBuffTime -= Time.deltaTime;
-            if (setJumpBuffTime <= 0) { setJumpBuffTime = 0; }
+            rb.velocity = new Vector3(move.x * walkSpeed, rb.velocity.y, move.z * walkSpeed);
         }
 
+        //JUMPING
+        if (jump.ReadValue<float>() > 0)
+        {
+            Jump();
+        }
+
+        //COYOTE TIME
         if (!IsGrounded())
         {
             rb.velocity += Vector3.up * Physics.gravity.y * (fallMulti - 1) * Time.deltaTime;
-
             setCoyoteTime -= Time.deltaTime;
+            if (rb.velocity.y > 0f)
+            {
+                setCoyoteTime = 0f;
+            }
         }
         else
         {
             setCoyoteTime = coyoteTime;
         }
 
+        //DASHING
+        if (enableDash)
+        {
+            dash.performed += ctx =>
+            {
+                Dash();
+            };
+        }
     }
 
+    //JUMP FUNCTION
     private void Jump()
     {
-        if (setJumpBuffTime > 0f && setCoyoteTime > 0f)
+        if (setCoyoteTime > 0f)
         {
             rb.AddForce(rb.velocity.x, jumpPower, rb.velocity.z, ForceMode.Impulse);
         }
     }
 
+    //DASH FUNCTION
+    private void Dash()
+    {
+        if (canDash)
+        {
+            rb.AddForce(dashPower * 10, rb.velocity.y, rb.velocity.z, ForceMode.Impulse);
+            canDash = false;
+        }
+    }
+
+    //GROUNDED BOOL
     private bool IsGrounded()
     {
         return Physics.CheckSphere(groundChecker.transform.position, .5f, ground);

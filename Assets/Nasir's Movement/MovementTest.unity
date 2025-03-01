@@ -181,11 +181,14 @@ MonoBehaviour:
     m_Bits: 64
   groundChecker: {fileID: 899487249}
   cam: {fileID: 1941573217}
-  walkSpeed: 7
-  jumpPower: 2
-  fallMulti: 2
+  walkSpeed: 5
+  runSpeed: 7
+  jumpPower: 1.5
+  fallMulti: 2.5
   coyoteTime: 0.2
-  jumpBuffTime: 0
+  enableDash: 1
+  dashPower: 15
+  maxDashTime: 0
 --- !u!54 &20194407
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -764,8 +767,8 @@ MonoBehaviour:
   player: {fileID: 20194404}
   axisX: {fileID: 446297968139386490, guid: 6126e80c064e030429ec21c4ef4ffc4d, type: 3}
   axisY: {fileID: -2871428396282351197, guid: 6126e80c064e030429ec21c4ef4ffc4d, type: 3}
-  sensX: 40
-  sensY: 40
+  sensX: 15
+  sensY: 15
 --- !u!1 &2085935761
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,7 +1,5 @@
 using UnityEngine;
-using UnityEngine.Animations;
 using UnityEngine.InputSystem;
-using static UnityEditor.Timeline.TimelinePlaybackControls;
 
 public class CameraPosition : MonoBehaviour
 {
@@ -15,10 +13,12 @@ public class CameraPosition : MonoBehaviour
     private float mouseX;
     private float mouseY;
 
-    [Range(20f, 100f)]
+    [Range(5f, 50f)]
     [SerializeField] private float sensX;
-    [Range(20f, 100f)]
+    [Range(5f, 50f)]
     [SerializeField] private float sensY;
+
+    private float currentRotationX = 0f;
 
     private void Start()
     {
@@ -26,27 +26,24 @@ public class CameraPosition : MonoBehaviour
         Cursor.visible = false;
     }
 
-    private void LateUpdate()
+    private void Update()
     {
         if (Cursor.lockState == CursorLockMode.Locked)
         {
             mouseX = axisX.action.ReadValue<float>();
             mouseY = axisY.action.ReadValue<float>();
+
+            float rotationX = mouseX * sensX / 100;
+            float rotationY = mouseY * sensY / 100;
+
+            currentRotationX -= rotationY;
+            currentRotationX = Mathf.Clamp(currentRotationX, -80f, 80f);
+
+            transform.rotation = Quaternion.Euler(currentRotationX, transform.rotation.eulerAngles.y + rotationX, 0);
+
+            player.transform.rotation = Quaternion.Euler(0, transform.rotation.eulerAngles.y, 0);
+
         }
-
-        float rotationX = mouseX * (sensX * Time.deltaTime);
-        float rotationY = mouseY * (sensY * Time.deltaTime);
-        rotationX = Mathf.Clamp(rotationX, -80f, 80);
-
-        Vector2 cameraRotation = transform.rotation.eulerAngles;
-
-        cameraRotation.x -= rotationY;
-        cameraRotation.y += rotationX;
-
-        transform.rotation = Quaternion.Euler(cameraRotation.x, cameraRotation.y, 0);
-
-        player.transform.rotation = Quaternion.Euler(0, cameraRotation.y , 0);
         transform.position = new Vector3(player.transform.position.x, player.transform.position.y, player.transform.position.z);
     }
-
 }
