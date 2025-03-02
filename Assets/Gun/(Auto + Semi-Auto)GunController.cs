@@ -2,7 +2,6 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
-using static UnityEngine.InputSystem.LowLevel.InputStateHistory;
 
 public class AutoAndSemiAutoGunController : MonoBehaviour
 {
@@ -12,11 +11,15 @@ public class AutoAndSemiAutoGunController : MonoBehaviour
     [SerializeField] private bool automatic = false;
     [SerializeField] private Vector3 upRecoil;
     [SerializeField] private Vector3 sideRecoil;
+    [SerializeField] private float recoilSmoothTime = 0.1f;
+    [SerializeField] private float recoilResetSpeed = 5f;
 
     private bool isReloading = false;
     private bool canShoot = true;
     private int currentAmmo;
-    private Vector3 originalRotation;
+    private Vector3 accumulatedRecoil = Vector3.zero;
+    private Quaternion initialRotation;
+    private float recoilVelocityX, recoilVelocityY;
 
 
     [Space(20)]
@@ -71,7 +74,7 @@ public class AutoAndSemiAutoGunController : MonoBehaviour
 
     void Start()
     {
-        originalRotation = transform.localEulerAngles;
+        initialRotation = transform.localRotation;
 
         currentAmmo = maxAmmo;
         UpdateAmmoText();
@@ -123,6 +126,10 @@ public class AutoAndSemiAutoGunController : MonoBehaviour
         };
         shoot.canceled += ctx => { StopRecoil(); };
         GunSight();
+
+        float smoothX = Mathf.SmoothDampAngle(transform.localEulerAngles.x, (initialRotation * Quaternion.Euler(-accumulatedRecoil)).eulerAngles.x, ref recoilVelocityX, recoilSmoothTime);
+        float smoothY = Mathf.SmoothDampAngle(transform.localEulerAngles.y, (initialRotation * Quaternion.Euler(-accumulatedRecoil)).eulerAngles.y, ref recoilVelocityY, recoilSmoothTime);
+        transform.localRotation = Quaternion.Euler(smoothX, 0, smoothY);
     }
 
     private void GunSight()
@@ -156,19 +163,6 @@ public class AutoAndSemiAutoGunController : MonoBehaviour
 
         playerCam.fieldOfView = newFOV;
     }
-
-    IEnumerator Reload()
-    {
-        isReloading = true;
-        StopRecoil();
-        // gunAudioSource.PlayOneShot(reloadClip);
-        // gun reload animation
-        yield return new WaitForSeconds(reloadTime);
-        currentAmmo = maxAmmo;
-        isReloading = false;
-        UpdateAmmoText();
-    }
-
     void Shoot()
     {
         // This is important to make semi auto work
@@ -194,6 +188,17 @@ public class AutoAndSemiAutoGunController : MonoBehaviour
             rb.velocity = bulletDirection * bulletSpeed;
         }
     }
+    IEnumerator Reload()
+    {
+        StartCoroutine(ResetRecoil());
+        isReloading = true;
+        // gunAudioSource.PlayOneShot(reloadClip);
+        // gun reload animation
+        yield return new WaitForSeconds(reloadTime);
+        currentAmmo = maxAmmo;
+        isReloading = false;
+        UpdateAmmoText();
+    }
     private Vector3 GetConeSpreadDirection(Vector3 forwardDirection, float maxAngle)
     {
         float maxAngleRad = maxAngle * Mathf.Deg2Rad;
@@ -211,14 +216,29 @@ public class AutoAndSemiAutoGunController : MonoBehaviour
     private void AddRecoil()
     {
         float sideAmount = Random.Range(-sideRecoil.y, sideRecoil.y);
-
-        transform.localEulerAngles += new Vector3(upRecoil.x, sideAmount, 0f);
+        accumulatedRecoil = new Vector3(-upRecoil.x, sideAmount, 0f);
     }
 
     private void StopRecoil()
     {
-        transform.localEulerAngles = originalRotation;
+        StartCoroutine(ResetRecoil());
     }
+
+    private IEnumerator ResetRecoil()
+    {
+        Vector3 startRecoil = accumulatedRecoil;
+        float elapsedTime = 0f;
+        float duration = 1f / recoilResetSpeed;
+
+        while (elapsedTime < duration)
+        {
+            elapsedTime += Time.deltaTime;
+            accumulatedRecoil = Vector3.Lerp(startRecoil, Vector3.zero, elapsedTime / duration);
+            yield return null;
+        }
+        accumulatedRecoil = Vector3.zero;
+    }
+
     void CanShootReset()
     {
         canShoot = true;
