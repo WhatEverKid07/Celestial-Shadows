@@ -15,6 +15,7 @@ public class AutoAndSemiAutoGunController : MonoBehaviour
     [SerializeField] private Vector3 sideRecoil;
     [SerializeField] private float recoilSmoothTime = 0.1f;
     [SerializeField] private float recoilResetSpeed = 5f;
+    [SerializeField] private float recoilIncreaseMultiplier = 1.2f;
 
     private bool isReloading = false;
     private bool canShoot = true;
@@ -22,6 +23,8 @@ public class AutoAndSemiAutoGunController : MonoBehaviour
     private Vector3 accumulatedRecoil = Vector3.zero;
     private Quaternion initialRotation;
     private float recoilVelocityX, recoilVelocityY;
+    private Vector3 currentUpRecoil;
+    private Vector3 currentSideRecoil;
 
 
     [Space(20)]
@@ -73,9 +76,17 @@ public class AutoAndSemiAutoGunController : MonoBehaviour
     private float zoomLevel = 0f;
     private Coroutine fovCoroutine;
     private float originalFOV;
+    private float currentConeAngle;
+
+    private float rotationY = -87f;
+    private float rotationX = 0.0f;
+    public Vector3 currentRecoil = Vector3.zero;
 
     void Start()
     {
+        currentSideRecoil = sideRecoil;
+        currentUpRecoil = upRecoil;
+        currentConeAngle = coneAngle;
         initialRotation = transform.localRotation;
 
         currentAmmo = maxAmmo;
@@ -93,6 +104,7 @@ public class AutoAndSemiAutoGunController : MonoBehaviour
         zoomInOrOut.performed += ctx => ChangeFOV(targetZoomFOV);
         zoomInOrOut.canceled += ctx => ChangeFOV(originalFOV);
     }
+
     private void Awake()
     {
         if (playerCam == null)
@@ -132,6 +144,8 @@ public class AutoAndSemiAutoGunController : MonoBehaviour
         float smoothX = Mathf.SmoothDampAngle(transform.localEulerAngles.x, (initialRotation * Quaternion.Euler(-accumulatedRecoil)).eulerAngles.x, ref recoilVelocityX, recoilSmoothTime);
         float smoothY = Mathf.SmoothDampAngle(transform.localEulerAngles.y, (initialRotation * Quaternion.Euler(-accumulatedRecoil)).eulerAngles.y, ref recoilVelocityY, recoilSmoothTime);
         transform.localRotation = Quaternion.Euler(smoothX, 0, smoothY);
+
+        HandleRecoil();
     }
 
     private void GunSight()
@@ -142,6 +156,7 @@ public class AutoAndSemiAutoGunController : MonoBehaviour
         zoomLevel = Mathf.Lerp(zoomLevel, targetZoom, Time.deltaTime * zoomSpeed);
         //animator.SetFloat("ZoomBlend", zoomLevel);
     }
+
     public void ChangeFOV(float newFOV)
     {
         if (fovCoroutine != null)
@@ -165,6 +180,7 @@ public class AutoAndSemiAutoGunController : MonoBehaviour
 
         playerCam.fieldOfView = newFOV;
     }
+
     void Shoot()
     {
         // This is important to make semi auto work
@@ -188,10 +204,11 @@ public class AutoAndSemiAutoGunController : MonoBehaviour
             muzzleFlash.Play();
             gunAudioSource.PlayOneShot(shootClip);
             Rigidbody rb = projectile.GetComponent<Rigidbody>();
-            Vector3 bulletDirection = GetConeSpreadDirection(bulletSpawn.transform.forward, coneAngle);
+            Vector3 bulletDirection = GetConeSpreadDirection(bulletSpawn.transform.forward, currentConeAngle);
             rb.velocity = bulletDirection * bulletSpeed;
         }
     }
+
     IEnumerator Reload()
     {
         StartCoroutine(ResetRecoil());
@@ -203,6 +220,7 @@ public class AutoAndSemiAutoGunController : MonoBehaviour
         isReloading = false;
         UpdateAmmoText();
     }
+
     private Vector3 GetConeSpreadDirection(Vector3 forwardDirection, float maxAngle)
     {
         float maxAngleRad = maxAngle * Mathf.Deg2Rad;
@@ -217,10 +235,23 @@ public class AutoAndSemiAutoGunController : MonoBehaviour
         Quaternion rotation = Quaternion.LookRotation(forwardDirection);
         return (rotation * randomSpread).normalized;
     }
+
+    private void HandleRecoil()
+    {
+        currentRecoil = Vector3.Lerp(currentRecoil, Vector3.zero, recoilResetSpeed * Time.deltaTime);
+        transform.localEulerAngles = new Vector3(rotationY, rotationX, 0) + currentRecoil;
+    }
+
     private void AddRecoil()
     {
-        float sideAmount = Random.Range(-sideRecoil.y, sideRecoil.y);
-        accumulatedRecoil = new Vector3(-upRecoil.x, sideAmount, 0f);
+        float sideAmount = Random.Range(-currentSideRecoil.y * recoilIncreaseMultiplier, currentSideRecoil.y * recoilIncreaseMultiplier);
+        float upAmount = Random.Range(-currentUpRecoil.x * recoilIncreaseMultiplier, currentUpRecoil.x * recoilIncreaseMultiplier);
+        Vector3 recoil = new Vector3(upAmount, sideAmount, 0f);
+
+        currentSideRecoil *= recoilIncreaseMultiplier;
+        currentUpRecoil *= recoilIncreaseMultiplier;
+        currentRecoil += recoil;
+        currentConeAngle *= 1.1f;
     }
 
     private void StopRecoil()
@@ -230,6 +261,9 @@ public class AutoAndSemiAutoGunController : MonoBehaviour
 
     private IEnumerator ResetRecoil()
     {
+        currentConeAngle = coneAngle;
+        currentUpRecoil = upRecoil;
+        currentSideRecoil = sideRecoil;
         Vector3 startRecoil = accumulatedRecoil;
         float elapsedTime = 0f;
         float duration = 1f / recoilResetSpeed;
@@ -247,6 +281,7 @@ public class AutoAndSemiAutoGunController : MonoBehaviour
     {
         canShoot = true;
     }
+
     void UpdateAmmoText()
     {
         ammoText.text = currentAmmo.ToString() + " / " + maxAmmo.ToString();

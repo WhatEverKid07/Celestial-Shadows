@@ -69,7 +69,8 @@ public class CameraController : MonoBehaviour
     private void AddRecoil()
     {
         float sideAmount = Random.Range(-sideRecoil.y, sideRecoil.y);
-        Vector3 recoil = new Vector3(upRecoil.x, sideAmount, 0f);
+        float upAmount = Random.Range(-upRecoil.x, upRecoil.x);
+        Vector3 recoil = new Vector3(upAmount, sideAmount, 0f);
 
         currentRecoil += recoil;
     }
