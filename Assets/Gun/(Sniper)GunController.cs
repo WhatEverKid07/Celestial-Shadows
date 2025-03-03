@@ -5,21 +5,24 @@ using UnityEngine.UI;
 public class SniperGunController : MonoBehaviour
 {
     [Header("Gun Attributes")]
-    public int maxAmmo = 1;
+    public int maxAmmo = 10;
     private int currentAmmo;
     public float reloadTime = 4f;
     private bool isReloading = false;
-    private bool isReloadingNextBullet = false;
-    //public bool automatic = false;
     private bool canShoot = true;
+    public float shotDelay = 0.2f;
+    public bool isSighted = false;
+    [SerializeField] private float coneAngle;
+
+    private float currentConeAngle;
 
     [Space(20)]
     [Header("Shooting Attributes")]
     public float fireRate = 15f;
+    public float bulletSpeed = 20f;
     private float nextTimeToFire = 0f;
     public GameObject bulletSpawn;
-    public GameObject projectilePrefab; // Projectile prefab to fire
-    public float bulletSpeed = 20f; // Speed of the projectile
+    public GameObject projectilePrefab;
 
     [Space(20)]
     [Header("Animations")]
@@ -46,6 +49,8 @@ public class SniperGunController : MonoBehaviour
 
     void Start()
     {
+        currentConeAngle = coneAngle;
+
         currentAmmo = maxAmmo;
         UpdateAmmoText();
     }
@@ -65,14 +70,7 @@ public class SniperGunController : MonoBehaviour
             StartCoroutine(Reload());
             return;
         }
-        /*
-        if (automatic == true && Input.GetButton("Fire1") && Time.time >= nextTimeToFire)
-        {
-            nextTimeToFire = Time.time + 1f / fireRate;
-            Shoot();
-            //muzzleFlash.Play();
-        }
-        */
+
         if (Input.GetButtonDown("Fire1") && canShoot == true)
         {
             Shoot();
@@ -100,8 +98,7 @@ public class SniperGunController : MonoBehaviour
     {
         isReloading = true;
         //gunAudioSource.PlayOneShot(reloadClip);
-        yield return new WaitForSeconds(reloadTime - 0.25f);
-        yield return new WaitForSeconds(0.25f);
+        yield return new WaitForSeconds(reloadTime);
         currentAmmo = maxAmmo;
         isReloading = false;
         UpdateAmmoText();
@@ -109,7 +106,7 @@ public class SniperGunController : MonoBehaviour
 
     void Shoot()
     {
-        Invoke("CanShootReset", 0.2f);
+        Invoke("CanShootReset", shotDelay);
         if (currentAmmo <= 0)
             return;
 
@@ -120,9 +117,24 @@ public class SniperGunController : MonoBehaviour
         // Spawn and shoot the bullet
         GameObject projectile = Instantiate(projectilePrefab, bulletSpawn.transform.position, bulletSpawn.transform.rotation);
         Rigidbody rb = projectile.GetComponent<Rigidbody>();
-        rb.velocity = bulletSpawn.transform.forward * bulletSpeed;
-        
+        Vector3 bulletDirection = GetConeSpreadDirection(bulletSpawn.transform.forward, currentConeAngle);
+        rb.velocity = bulletDirection * bulletSpeed;
     }
+    private Vector3 GetConeSpreadDirection(Vector3 forwardDirection, float maxAngle)
+    {
+        float maxAngleRad = maxAngle * Mathf.Deg2Rad;
+        float randomAngle = Random.Range(0, 2 * Mathf.PI);
+        float randomRadius = Mathf.Sin(maxAngleRad) * Random.Range(0f, 1f);
+
+        Vector3 randomSpread = new Vector3(
+            randomRadius * Mathf.Cos(randomAngle),
+            randomRadius * Mathf.Sin(randomAngle),
+            Mathf.Cos(maxAngleRad)
+        );
+        Quaternion rotation = Quaternion.LookRotation(forwardDirection);
+        return (rotation * randomSpread).normalized;
+    }
+
     void CanShootReset()
     {
         canShoot = true;

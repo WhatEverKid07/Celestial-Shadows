@@ -9,6 +9,7 @@ public class AutoAndSemiAutoGunController : MonoBehaviour
 
     [Header("Gun Attributes")]
     [SerializeField] private int maxAmmo = 30;
+    [SerializeField] private int shootHowManyBullets = 1;
     [SerializeField] private float reloadTime = 1f;
     [SerializeField] private bool automatic = false;
     [SerializeField] private Vector3 upRecoil;
@@ -16,6 +17,7 @@ public class AutoAndSemiAutoGunController : MonoBehaviour
     [SerializeField] private float recoilSmoothTime = 0.1f;
     [SerializeField] private float recoilResetSpeed = 5f;
     [SerializeField] private float recoilIncreaseMultiplier = 1.2f;
+    [SerializeField] private float semiAutoShotDelay = 0.2f;
 
     private bool isReloading = false;
     private bool canShoot = true;
@@ -127,14 +129,14 @@ public class AutoAndSemiAutoGunController : MonoBehaviour
         if (automatic && shoot.ReadValue<float>() > 0 && Time.time >= nextTimeToFire)
         {
             nextTimeToFire = Time.time + 1f / fireRate;
-            Shoot();
+            Shoot(shootHowManyBullets);
         }
 
         shoot.performed += ctx =>
         {
             if (!automatic && canShoot == true)
             {
-                Shoot();
+                Shoot(shootHowManyBullets);
                 canShoot = false;
             }
         };
@@ -181,14 +183,15 @@ public class AutoAndSemiAutoGunController : MonoBehaviour
         playerCam.fieldOfView = newFOV;
     }
 
-    void Shoot()
+    void Shoot(int numberOfBullets)
     {
         // This is important to make semi auto work
-        Invoke("CanShootReset", 0.2f);
+        Invoke("CanShootReset", semiAutoShotDelay);
 
         if (currentAmmo == 0)
         {
             StartCoroutine(Reload());
+            StopRecoil();
         }
 
         camController.GunController();
@@ -200,12 +203,16 @@ public class AutoAndSemiAutoGunController : MonoBehaviour
             currentAmmo--;
             UpdateAmmoText();
             // Spawn and shoot the bullet
-            GameObject projectile = Instantiate(projectilePrefab, bulletSpawn.transform.position, bulletSpawn.transform.rotation);
+            for (var i = 0; i < numberOfBullets; i++)
+            {
+                Debug.Log("shoot");
+                GameObject projectile = Instantiate(projectilePrefab, bulletSpawn.transform.position, bulletSpawn.transform.rotation);
+                Rigidbody rb = projectile.GetComponent<Rigidbody>();
+                Vector3 bulletDirection = GetConeSpreadDirection(bulletSpawn.transform.forward, currentConeAngle);
+                rb.velocity = bulletDirection * bulletSpeed;
+            }
             muzzleFlash.Play();
             gunAudioSource.PlayOneShot(shootClip);
-            Rigidbody rb = projectile.GetComponent<Rigidbody>();
-            Vector3 bulletDirection = GetConeSpreadDirection(bulletSpawn.transform.forward, currentConeAngle);
-            rb.velocity = bulletDirection * bulletSpeed;
         }
     }
 
