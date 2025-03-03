@@ -14,11 +14,10 @@ public class CharacterMovement : MonoBehaviour
 
     [Header("Properties")]
     [SerializeField] private Rigidbody rb;
-    [SerializeField] private LayerMask ground;
-    [SerializeField] private GameObject groundChecker;
 
     [Header("Camera")]
-    [SerializeField] private GameObject cam;
+    [SerializeField] private Camera fpsCam;
+    [SerializeField] private GameObject camDir;
     [Range(90, 100)]
     [SerializeField] private int fov;
 
@@ -26,9 +25,12 @@ public class CharacterMovement : MonoBehaviour
     private Vector3 moveDir;
     [SerializeField] private float walkSpeed;
     [SerializeField] private float runSpeed;
+    private bool isRunning;
 
-    private Coroutine walkFOVCoroutine;
-    private Coroutine runFOVCoroutine;
+    [Header("Wall Running")]
+    private float wallWalkSpeed;
+    private float wallRunSpeed;
+    public bool isWallRunning { get; private set; }
 
     [Header("Jumping")]
     [Range(1f, 5f)]
@@ -41,6 +43,14 @@ public class CharacterMovement : MonoBehaviour
     [Range(.1f, .25f)]
     [SerializeField] private float coyoteTime;
     private float setCoyoteTime;
+
+    [SerializeField] private LayerMask ground;
+    [SerializeField] private GameObject groundChecker;
+
+    [Header("Wall Jumping")]
+
+    [SerializeField] private LayerMask wall;
+    [SerializeField] private GameObject wallChecker;
 
     [Header("Dashing")]
     [SerializeField] private bool enableDash;
@@ -59,7 +69,13 @@ public class CharacterMovement : MonoBehaviour
 
     private void Start()
     {
-        Camera.main.fieldOfView = fov;
+        fpsCam.fieldOfView = fov;
+
+        wallWalkSpeed = runSpeed;
+        wallRunSpeed = wallWalkSpeed + 2f;
+
+        groundChecker = GameObject.Find("GroundChecker");
+        wallChecker = GameObject.Find("WallChecker");
 
         jump = playerCntrlsAss.FindActionMap("Player Controls").FindAction("Jump");
         run = playerCntrlsAss.FindActionMap("Player Controls").FindAction("Run");
@@ -80,6 +96,40 @@ public class CharacterMovement : MonoBehaviour
     private void Update()
     {
         moveDir = playerCntrls.action.ReadValue<Vector3>();
+
+        if (isRunning || isWallRunning)
+        {
+            ChangeWalkFOV();
+        }
+        else
+        {
+            ChangeRunFOV();
+        }
+
+        //COYOTE TIME
+        if (!IsGrounded())
+        {
+            setCoyoteTime -= Time.deltaTime;
+            if (rb.velocity.y > 0f)
+            {
+                setCoyoteTime = 0f;
+            }
+        }
+        else
+        {
+            setCoyoteTime = coyoteTime;
+        }
+
+        if (IsWalled())
+        {
+            isWallRunning = true;
+        }
+        else
+        {
+            isWallRunning = false;
+        }
+
+        Debug.Log(isWallRunning);
 
         if (!canDash)
         {
@@ -104,27 +154,19 @@ public class CharacterMovement : MonoBehaviour
         }
 
         //COYOTE TIME
-        if (!IsGrounded())
+        if (setCoyoteTime == 0f)
         {
             ApplyGravity();
-            setCoyoteTime -= Time.deltaTime;
-            if (rb.velocity.y > 0f)
-            {
-                setCoyoteTime = 0f;
-            }
         }
-        else
-        {
-            setCoyoteTime = coyoteTime;
-        }
+
     }
 
     //WALK & RUN FUNCTION
     private void Move()
     {
         //CAM DIRECTIONS
-        Vector3 cameraForward = cam.transform.forward;
-        Vector3 cameraRight = cam.transform.right;
+        Vector3 cameraForward = camDir.transform.forward;
+        Vector3 cameraRight = camDir.transform.right;
 
         cameraForward.y = 0f;
         cameraRight.y = 0f;
@@ -136,47 +178,43 @@ public class CharacterMovement : MonoBehaviour
         if (run.ReadValue<float>() > 0)
         {
             rb.velocity = new Vector3(move.x * runSpeed, rb.velocity.y, move.z * runSpeed);
-            walkFOVCoroutine = StartCoroutine(ChangeWalkFOV());
+            isRunning = true;
         }
         else
         {
             rb.velocity = new Vector3(move.x * walkSpeed, rb.velocity.y, move.z * walkSpeed);
-            runFOVCoroutine = StartCoroutine(ChangeRunFOV());
+            isRunning = false;
         }
     }
 
-    private IEnumerator ChangeWalkFOV()
+    private void ChangeWalkFOV()
     {
         float runFOV = fov + 10;
-        float velocity = .1f;
-        float startRunTime = 10f;
-        float elaspedTime = 0;
 
-        while (elaspedTime < startRunTime)
+        if (fpsCam.fieldOfView < runFOV)
         {
-            float smoothFactor = Mathf.SmoothDamp(fov, runFOV, ref velocity, elaspedTime / startRunTime);
-            Camera.main.fieldOfView = smoothFactor;
-            elaspedTime += Time.deltaTime;
+            fpsCam.fieldOfView += .1f;
+        }
+        else
+        {
+            fpsCam.fieldOfView = runFOV;
         }
 
-        yield return null;
+
     }
 
-    private IEnumerator ChangeRunFOV()
+    private void ChangeRunFOV()
     {
-        float runFOV = fov - 10;
-        float velocity = .1f;
-        float startRunTime = 10f;
-        float elaspedTime = 0;
+        float walkFOV = fov - 10;
 
-        while (elaspedTime < startRunTime)
+        if (fpsCam.fieldOfView > walkFOV)
         {
-            float smoothFactor = Mathf.SmoothDamp(runFOV, fov, ref velocity, elaspedTime / startRunTime);
-            Camera.main.fieldOfView = smoothFactor;
-            elaspedTime += Time.deltaTime;
+            fpsCam.fieldOfView -= .1f;
         }
-
-        yield return null;
+        else
+        {
+            fpsCam.fieldOfView = walkFOV;
+        }
     }
 
     //JUMP FUNCTION
@@ -194,6 +232,11 @@ public class CharacterMovement : MonoBehaviour
         {
             isJumping = false;
         }
+    }
+
+    private void WallJump()
+    {
+
     }
 
     private void ApplyGravity()
@@ -221,8 +264,8 @@ public class CharacterMovement : MonoBehaviour
     //DASH IENUMERATOR
     private IEnumerator PerformDash()
     {
-        Vector3 cameraForward = cam.transform.forward;
-        Vector3 cameraRight = cam.transform.right;
+        Vector3 cameraForward = camDir.transform.forward;
+        Vector3 cameraRight = camDir.transform.right;
 
         cameraForward.y = 0f;
         cameraRight.y = 0f;
@@ -281,6 +324,11 @@ public class CharacterMovement : MonoBehaviour
     private bool IsGrounded()
     {
         return Physics.CheckSphere(groundChecker.transform.position, .2f, ground);
+    }
+
+    private bool IsWalled()
+    {
+        return Physics.CheckSphere(wallChecker.transform.position, 1f, wall);
     }
 
 }
