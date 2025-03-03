@@ -181,6 +181,7 @@ MonoBehaviour:
     m_Bits: 64
   groundChecker: {fileID: 899487249}
   cam: {fileID: 1941573217}
+  fov: 90
   walkSpeed: 7
   runSpeed: 10
   jumpPower: 3
