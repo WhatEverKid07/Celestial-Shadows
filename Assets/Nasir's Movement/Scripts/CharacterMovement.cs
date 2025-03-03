@@ -19,11 +19,16 @@ public class CharacterMovement : MonoBehaviour
 
     [Header("Camera")]
     [SerializeField] private GameObject cam;
+    [Range(90, 100)]
+    [SerializeField] private int fov;
 
     [Header("Walking & Running")]
     private Vector3 moveDir;
     [SerializeField] private float walkSpeed;
     [SerializeField] private float runSpeed;
+
+    private Coroutine walkFOVCoroutine;
+    private Coroutine runFOVCoroutine;
 
     [Header("Jumping")]
     [Range(1f, 5f)]
@@ -54,6 +59,8 @@ public class CharacterMovement : MonoBehaviour
 
     private void Start()
     {
+        Camera.main.fieldOfView = fov;
+
         jump = playerCntrlsAss.FindActionMap("Player Controls").FindAction("Jump");
         run = playerCntrlsAss.FindActionMap("Player Controls").FindAction("Run");
         dash = playerCntrlsAss.FindActionMap("Player Controls").FindAction("Dash");
@@ -129,11 +136,47 @@ public class CharacterMovement : MonoBehaviour
         if (run.ReadValue<float>() > 0)
         {
             rb.velocity = new Vector3(move.x * runSpeed, rb.velocity.y, move.z * runSpeed);
+            walkFOVCoroutine = StartCoroutine(ChangeWalkFOV());
         }
         else
         {
             rb.velocity = new Vector3(move.x * walkSpeed, rb.velocity.y, move.z * walkSpeed);
+            runFOVCoroutine = StartCoroutine(ChangeRunFOV());
         }
+    }
+
+    private IEnumerator ChangeWalkFOV()
+    {
+        float runFOV = fov + 10;
+        float velocity = .1f;
+        float startRunTime = 10f;
+        float elaspedTime = 0;
+
+        while (elaspedTime < startRunTime)
+        {
+            float smoothFactor = Mathf.SmoothDamp(fov, runFOV, ref velocity, elaspedTime / startRunTime);
+            Camera.main.fieldOfView = smoothFactor;
+            elaspedTime += Time.deltaTime;
+        }
+
+        yield return null;
+    }
+
+    private IEnumerator ChangeRunFOV()
+    {
+        float runFOV = fov - 10;
+        float velocity = .1f;
+        float startRunTime = 10f;
+        float elaspedTime = 0;
+
+        while (elaspedTime < startRunTime)
+        {
+            float smoothFactor = Mathf.SmoothDamp(runFOV, fov, ref velocity, elaspedTime / startRunTime);
+            Camera.main.fieldOfView = smoothFactor;
+            elaspedTime += Time.deltaTime;
+        }
+
+        yield return null;
     }
 
     //JUMP FUNCTION
