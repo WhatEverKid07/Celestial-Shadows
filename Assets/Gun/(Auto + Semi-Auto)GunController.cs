@@ -5,6 +5,8 @@ using UnityEngine.UI;
 
 public class AutoAndSemiAutoGunController : MonoBehaviour
 {
+    [SerializeField] private CameraController camController;
+
     [Header("Gun Attributes")]
     [SerializeField] private int maxAmmo = 30;
     [SerializeField] private float reloadTime = 1f;
@@ -172,6 +174,8 @@ public class AutoAndSemiAutoGunController : MonoBehaviour
         {
             StartCoroutine(Reload());
         }
+
+        camController.GunController();
 
         if (currentAmmo >= 1)
         {

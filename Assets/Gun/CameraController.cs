@@ -1,13 +1,16 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class CameraController : MonoBehaviour
 {
     [Header("Camera Movement Settings")]
     [SerializeField] private float speed = 10.0f;
     [SerializeField] private float sensitivity = 5.0f;
+    [SerializeField] private InputActionAsset gunControls;
 
     private float rotationY = 0.0f;
     private float rotationX = 0.0f;
+    private InputAction shoot;
 
     [Header("Recoil Settings")]
     [SerializeField] private Vector3 upRecoil;
@@ -22,6 +25,8 @@ public class CameraController : MonoBehaviour
     {
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
+        shoot = gunControls.FindActionMap("Gun Controls").FindAction("Shoot");
+        shoot.Enable();
     }
 
     void Update()
@@ -45,13 +50,17 @@ public class CameraController : MonoBehaviour
         rotationY = Mathf.Clamp(rotationY, -90, 90);
     }
 
-    private void HandleRecoil()
+    public void GunController()
     {
-        if (Input.GetKey(KeyCode.Mouse0) && Time.time >= nextRecoilTime)
+        if (Time.time >= nextRecoilTime)
         {
             AddRecoil();
             nextRecoilTime = Time.time + recoilCooldown;
         }
+    }
+
+    private void HandleRecoil()
+    {
         currentRecoil = Vector3.Lerp(currentRecoil, Vector3.zero, recoilRecoverySpeed * Time.deltaTime);
 
         transform.localEulerAngles = new Vector3(rotationY, rotationX, 0) + currentRecoil;

@@ -165,11 +165,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: da2ac12809156bc4f9afc6ff3c393194, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  camController: {fileID: 1061397736}
   maxAmmo: 30
   reloadTime: 1
   automatic: 1
-  upRecoil: {x: -1, y: 0, z: 0}
-  sideRecoil: {x: 0, y: 1, z: 0}
+  upRecoil: {x: -2, y: 0, z: 0}
+  sideRecoil: {x: 0, y: 2, z: 0}
   recoilSmoothTime: 0.1
   recoilResetSpeed: 5
   bulletSpawn: {fileID: 26827960}
@@ -459,8 +460,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 10
   sensitivity: 5
-  upRecoil: {x: -1.5, y: 0, z: 0}
-  sideRecoil: {x: 0, y: 1, z: 0}
+  gunControls: {fileID: -944628639613478452, guid: 9269ee16b3aa1f0448f0710a2c982dcc, type: 3}
+  upRecoil: {x: -2, y: 0, z: 0}
+  sideRecoil: {x: 0, y: 2, z: 0}
   recoilCooldown: 0.1
   recoilRecoverySpeed: 10
 --- !u!1 &1262118333
