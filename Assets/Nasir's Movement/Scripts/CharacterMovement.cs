@@ -13,7 +13,7 @@ public class CharacterMovement : MonoBehaviour
     private InputAction dash;
 
     [Header("Properties")]
-    [SerializeField] private GameObject player;
+    [SerializeField] private Transform orientation;
     [SerializeField] private Rigidbody rb;
 
     [Header("Camera")]
@@ -129,6 +129,15 @@ public class CharacterMovement : MonoBehaviour
 
         CheckForWall();
 
+        if (isRightWalled || isLeftWalled && !IsGrounded())
+        {
+            isWallRunning = true;
+        }
+        else
+        {
+            isWallRunning = false;
+        }
+
         if (!canDash)
         {
             setDashTime = Mathf.Max(0f, setDashTime - Time.deltaTime);
@@ -155,6 +164,15 @@ public class CharacterMovement : MonoBehaviour
         if (setCoyoteTime == 0f)
         {
             ApplyGravity();
+        }
+
+        if (isWallRunning)
+        {
+            WallRunningMove();
+        }
+        else
+        {
+            isWallRunning = false;
         }
 
     }
@@ -197,8 +215,6 @@ public class CharacterMovement : MonoBehaviour
         {
             fpsCam.fieldOfView = runFOV;
         }
-
-
     }
 
     private void ChangeRunFOV()
@@ -326,12 +342,31 @@ public class CharacterMovement : MonoBehaviour
 
     public void CheckForWall()
     {
-        isLeftWalled = Physics.Raycast(transform.position, camDir.right, out leftHit, wallCheckDist);
-        isRightWalled = Physics.Raycast(transform.position, -camDir.right, out rightHit, wallCheckDist);
+        Vector3 lft = transform.TransformDirection(Vector3.left);
+        Vector3 rght = transform.TransformDirection(Vector3.right);
+
+        isLeftWalled = Physics.Raycast(transform.position, lft, out leftHit, wallCheckDist);
+        isRightWalled = Physics.Raycast(transform.position, rght, out rightHit, wallCheckDist);
+
+        Debug.DrawLine(transform.position, transform.position + orientation.right * wallCheckDist, Color.green);
+        Debug.DrawLine(transform.position, transform.position + -orientation.right * wallCheckDist, Color.red);
     }
 
     private void WallRunningMove()
     {
+        //CAM DIRECTIONS
+        Vector3 cameraForward = camDir.forward;
+        Vector3 cameraRight = camDir.right;
+
+        cameraForward.y = 0f;
+        cameraRight.y = 0f;
+        cameraForward.Normalize();
+        cameraRight.Normalize();
+
+        Vector3 move = cameraForward * moveDir.z + cameraRight * moveDir.x;
+
+        rb.useGravity = false;
+        rb.velocity = new Vector3(move.x * rb.velocity.x, 0, move.z * rb.velocity.z);
         Vector3 wallNormal = isLeftWalled ? leftHit.normal : rightHit.normal;
         Vector3 wallForward = Vector3.Cross(wallNormal, transform.up);
 
