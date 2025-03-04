@@ -17,7 +17,7 @@ public class GrenadeThrower : MonoBehaviour
 
     void Update()
     {
-        while (currentThrowDelay >= 0)
+        if (currentThrowDelay >= 0)
         {
             currentThrowDelay -= Time.deltaTime;
         }
