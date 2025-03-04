@@ -159,7 +159,6 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 899487250}
-  - {fileID: 2035357319}
   m_Father: {fileID: 1351133893}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &20194406
@@ -178,15 +177,17 @@ MonoBehaviour:
   playerCntrlsAss: {fileID: -944628639613478452, guid: 6126e80c064e030429ec21c4ef4ffc4d, type: 3}
   orientation: {fileID: 20194405}
   rb: {fileID: 20194407}
-  fpsCam: {fileID: 1941573219}
   camDir: {fileID: 1941573220}
   fov: 90
+  offsetDistance: 0.5
   walkSpeed: 7
   runSpeed: 10
-  wallRunForce: 200
-  wallCheckDist: 1
-  jumpPower: 3
-  fallMulti: 2.5
+  wallRunForce: 500
+  wallRunForceMulti: 3
+  wallRunTime: 2
+  wallCheckDist: 0.8
+  jumpPower: 7
+  fallMulti: 3
   coyoteTime: 0.2
   ground:
     serializedVersion: 2
@@ -195,7 +196,6 @@ MonoBehaviour:
   wall:
     serializedVersion: 2
     m_Bits: 128
-  wallChecker: {fileID: 2035357318}
   enableDash: 1
   dashPower: 3
   DashTime: 1
@@ -224,7 +224,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 1
-  m_Constraints: 80
+  m_Constraints: 112
   m_CollisionDetection: 1
 --- !u!136 &20194408
 CapsuleCollider:
@@ -884,39 +884,11 @@ MonoBehaviour:
   player: {fileID: 20194404}
   axisX: {fileID: 446297968139386490, guid: 6126e80c064e030429ec21c4ef4ffc4d, type: 3}
   axisY: {fileID: -2871428396282351197, guid: 6126e80c064e030429ec21c4ef4ffc4d, type: 3}
+  fpsCam: {fileID: 1941573219}
+  fov: 90
+  rotationSpeed: 3
   sensX: 15
   sensY: 15
---- !u!1 &2035357318
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 2035357319}
-  m_Layer: 0
-  m_Name: WallChecker
-  m_TagString: Untagged
-  m_Icon: {fileID: 4422084297763085224, guid: 0000000000000000d000000000000000, type: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &2035357319
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2035357318}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 20194405}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2085935761
 GameObject:
   m_ObjectHideFlags: 0

@@ -16,6 +16,13 @@ public class CameraMovement : MonoBehaviour
     [SerializeField] private InputActionReference axisX;
     [SerializeField] private InputActionReference axisY;
 
+    [Header("Camera")]
+    [SerializeField] private Camera fpsCam;
+    [Range(90, 100)]
+    [SerializeField] private int fov;
+    [SerializeField] private float rotationSpeed;
+
+    [Header("Sensitivity")]
     private float mouseX;
     private float mouseY;
 
@@ -25,10 +32,10 @@ public class CameraMovement : MonoBehaviour
     [SerializeField] private float sensY;
 
     private float currentRotationX = 0f;
-    private float currentRotationZ = 0f;
 
     private void Start()
     {
+        fpsCam.fieldOfView = fov;
         characterMove = FindFirstObjectByType<CharacterMovement>();
 
         Cursor.lockState = CursorLockMode.Locked;
@@ -37,20 +44,23 @@ public class CameraMovement : MonoBehaviour
 
     private void Update()
     {
+        transform.position = new Vector3(player.transform.position.x, player.transform.position.y, player.transform.position.z);
 
         mouseX = axisX.action.ReadValue<float>();
         mouseY = axisY.action.ReadValue<float>();
 
-        if (characterMove.isLeftWalled || characterMove.isRightWalled && characterMove.isGrounded)
+
+            ChangeCameraWalkAngle();
+
+
+        if (characterMove.isRunning || characterMove.isWallRunning)
         {
-            ChangeCameraWallAngle();
+            ChangeWalkFOV();
         }
         else
         {
-            ChangeCameraWalkAngle();
+            ChangeRunFOV();
         }
-
-        transform.position = new Vector3(player.transform.position.x, player.transform.position.y, player.transform.position.z);
     }
 
     private void ChangeCameraWalkAngle()
@@ -65,25 +75,31 @@ public class CameraMovement : MonoBehaviour
         player.transform.rotation = Quaternion.Euler(0, transform.rotation.eulerAngles.y, 0);
     }
 
-    private void ChangeCameraWallAngle()
+    private void ChangeWalkFOV()
     {
-        float rotationX = mouseX * sensX / 100;
-        float rotationZ = mouseY * sensY / 100;
+        float runFOV = fov + 10;
 
-        currentRotationX -= rotationZ;
-        currentRotationX = Mathf.Clamp(currentRotationX, -80f, 80f);
-
-        currentRotationZ += rotationX;
-        if (characterMove.isLeftWalled)
+        if (fpsCam.fieldOfView < runFOV)
         {
-            currentRotationZ = Mathf.Clamp(currentRotationZ, -45f, -70f);
+            fpsCam.fieldOfView += .1f;
         }
         else
         {
-            currentRotationZ = Mathf.Clamp(currentRotationZ, 45f, 70f);
+            fpsCam.fieldOfView = runFOV;
         }
+    }
 
-        transform.rotation = Quaternion.Euler(currentRotationX, 0, currentRotationZ + rotationX);
-        player.transform.rotation = Quaternion.Euler(0, transform.rotation.eulerAngles.y, currentRotationZ);
+    private void ChangeRunFOV()
+    {
+        float walkFOV = fov - 10;
+
+        if (fpsCam.fieldOfView > walkFOV)
+        {
+            fpsCam.fieldOfView -= .1f;
+        }
+        else
+        {
+            fpsCam.fieldOfView = walkFOV;
+        }
     }
 }

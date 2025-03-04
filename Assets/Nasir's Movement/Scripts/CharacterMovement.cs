@@ -2,6 +2,7 @@ using UnityEngine.InputSystem;
 using UnityEngine;
 using System.Collections;
 using System;
+using System.Runtime.CompilerServices;
 
 public class CharacterMovement : MonoBehaviour
 {
@@ -17,22 +18,25 @@ public class CharacterMovement : MonoBehaviour
     [SerializeField] private Rigidbody rb;
 
     [Header("Camera")]
-    [SerializeField] private Camera fpsCam;
     [SerializeField] private Transform camDir;
-    [Range(90, 100)]
+    [Range(60, 100)]
     [SerializeField] private int fov;
+    [SerializeField] private float offsetDistance;
 
     [Header("Walking & Running")]
     private Vector3 moveDir;
     [SerializeField] private float walkSpeed;
     [SerializeField] private float runSpeed;
-    [SerializeField] private float wallRunForce;
-    private bool isRunning;
+    public bool isRunning { get; private set; }
     public bool isGrounded { get; private set; }
 
     [Header("Wall Running")]
-    private float wallWalkSpeed;
-    private float wallRunSpeed;
+    [SerializeField] private float wallRunForce;
+    [SerializeField] private float wallRunForceMulti;
+    [SerializeField] private float wallRunTime;
+    private float setWallRunTime;
+
+    public bool facingForward { get; private set; }
 
     [SerializeField] private float wallCheckDist;
     private RaycastHit leftHit;
@@ -43,7 +47,7 @@ public class CharacterMovement : MonoBehaviour
     public bool isWallRunning { get; private set; }
 
     [Header("Jumping")]
-    [Range(1f, 5f)]
+    [Range(5f, 10f)]
     [SerializeField] private float jumpPower;
     private bool isJumping = false;
 
@@ -60,7 +64,6 @@ public class CharacterMovement : MonoBehaviour
     [Header("Wall Jumping")]
 
     [SerializeField] private LayerMask wall;
-    [SerializeField] private GameObject wallChecker;
 
     [Header("Dashing")]
     [SerializeField] private bool enableDash;
@@ -79,13 +82,7 @@ public class CharacterMovement : MonoBehaviour
 
     private void Start()
     {
-        fpsCam.fieldOfView = fov;
-
-        wallWalkSpeed = runSpeed;
-        wallRunSpeed = wallWalkSpeed + 2f;
-
         groundChecker = GameObject.Find("GroundChecker");
-        wallChecker = GameObject.Find("WallChecker");
 
         jump = playerCntrlsAss.FindActionMap("Player Controls").FindAction("Jump");
         run = playerCntrlsAss.FindActionMap("Player Controls").FindAction("Run");
@@ -101,15 +98,6 @@ public class CharacterMovement : MonoBehaviour
     private void Update()
     {
         moveDir = playerCntrls.action.ReadValue<Vector3>();
-
-        if (isRunning || isWallRunning)
-        {
-            ChangeWalkFOV();
-        }
-        else
-        {
-            ChangeRunFOV();
-        }
 
         //COYOTE TIME
         if (!IsGrounded())
@@ -129,7 +117,7 @@ public class CharacterMovement : MonoBehaviour
 
         CheckForWall();
 
-        if (isRightWalled || isLeftWalled && !IsGrounded())
+        if ((isRightWalled || isLeftWalled) && !IsGrounded() && GroundedDistanceForWall())
         {
             isWallRunning = true;
         }
@@ -147,6 +135,27 @@ public class CharacterMovement : MonoBehaviour
             }
         }
 
+        if (isWallRunning)
+        {
+            if (setWallRunTime > 0f)
+            {
+                setWallRunTime -= Time.deltaTime;
+            }
+        }
+        else
+        {
+            if (setWallRunTime < wallRunTime)
+            {
+                setWallRunTime += .5f;
+                if (setWallRunTime > wallRunTime)
+                {
+                    setWallRunTime = wallRunTime;
+                }
+            }
+        }
+
+
+        //Debug.Log(setWallRunTime);
     }
     
     private void FixedUpdate()
@@ -158,6 +167,7 @@ public class CharacterMovement : MonoBehaviour
         if (jump.ReadValue<float>() > 0f)
         {
             Jump();
+            //WallJump();
         }
 
         //COYOTE TIME
@@ -166,13 +176,13 @@ public class CharacterMovement : MonoBehaviour
             ApplyGravity();
         }
 
-        if (isWallRunning)
+        if (isWallRunning && setWallRunTime > 0f)
         {
             WallRunningMove();
         }
         else
         {
-            isWallRunning = false;
+            StopWallRunning();
         }
 
     }
@@ -202,33 +212,46 @@ public class CharacterMovement : MonoBehaviour
             isRunning = false;
         }
     }
-
-    private void ChangeWalkFOV()
+    private void WallRunningMove()
     {
-        float runFOV = fov + 10;
+        //CAM DIRECTIONS
+        Vector3 cameraForward = camDir.forward;
+        Vector3 cameraRight = camDir.right;
 
-        if (fpsCam.fieldOfView < runFOV)
+        cameraForward.y = 0f;
+        cameraRight.y = 0f;
+        cameraForward.Normalize();
+        cameraRight.Normalize();
+
+        Vector3 move = cameraForward * moveDir.z + cameraRight * moveDir.x;
+
+        rb.useGravity = false;
+        rb.velocity = new Vector3(move.x * rb.velocity.x, 0, move.z * rb.velocity.z);
+
+        Vector3 wallNormal = isLeftWalled ? leftHit.normal : rightHit.normal;
+
+        Vector3 wallBackward = Vector3.Cross(wallNormal, transform.up);
+
+        if ((transform.forward - wallBackward).magnitude  > (transform.forward - -wallBackward).magnitude)
         {
-            fpsCam.fieldOfView += .1f;
+            wallBackward = -wallBackward;
         }
-        else
+
+        rb.AddForce(wallBackward * wallRunForce, ForceMode.Force);
+
+        if (!(isLeftWalled && moveDir.x > 0f) || !(isRightWalled && -moveDir.x > 0))
         {
-            fpsCam.fieldOfView = runFOV;
+            rb.AddForce(-wallNormal * 100, ForceMode.Force);
         }
+
+        rb.velocity = new Vector3(move.x * rb.velocity.x, rb.velocity.y, move.z * rb.velocity.z);
+
     }
 
-    private void ChangeRunFOV()
+    private void StopWallRunning()
     {
-        float walkFOV = fov - 10;
-
-        if (fpsCam.fieldOfView > walkFOV)
-        {
-            fpsCam.fieldOfView -= .1f;
-        }
-        else
-        {
-            fpsCam.fieldOfView = walkFOV;
-        }
+        Move();
+        rb.useGravity = true;
     }
 
     //JUMP FUNCTION
@@ -239,6 +262,7 @@ public class CharacterMovement : MonoBehaviour
         if (setCoyoteTime > 0f && !isJumping)
         {
             isJumping = true;
+            rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
             rb.AddForce(jumpForce, ForceMode.VelocityChange);
 
         }
@@ -250,12 +274,24 @@ public class CharacterMovement : MonoBehaviour
 
     private void WallJump()
     {
-
+        if (isLeftWalled || isRightWalled)
+        {
+            Vector3 wallJumpDir = Vector3.forward + (transform.forward * 0.5f); 
+            rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
+            rb.AddForce(wallJumpDir * jumpPower, ForceMode.VelocityChange); 
+        }
     }
 
     private void ApplyGravity()
     {
-        rb.velocity += Vector3.up * Physics.gravity.y * (fallMulti - 1) * Time.deltaTime;
+        if (rb.velocity.y < 0f)
+        {
+            rb.velocity += Vector3.up * Physics.gravity.y * (fallMulti - 1) * Time.deltaTime;
+        }
+        else
+        {
+            rb.velocity += Vector3.down * Physics.gravity.y * (1 - fallMulti) * Time.deltaTime;
+        }
     }
 
     //DASH FUNCTION
@@ -340,37 +376,30 @@ public class CharacterMovement : MonoBehaviour
         return Physics.CheckSphere(groundChecker.transform.position, .2f, ground);
     }
 
+    private bool GroundedDistanceForWall()
+    {
+        return !Physics.Raycast(transform.position, Vector3.down, .5f, ground);
+    }
+
     public void CheckForWall()
     {
-        Vector3 lft = transform.TransformDirection(Vector3.left);
-        Vector3 rght = transform.TransformDirection(Vector3.right);
+        Vector3 lft = transform.TransformDirection(-transform.right);
+        Vector3 rght = transform.TransformDirection(transform.right);
 
         isLeftWalled = Physics.Raycast(transform.position, lft, out leftHit, wallCheckDist);
         isRightWalled = Physics.Raycast(transform.position, rght, out rightHit, wallCheckDist);
 
         Debug.DrawLine(transform.position, transform.position + orientation.right * wallCheckDist, Color.green);
         Debug.DrawLine(transform.position, transform.position + -orientation.right * wallCheckDist, Color.red);
+
+        if (isLeftWalled)
+        {
+            Debug.DrawRay(leftHit.point, leftHit.normal * 5, Color.green);
+        }
+
+        if (isRightWalled)
+        {
+            Debug.DrawRay(rightHit.point, rightHit.normal * 5, Color.red);
+        }
     }
-
-    private void WallRunningMove()
-    {
-        //CAM DIRECTIONS
-        Vector3 cameraForward = camDir.forward;
-        Vector3 cameraRight = camDir.right;
-
-        cameraForward.y = 0f;
-        cameraRight.y = 0f;
-        cameraForward.Normalize();
-        cameraRight.Normalize();
-
-        Vector3 move = cameraForward * moveDir.z + cameraRight * moveDir.x;
-
-        rb.useGravity = false;
-        rb.velocity = new Vector3(move.x * rb.velocity.x, 0, move.z * rb.velocity.z);
-        Vector3 wallNormal = isLeftWalled ? leftHit.normal : rightHit.normal;
-        Vector3 wallForward = Vector3.Cross(wallNormal, transform.up);
-
-        rb.AddForce(wallForward * wallRunForce, ForceMode.Force);
-    }
-
 }
