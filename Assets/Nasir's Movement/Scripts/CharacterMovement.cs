@@ -13,6 +13,7 @@ public class CharacterMovement : MonoBehaviour
     private InputAction dash;
 
     [Header("Properties")]
+    [SerializeField] private GameObject player;
     [SerializeField] private Rigidbody rb;
 
     [Header("Camera")]
@@ -30,6 +31,8 @@ public class CharacterMovement : MonoBehaviour
     [Header("Wall Running")]
     private float wallWalkSpeed;
     private float wallRunSpeed;
+    public bool isLeftWalled { get; private set; }
+    public bool isRightWalled { get; private set; }
     public bool isWallRunning { get; private set; }
 
     [Header("Jumping")]
@@ -120,16 +123,23 @@ public class CharacterMovement : MonoBehaviour
             setCoyoteTime = coyoteTime;
         }
 
-        if (IsWalled())
+        /*
+        if ()
         {
-            isWallRunning = true;
+            isLeftWalled = true;
+            isRightWalled = false;
+        }
+        else if ()
+        {
+            isRightWalled = true;
+            isLeftWalled = false;
         }
         else
         {
-            isWallRunning = false;
+            isLeftWalled = false;
+            isRightWalled = false;
         }
-
-        Debug.Log(isWallRunning);
+        */
 
         if (!canDash)
         {
@@ -324,11 +334,6 @@ public class CharacterMovement : MonoBehaviour
     private bool IsGrounded()
     {
         return Physics.CheckSphere(groundChecker.transform.position, .2f, ground);
-    }
-
-    private bool IsWalled()
-    {
-        return Physics.CheckSphere(wallChecker.transform.position, 1f, wall);
     }
 
 }

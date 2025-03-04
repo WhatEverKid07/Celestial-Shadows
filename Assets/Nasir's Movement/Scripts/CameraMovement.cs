@@ -4,7 +4,7 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class CameraPosition : MonoBehaviour
+public class CameraMovement : MonoBehaviour
 {
     [Header("Scripts")]
     [SerializeField] private CharacterMovement characterMove;
@@ -25,6 +25,7 @@ public class CameraPosition : MonoBehaviour
     [SerializeField] private float sensY;
 
     private float currentRotationX = 0f;
+    private float currentRotationZ = 0f;
 
     private void Start()
     {
@@ -40,7 +41,7 @@ public class CameraPosition : MonoBehaviour
         mouseX = axisX.action.ReadValue<float>();
         mouseY = axisY.action.ReadValue<float>();
 
-        if (characterMove.isWallRunning)
+        if (characterMove.isRightWalled || characterMove.isLeftWalled)
         {
             ChangeCameraWallAngle();
         }
@@ -72,5 +73,21 @@ public class CameraPosition : MonoBehaviour
 
         currentRotationX -= rotationZ;
         currentRotationX = Mathf.Clamp(currentRotationX, -80f, 80f);
+
+        currentRotationZ += rotationX;
+        if (characterMove.isLeftWalled)
+        {
+            currentRotationZ = Mathf.Clamp(currentRotationZ, -45f, -70f);
+        }
+        else
+        {
+            currentRotationZ = Mathf.Clamp(currentRotationZ, 45f, 70f);
+        }
+
+        float targetRotationY = characterMove.isLeftWalled ? -180: 0;
+        float currentRotationY = targetRotationY;
+
+        transform.rotation = Quaternion.Euler(currentRotationX, currentRotationY, currentRotationZ + rotationX);
+        player.transform.rotation = Quaternion.Euler(0, currentRotationY, currentRotationZ);
     }
 }
