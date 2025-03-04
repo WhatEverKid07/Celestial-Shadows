@@ -123,6 +123,29 @@ public class CharacterMovement : MonoBehaviour
             setCoyoteTime = coyoteTime;
         }
 
+        if (IsWalled())
+        {
+            RaycastHit leftHit;
+            RaycastHit rightHit;
+
+            if (Physics.Raycast(transform.position, Vector3.left, out leftHit, 5f, wall))
+            {
+                isLeftWalled = true;
+                isRightWalled = false;
+            }
+            else if (Physics.Raycast(transform.position, Vector3.right, out rightHit, 5f, wall))
+            {
+                isRightWalled = true;
+                isLeftWalled = false;
+            }
+            else
+            {
+                isLeftWalled = false;
+                isRightWalled = false;
+            }
+            
+        }
+
         /*
         if ()
         {
@@ -334,6 +357,11 @@ public class CharacterMovement : MonoBehaviour
     private bool IsGrounded()
     {
         return Physics.CheckSphere(groundChecker.transform.position, .2f, ground);
+    }
+
+    public bool IsWalled()
+    {
+        return Physics.CheckSphere(wallChecker.transform.position, .5f, wall);
     }
 
 }

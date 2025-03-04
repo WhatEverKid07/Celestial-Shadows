@@ -41,7 +41,7 @@ public class CameraMovement : MonoBehaviour
         mouseX = axisX.action.ReadValue<float>();
         mouseY = axisY.action.ReadValue<float>();
 
-        if (characterMove.isRightWalled || characterMove.isLeftWalled)
+        if (characterMove.IsWalled())
         {
             ChangeCameraWallAngle();
         }
