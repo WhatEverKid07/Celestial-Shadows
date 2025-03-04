@@ -1,28 +1,18 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
-public class GrenadeThrower : MonoBehaviour
+public class Grenade : MonoBehaviour
 {
-    public GameObject grenadePrefab;
-    public Transform throwPoint;
-    public float throwForce = 10f;
-
-    void Update()
+    [SerializeField] float grenadeFuse = 5;
+    public void StartFuse()
     {
-        if (Input.GetKeyDown(KeyCode.G))
-        {
-            ThrowGrenade();
-        }
+        StartCoroutine(Fuse(grenadeFuse));
     }
-
-    void ThrowGrenade()
+    IEnumerator Fuse(float fuseLength)
     {
-        GameObject grenade = Instantiate(grenadePrefab, throwPoint.position, throwPoint.rotation);
-        Rigidbody rb = grenade.GetComponent<Rigidbody>();
-        if (rb != null)
-        {
-            Vector3 throwDirection = (throwPoint.forward * throwForce) + (Vector3.up * (throwForce / 2));
-            rb.AddForce((throwPoint.forward * throwForce) + (Vector3.up * (throwForce / 2)), ForceMode.Impulse);
-            rb.AddTorque(Random.insideUnitSphere * 5f, ForceMode.Impulse);
-        }
+        Debug.Log("Works");
+        yield return new WaitForSeconds(fuseLength);
+        Destroy(gameObject);
     }
 }

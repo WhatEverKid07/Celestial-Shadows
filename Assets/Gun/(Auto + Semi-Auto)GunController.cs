@@ -18,6 +18,7 @@ public class AutoAndSemiAutoGunController : MonoBehaviour
     [SerializeField] private float recoilResetSpeed = 5f;
     [SerializeField] private float recoilIncreaseMultiplier = 1.2f;
     [SerializeField] private float semiAutoShotDelay = 0.2f;
+    [SerializeField] private float coneAngle;
 
     private bool isReloading = false;
     private bool canShoot = true;
@@ -69,7 +70,6 @@ public class AutoAndSemiAutoGunController : MonoBehaviour
     [SerializeField] private InputActionAsset gunControls;
     [SerializeField] private float targetZoomFOV = 40;
     [SerializeField] private float transitionDuration = 1f;
-    [SerializeField] private float coneAngle;
 
     private InputAction shoot;
     private InputAction reload;
@@ -82,7 +82,7 @@ public class AutoAndSemiAutoGunController : MonoBehaviour
 
     private float rotationY = -87f;
     private float rotationX = 0.0f;
-    public Vector3 currentRecoil = Vector3.zero;
+    private Vector3 currentRecoil = Vector3.zero;
 
     void Start()
     {
@@ -125,6 +125,12 @@ public class AutoAndSemiAutoGunController : MonoBehaviour
     {
         if (isReloading)
             return;
+
+        if (currentAmmo == 0)
+        {
+            StartCoroutine(Reload());
+            StopRecoil();
+        }
 
         if (automatic && shoot.ReadValue<float>() > 0 && Time.time >= nextTimeToFire)
         {
@@ -187,12 +193,6 @@ public class AutoAndSemiAutoGunController : MonoBehaviour
     {
         // This is important to make semi auto work
         Invoke("CanShootReset", semiAutoShotDelay);
-
-        if (currentAmmo == 0)
-        {
-            StartCoroutine(Reload());
-            StopRecoil();
-        }
 
         camController.GunController();
 
