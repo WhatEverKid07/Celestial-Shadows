@@ -176,6 +176,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerCntrls: {fileID: 8219257814868728328, guid: 6126e80c064e030429ec21c4ef4ffc4d, type: 3}
   playerCntrlsAss: {fileID: -944628639613478452, guid: 6126e80c064e030429ec21c4ef4ffc4d, type: 3}
+  player: {fileID: 20194404}
   rb: {fileID: 20194407}
   fpsCam: {fileID: 1941573219}
   camDir: {fileID: 1941573217}
