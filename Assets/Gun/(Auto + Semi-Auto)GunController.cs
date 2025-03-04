@@ -23,7 +23,7 @@ public class AutoAndSemiAutoGunController : MonoBehaviour
     private bool isReloading = false;
     private bool canShoot = true;
     private int currentAmmo;
-    private Vector3 accumulatedRecoil = Vector3.zero;
+    private Vector3 accumulatedRecoil;
     private Quaternion initialRotation;
     private float recoilVelocityX, recoilVelocityY;
     private Vector3 currentUpRecoil;
@@ -70,6 +70,8 @@ public class AutoAndSemiAutoGunController : MonoBehaviour
     [SerializeField] private InputActionAsset gunControls;
     [SerializeField] private float targetZoomFOV = 40;
     [SerializeField] private float transitionDuration = 1f;
+    [SerializeField] private float rotationX;
+    [SerializeField] private float rotationY;
 
     private InputAction shoot;
     private InputAction reload;
@@ -80,8 +82,6 @@ public class AutoAndSemiAutoGunController : MonoBehaviour
     private float originalFOV;
     private float currentConeAngle;
 
-    private float rotationY = -87f;
-    private float rotationX = 0.0f;
     private Vector3 currentRecoil = Vector3.zero;
 
     void Start()
@@ -245,18 +245,19 @@ public class AutoAndSemiAutoGunController : MonoBehaviour
 
     private void HandleRecoil()
     {
-        currentRecoil = Vector3.Lerp(currentRecoil, Vector3.zero, recoilResetSpeed * Time.deltaTime);
-        transform.localEulerAngles = new Vector3(rotationY, rotationX, 0) + currentRecoil;
+        currentRecoil = Vector3.Lerp(currentRecoil, Vector3.zero, recoilResetSpeed * Time.deltaTime * 0.5f);
+        transform.localEulerAngles = new Vector3(rotationX - currentRecoil.x, rotationY + currentRecoil.y, 0);
     }
 
     private void AddRecoil()
     {
         float sideAmount = Random.Range(-currentSideRecoil.y * recoilIncreaseMultiplier, currentSideRecoil.y * recoilIncreaseMultiplier);
-        float upAmount = Random.Range(-currentUpRecoil.x * recoilIncreaseMultiplier, currentUpRecoil.x * recoilIncreaseMultiplier);
-        Vector3 recoil = new Vector3(upAmount, sideAmount, 0f);
+        float upAmount = Random.Range(currentUpRecoil.x * 0.8f, currentUpRecoil.x * recoilIncreaseMultiplier);
 
+        Vector3 recoil = new Vector3(upAmount, sideAmount, 0f);
         currentSideRecoil *= recoilIncreaseMultiplier;
         currentUpRecoil *= recoilIncreaseMultiplier;
+
         currentRecoil += recoil;
         currentConeAngle *= 1.1f;
     }
@@ -271,9 +272,10 @@ public class AutoAndSemiAutoGunController : MonoBehaviour
         currentConeAngle = coneAngle;
         currentUpRecoil = upRecoil;
         currentSideRecoil = sideRecoil;
+
         Vector3 startRecoil = accumulatedRecoil;
         float elapsedTime = 0f;
-        float duration = 1f / recoilResetSpeed;
+        float duration = 1f / (recoilResetSpeed * 0.8f);
 
         while (elapsedTime < duration)
         {
