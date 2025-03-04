@@ -41,7 +41,7 @@ public class CameraMovement : MonoBehaviour
         mouseX = axisX.action.ReadValue<float>();
         mouseY = axisY.action.ReadValue<float>();
 
-        if (characterMove.IsWalled())
+        if (characterMove.isLeftWalled || characterMove.isRightWalled && characterMove.isGrounded)
         {
             ChangeCameraWallAngle();
         }
@@ -49,7 +49,6 @@ public class CameraMovement : MonoBehaviour
         {
             ChangeCameraWalkAngle();
         }
-
 
         transform.position = new Vector3(player.transform.position.x, player.transform.position.y, player.transform.position.z);
     }
@@ -84,10 +83,7 @@ public class CameraMovement : MonoBehaviour
             currentRotationZ = Mathf.Clamp(currentRotationZ, 45f, 70f);
         }
 
-        float targetRotationY = characterMove.isLeftWalled ? -180: 0;
-        float currentRotationY = targetRotationY;
-
-        transform.rotation = Quaternion.Euler(currentRotationX, currentRotationY, currentRotationZ + rotationX);
-        player.transform.rotation = Quaternion.Euler(0, currentRotationY, currentRotationZ);
+        transform.rotation = Quaternion.Euler(currentRotationX, 0, currentRotationZ + rotationX);
+        player.transform.rotation = Quaternion.Euler(0, transform.rotation.eulerAngles.y, currentRotationZ);
     }
 }

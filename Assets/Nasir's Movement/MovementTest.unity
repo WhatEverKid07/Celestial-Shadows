@@ -179,10 +179,12 @@ MonoBehaviour:
   player: {fileID: 20194404}
   rb: {fileID: 20194407}
   fpsCam: {fileID: 1941573219}
-  camDir: {fileID: 1941573217}
+  camDir: {fileID: 1941573220}
   fov: 90
   walkSpeed: 7
   runSpeed: 10
+  wallRunForce: 0
+  wallCheckDist: 1
   jumpPower: 3
   fallMulti: 2.5
   coyoteTime: 0.2
@@ -878,7 +880,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5839269342fb66947acea945e6d8d6a6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  characterMove: {fileID: 0}
+  characterMove: {fileID: 20194406}
   player: {fileID: 20194404}
   axisX: {fileID: 446297968139386490, guid: 6126e80c064e030429ec21c4ef4ffc4d, type: 3}
   axisY: {fileID: -2871428396282351197, guid: 6126e80c064e030429ec21c4ef4ffc4d, type: 3}
