@@ -1,5 +1,6 @@
 using Unity.PlasticSCM.Editor.WebApi;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class GrenadeThrower : MonoBehaviour
 {
@@ -8,25 +9,46 @@ public class GrenadeThrower : MonoBehaviour
     [SerializeField] private Transform throwPoint;
     [SerializeField] private float throwForce = 10f;
     [SerializeField] private float throwDelay = 2f;
+    [SerializeField] private int grenadeAmount = 2;
+    [SerializeField] private GameObject grenadeThrower;
+    [SerializeField] private InputActionAsset controls;
+
+    private InputAction throwGrenade;
     public float currentThrowDelay;
 
     private void Start()
     {
+        throwGrenade = controls.FindActionMap("Gun Controls").FindAction("Shoot");
+        throwGrenade.Enable();
+
         currentThrowDelay = throwDelay;
     }
 
     void Update()
     {
-        if (currentThrowDelay >= 0)
+
+        if (currentThrowDelay >= 0 && grenadeAmount >= 1)
         {
             currentThrowDelay -= Time.deltaTime;
         }
-
-        if (Input.GetKeyDown(KeyCode.G) && currentThrowDelay <= 0)
+        if (grenadeAmount <= 0)
         {
-            ThrowGrenade();
-            currentThrowDelay = throwDelay;
+            Debug.Log("1");
+            grenadeThrower.SetActive(false);
+            return;
         }
+        else if (grenadeAmount >= 1) { grenadeThrower.SetActive(true);}
+
+        throwGrenade.performed += ctx => {
+
+            if (currentThrowDelay <= 0)
+            {
+                Debug.Log("2");
+                ThrowGrenade();
+                currentThrowDelay = throwDelay;
+            }
+        };
+
     }
 
     void ThrowGrenade()
@@ -42,5 +64,6 @@ public class GrenadeThrower : MonoBehaviour
             rb.AddTorque(Random.insideUnitSphere * 5f, ForceMode.Impulse);
             grenadeScript = null;
         }
+        grenadeAmount--;
     }
 }
