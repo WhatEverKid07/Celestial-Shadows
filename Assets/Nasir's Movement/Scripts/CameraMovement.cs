@@ -32,6 +32,7 @@ public class CameraMovement : MonoBehaviour
     [SerializeField] private float sensY;
 
     private float currentRotationX = 0f;
+    private float currentRotationZ = 0f;
 
     private void Start()
     {
@@ -49,8 +50,18 @@ public class CameraMovement : MonoBehaviour
         mouseX = axisX.action.ReadValue<float>();
         mouseY = axisY.action.ReadValue<float>();
 
-
+        if (characterMove.isRightWalled && characterMove.isWallRunning && !characterMove.isWallJumping)
+        {
+            ChangeCameraRightWallAngle();
+        }
+        else if (characterMove.isLeftWalled && characterMove.isWallRunning && !characterMove.isWallJumping)
+        {
+            ChangeCameraLeftWallAngle();
+        }
+        else 
+        {
             ChangeCameraWalkAngle();
+        }
 
 
         if (characterMove.isRunning || characterMove.isWallRunning)
@@ -73,6 +84,34 @@ public class CameraMovement : MonoBehaviour
 
         transform.rotation = Quaternion.Euler(currentRotationX, transform.rotation.eulerAngles.y + rotationX, 0);
         player.transform.rotation = Quaternion.Euler(0, transform.rotation.eulerAngles.y, 0);
+    }
+
+    private void ChangeCameraRightWallAngle()
+    {
+        float rotationX = mouseX * sensX / 100; 
+        float rotationZ = mouseY * sensY / 100;
+
+        currentRotationX -= rotationZ;
+        currentRotationX = Mathf.Clamp(currentRotationX, -20f, 20f);
+
+        currentRotationZ += rotationX;
+        currentRotationZ = Mathf.Clamp(currentRotationZ, 5f, 15f);
+
+        transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(currentRotationX, 0, currentRotationZ), Time.deltaTime * rotationSpeed);
+    }
+
+    private void ChangeCameraLeftWallAngle()
+    {
+        float rotationX = mouseX * sensX / 100;
+        float rotationZ = mouseY * sensY / 100;
+
+        currentRotationX -= rotationZ;
+        currentRotationX = Mathf.Clamp(currentRotationX, -20f, 20f);
+
+        currentRotationZ += rotationX;
+        currentRotationZ = Mathf.Clamp(currentRotationZ, -15f, -5f);
+
+        transform.rotation = Quaternion.Slerp(transform.rotation,Quaternion.Euler(currentRotationX, -180, currentRotationZ), Time.deltaTime * rotationSpeed);
     }
 
     private void ChangeWalkFOV()

@@ -886,7 +886,7 @@ MonoBehaviour:
   axisY: {fileID: -2871428396282351197, guid: 6126e80c064e030429ec21c4ef4ffc4d, type: 3}
   fpsCam: {fileID: 1941573219}
   fov: 90
-  rotationSpeed: 3
+  rotationSpeed: 10
   sensX: 15
   sensY: 15
 --- !u!1 &2085935761

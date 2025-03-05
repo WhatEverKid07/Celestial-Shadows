@@ -62,8 +62,10 @@ public class CharacterMovement : MonoBehaviour
     [SerializeField] private GameObject groundChecker;
 
     [Header("Wall Jumping")]
-
     [SerializeField] private LayerMask wall;
+    private bool canWallJump;
+    private Coroutine jumpCoroutine;
+    public bool isWallJumping { get; private set; }
 
     [Header("Dashing")]
     [SerializeField] private bool enableDash;
@@ -93,6 +95,7 @@ public class CharacterMovement : MonoBehaviour
         dash.Enable();
 
         dash.performed += ctx => Dash();
+        jump.performed += ctx => WallJump();
     }
 
     private void Update()
@@ -137,6 +140,7 @@ public class CharacterMovement : MonoBehaviour
 
         if (isWallRunning)
         {
+            canWallJump = true;
             if (setWallRunTime > 0f)
             {
                 setWallRunTime -= Time.deltaTime;
@@ -164,10 +168,9 @@ public class CharacterMovement : MonoBehaviour
         Move();
 
         //JUMPING
-        if (jump.ReadValue<float>() > 0f)
+        if (jump.ReadValue<float>() > 0f && !canWallJump)
         {
             Jump();
-            //WallJump();
         }
 
         //COYOTE TIME
@@ -176,7 +179,7 @@ public class CharacterMovement : MonoBehaviour
             ApplyGravity();
         }
 
-        if (isWallRunning && setWallRunTime > 0f)
+        if (isWallRunning && setWallRunTime > 0f && !isWallJumping)
         {
             WallRunningMove();
         }
@@ -274,12 +277,34 @@ public class CharacterMovement : MonoBehaviour
 
     private void WallJump()
     {
-        if (isLeftWalled || isRightWalled)
+        if (canWallJump && !isWallJumping)
         {
-            Vector3 wallJumpDir = Vector3.forward + (transform.forward * 0.5f); 
-            rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
-            rb.AddForce(wallJumpDir * jumpPower, ForceMode.VelocityChange); 
+            isWallJumping = true;
+
+            jumpCoroutine = StartCoroutine(PerformWallJump());
+            canWallJump = false;
         }
+    }
+
+    private IEnumerator PerformWallJump()
+    {
+        Vector3 wallNormal = isLeftWalled ? leftHit.normal : rightHit.normal;
+
+        rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
+        Vector3 up = transform.TransformDirection(Vector3.up);
+        float wallDir = Vector3.Dot(wallNormal, up);
+
+        float jumpDuration = .2f;
+        float elaspedTime = 0f;
+
+        while (elaspedTime < jumpDuration)
+        {
+            rb.AddForce(rb.velocity * wallDir, ForceMode.VelocityChange);
+            elaspedTime += Time.deltaTime;
+        }
+        yield return null;
+
+        isWallJumping = false;
     }
 
     private void ApplyGravity()
@@ -383,8 +408,8 @@ public class CharacterMovement : MonoBehaviour
 
     public void CheckForWall()
     {
-        Vector3 lft = transform.TransformDirection(-transform.right);
-        Vector3 rght = transform.TransformDirection(transform.right);
+        Vector3 lft = transform.TransformDirection(Vector3.left);
+        Vector3 rght = transform.TransformDirection(Vector3.right);
 
         isLeftWalled = Physics.Raycast(transform.position, lft, out leftHit, wallCheckDist);
         isRightWalled = Physics.Raycast(transform.position, rght, out rightHit, wallCheckDist);
