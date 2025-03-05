@@ -100,22 +100,31 @@ public class SniperGunController : MonoBehaviour
     void OnEnable()
     {
         isReloading = false;
+        ammoText.gameObject.SetActive(true);
+        UpdateAmmoText();
+    }
+    private void OnDisable()
+    {
+        ammoText.gameObject.SetActive(false);
     }
 
     void Update()
     {
-        if (isReloading)
+        if (!gameObject.activeInHierarchy)
             return;
-
+        
         if (currentAmmo == 0)
         {
             StartCoroutine(Reload());
             return;
         }
 
+        if (isReloading)
+            return;
+
         shoot.performed += ctx =>
         {
-            if (canShoot == true)
+            if (canShoot == true && gameObject.activeInHierarchy)
             {
                 Shoot();
                 canShoot = false;
@@ -144,7 +153,10 @@ public class SniperGunController : MonoBehaviour
         {
             StopCoroutine(fovCoroutine);
         }
-        fovCoroutine = StartCoroutine(SmoothFOVChange(newFOV));
+        if (gameObject.activeInHierarchy)
+        {
+            fovCoroutine = StartCoroutine(SmoothFOVChange(newFOV));
+        }
     }
 
     private IEnumerator SmoothFOVChange(float newFOV)

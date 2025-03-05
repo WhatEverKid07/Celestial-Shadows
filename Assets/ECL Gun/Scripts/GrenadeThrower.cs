@@ -26,7 +26,11 @@ public class GrenadeThrower : MonoBehaviour
 
     void Update()
     {
-
+        if (!enabled)
+        {
+            throwGrenade.Disable();
+            return;
+        }
         if (currentThrowDelay >= 0 && grenadeAmount >= 1)
         {
             currentThrowDelay -= Time.deltaTime;

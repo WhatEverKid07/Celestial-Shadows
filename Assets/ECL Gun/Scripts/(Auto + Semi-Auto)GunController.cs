@@ -1,4 +1,5 @@
 using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
@@ -86,6 +87,7 @@ public class AutoAndSemiAutoGunController : MonoBehaviour
 
     void Start()
     {
+        Debug.Log("Start");
         currentSideRecoil = sideRecoil;
         currentUpRecoil = upRecoil;
         currentConeAngle = coneAngle;
@@ -109,6 +111,8 @@ public class AutoAndSemiAutoGunController : MonoBehaviour
 
     private void Awake()
     {
+        Debug.Log("Awake");
+
         if (playerCam == null)
         {
             playerCam = Camera.main;
@@ -119,11 +123,17 @@ public class AutoAndSemiAutoGunController : MonoBehaviour
     void OnEnable()
     {
         isReloading = false;
+        ammoText.gameObject.SetActive(true);
+        UpdateAmmoText();
+    }
+    private void OnDisable()
+    {
+        ammoText.gameObject.SetActive(false);
     }
 
     void Update()
     {
-        if (isReloading)
+        if (!gameObject.activeInHierarchy)
             return;
 
         if (currentAmmo == 0)
@@ -131,8 +141,10 @@ public class AutoAndSemiAutoGunController : MonoBehaviour
             StartCoroutine(Reload());
             StopRecoil();
         }
+        if (isReloading)
+            return;
 
-        if (automatic && shoot.ReadValue<float>() > 0 && Time.time >= nextTimeToFire)
+        if (automatic && shoot.ReadValue<float>() > 0 && Time.time >= nextTimeToFire && enabled)
         {
             nextTimeToFire = Time.time + 1f / fireRate;
             Shoot(shootHowManyBullets);
@@ -140,7 +152,7 @@ public class AutoAndSemiAutoGunController : MonoBehaviour
 
         shoot.performed += ctx =>
         {
-            if (!automatic && canShoot == true)
+            if (!automatic && canShoot == true && gameObject.activeInHierarchy)
             {
                 Shoot(shootHowManyBullets);
                 canShoot = false;
@@ -171,7 +183,10 @@ public class AutoAndSemiAutoGunController : MonoBehaviour
         {
             StopCoroutine(fovCoroutine);
         }
-        fovCoroutine = StartCoroutine(SmoothFOVChange(newFOV));
+        if (gameObject.activeInHierarchy)
+        {
+            fovCoroutine = StartCoroutine(SmoothFOVChange(newFOV));
+        }
     }
 
     private IEnumerator SmoothFOVChange(float newFOV)
@@ -264,7 +279,10 @@ public class AutoAndSemiAutoGunController : MonoBehaviour
 
     private void StopRecoil()
     {
-        StartCoroutine(ResetRecoil());
+        if (gameObject.activeInHierarchy)
+        {
+            StartCoroutine(ResetRecoil());
+        }
     }
 
     private IEnumerator ResetRecoil()
