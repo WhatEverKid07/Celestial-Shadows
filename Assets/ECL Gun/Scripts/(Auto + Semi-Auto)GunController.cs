@@ -88,7 +88,6 @@ public class AutoAndSemiAutoGunController : MonoBehaviour
 
     void Start()
     {
-        Debug.Log("Start");
         currentSideRecoil = sideRecoil;
         currentUpRecoil = upRecoil;
         currentConeAngle = coneAngle;
@@ -113,8 +112,6 @@ public class AutoAndSemiAutoGunController : MonoBehaviour
 
     private void Awake()
     {
-        Debug.Log("Awake");
-
         if (playerCam == null)
         {
             playerCam = Camera.main;
@@ -216,11 +213,9 @@ public class AutoAndSemiAutoGunController : MonoBehaviour
     {
         // This is important to make semi auto work
         Invoke("CanShootReset", semiAutoShotDelay);
-
-        camController.GunController();
-
         if (currentAmmo >= 1)
         {
+            camController.GunController();
             // Shoot animations
             AddRecoil();
             currentAmmo--;
@@ -234,7 +229,8 @@ public class AutoAndSemiAutoGunController : MonoBehaviour
                 Vector3 bulletDirection = GetConeSpreadDirection(bulletSpawn.transform.forward, currentConeAngle);
                 rb.velocity = bulletDirection * bulletSpeed;
             }
-            muzzleFlash.Play();
+            if(muzzleFlash != null)
+                muzzleFlash.Play();
             gunAudioSource.PlayOneShot(shootClip);
         }
     }

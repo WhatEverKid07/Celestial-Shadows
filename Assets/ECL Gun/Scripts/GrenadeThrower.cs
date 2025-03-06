@@ -26,7 +26,7 @@ public class GrenadeThrower : MonoBehaviour
 
     void Update()
     {
-        if (!enabled)
+        if (!gameObject.activeInHierarchy)
         {
             throwGrenade.Disable();
             return;
@@ -45,7 +45,7 @@ public class GrenadeThrower : MonoBehaviour
 
         throwGrenade.performed += ctx => {
 
-            if (currentThrowDelay <= 0)
+            if (currentThrowDelay <= 0 && gameObject.activeInHierarchy)
             {
                 Debug.Log("2");
                 ThrowGrenade();

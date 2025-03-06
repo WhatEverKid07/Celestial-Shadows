@@ -100,8 +100,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   grenadeFuse: 5
   radius: 10
-  grenadeForce: 700
-  upwardsGrenadeForce: 700
+  grenadeForce: 200
+  upwardsGrenadeForce: 400
   explosionEffect: {fileID: 100006, guid: 7c442b9b6852b8a4f93306f3d154d471, type: 3}
   maxDamage: 500
 --- !u!1 &1896870355742165237

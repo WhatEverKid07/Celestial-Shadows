@@ -19,7 +19,6 @@ public class SniperGunController : MonoBehaviour
     private int currentAmmo;
     private bool isReloading = false;
     private bool canShoot = true;
-    private bool isSighted = false;
 
 
     [Space(20)]
