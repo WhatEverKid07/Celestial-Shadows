@@ -1,25 +1,34 @@
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class GunManagement : MonoBehaviour
 {
-    public List<GameObject> guns; // List of gun GameObjects
-    private int currentGunIndex = 0; // Tracks the currently selected gun
+    [SerializeField] private List<GameObject> guns;
+    [SerializeField] private InputActionAsset gunControls;
+    
+    private int currentGunIndex = 0;
+    internal bool canSwitch = true;
+    private InputAction scroll;
 
     void Start()
     {
+        scroll = gunControls.FindActionMap("Gun Controls").FindAction("Scroll");
+        scroll.Enable();
         UpdateGunSelection();
     }
 
     void Update()
     {
-        float scroll = Input.GetAxis("Mouse ScrollWheel");
+        float z = scroll.ReadValue<float>();
+        //Debug.Log(z); // *For Debugging*
 
-        if (scroll > 0f)
+        if (z > 0 && canSwitch)
         {
             NextGun();
         }
-        else if (scroll < 0f)
+        if (z < 0 && canSwitch)
         {
             PreviousGun();
         }

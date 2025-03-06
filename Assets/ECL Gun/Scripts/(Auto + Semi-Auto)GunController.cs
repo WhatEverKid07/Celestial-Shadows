@@ -7,6 +7,7 @@ using UnityEngine.UI;
 public class AutoAndSemiAutoGunController : MonoBehaviour
 {
     [SerializeField] private CameraController camController;
+    [SerializeField] private GunManagement gunManager;
 
     [Header("Gun Attributes")]
     [SerializeField] private int maxAmmo = 30;
@@ -103,9 +104,10 @@ public class AutoAndSemiAutoGunController : MonoBehaviour
         shoot.Enable();
         reload.Enable();
         zoomInOrOut.Enable();
-        reload.performed += ctx => StartCoroutine(Reload());
 
         zoomInOrOut.performed += ctx => ChangeFOV(targetZoomFOV);
+        zoomInOrOut.performed += ctx => gunManager.canSwitch = false;
+        zoomInOrOut.canceled += ctx => gunManager.canSwitch = true;
         zoomInOrOut.canceled += ctx => ChangeFOV(originalFOV);
     }
 
@@ -128,13 +130,19 @@ public class AutoAndSemiAutoGunController : MonoBehaviour
     }
     private void OnDisable()
     {
-        ammoText.gameObject.SetActive(false);
+        if(ammoText != null)
+            ammoText.gameObject.SetActive(false);
     }
 
     void Update()
     {
         if (!gameObject.activeInHierarchy)
             return;
+
+        if (gameObject.activeInHierarchy && reload.ReadValue<float>() > 0)
+        {
+            StartCoroutine(Reload());
+        }
 
         if (currentAmmo == 0)
         {

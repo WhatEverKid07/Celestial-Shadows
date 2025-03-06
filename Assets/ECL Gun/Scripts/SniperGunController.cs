@@ -6,6 +6,7 @@ using UnityEngine.UI;
 public class SniperGunController : MonoBehaviour
 {
     [SerializeField] private CameraController camController;
+    [SerializeField] private GunManagement gunManager;
 
     [Header("Gun Attributes")]
     [SerializeField] private int maxAmmo = 10;
@@ -39,7 +40,6 @@ public class SniperGunController : MonoBehaviour
     [Header("Effects")]
     [SerializeField] private Camera fPSCam;
     [SerializeField] private ParticleSystem muzzleFlash;
-    [SerializeField] private float impactForce = 30f;
 
     
     [Space(20)]
@@ -80,11 +80,12 @@ public class SniperGunController : MonoBehaviour
         shoot.Enable();
         reload.Enable();
         zoomInOrOut.Enable();
-        reload.performed += ctx => StartCoroutine(Reload());
+
 
         zoomInOrOut.performed += ctx => ChangeFOV(targetZoomFOV);
         zoomInOrOut.canceled += ctx => ChangeFOV(originalFOV);
-        zoomInOrOut.canceled += ctx => isSighted = false;
+        zoomInOrOut.performed += ctx => gunManager.canSwitch = false;
+        zoomInOrOut.canceled += ctx => gunManager.canSwitch = true;
         zoomInOrOut.canceled += ctx => currentConeAngle = coneAngle;
     }
 
@@ -105,14 +106,20 @@ public class SniperGunController : MonoBehaviour
     }
     private void OnDisable()
     {
-        ammoText.gameObject.SetActive(false);
+        if (ammoText != null)
+            ammoText.gameObject.SetActive(false);
     }
 
     void Update()
     {
         if (!gameObject.activeInHierarchy)
             return;
-        
+
+        if (gameObject.activeInHierarchy && reload.ReadValue<float>() > 0)
+        {
+            StartCoroutine(Reload());
+        }
+
         if (currentAmmo == 0)
         {
             StartCoroutine(Reload());
@@ -131,11 +138,6 @@ public class SniperGunController : MonoBehaviour
             }
         };
         GunSight();
-
-        if (Input.GetKeyDown(KeyCode.R))
-        {
-            StartCoroutine(Reload());
-        }
     }
 
     private void GunSight()
@@ -161,7 +163,6 @@ public class SniperGunController : MonoBehaviour
 
     private IEnumerator SmoothFOVChange(float newFOV)
     {
-        isSighted = true;
         currentConeAngle = coneAngleWhenSighted;
         float startFOV = fPSCam.fieldOfView;
         float elapsedTime = 0f;

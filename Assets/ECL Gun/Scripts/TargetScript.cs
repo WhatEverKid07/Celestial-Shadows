@@ -2,10 +2,11 @@ using UnityEngine;
 
 public class Target : MonoBehaviour
 {
-    public float health = 50f;
+    [SerializeField] private float health = 50f;
 
     public void TakeDamage(float amount)
     {
+        Debug.Log("Hit!" + amount);
         health -= amount;
         if (health <= 0f)
         {
@@ -13,7 +14,7 @@ public class Target : MonoBehaviour
         }
     }
 
-    void Die()
+    private void Die()
     {
         Destroy(gameObject);
     }
