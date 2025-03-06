@@ -50,11 +50,11 @@ public class CameraMovement : MonoBehaviour
         mouseX = axisX.action.ReadValue<float>();
         mouseY = axisY.action.ReadValue<float>();
 
-        if (characterMove.isRightWalled && characterMove.isWallRunning)
+        if (characterMove.isRightWalled && characterMove.isWallRunning && !characterMove.isWallJumping)
         {
             ChangeCameraRightWallAngle();
         }
-        else if (characterMove.isLeftWalled && characterMove.isWallRunning)
+        else if (characterMove.isLeftWalled && characterMove.isWallRunning && !characterMove.isWallJumping)
         {
             ChangeCameraLeftWallAngle();
         }
@@ -98,16 +98,11 @@ public class CameraMovement : MonoBehaviour
         currentRotationZ = Mathf.Clamp(currentRotationZ, 5f, 15f);
 
         float currentRotationY = player.transform.rotation.eulerAngles.y;
-        if (currentRotationY > 180)
-        {
-            currentRotationY -= 360;
-        }
-
         float targetY;
 
-        if (Mathf.Abs(currentRotationY - (-180)) < Mathf.Abs(currentRotationY - 180))
+        if (Mathf.DeltaAngle(currentRotationY, -90) < Mathf.DeltaAngle(currentRotationY, 90))
         {
-            targetY = 180;
+            targetY = 0;
         }
         else
         {
@@ -134,20 +129,15 @@ public class CameraMovement : MonoBehaviour
         currentRotationZ = Mathf.Clamp(currentRotationZ, -15f, -5f);
 
         float currentRotationY = player.transform.rotation.eulerAngles.y;
-        if (currentRotationY > 180)
-        {
-            currentRotationY -= 360;
-        }
-
         float targetY;
 
-        if (Mathf.Abs(currentRotationY - (-180)) < Mathf.Abs(currentRotationY - 180))
+        if (Mathf.DeltaAngle(currentRotationY, -90) < Mathf.DeltaAngle(currentRotationY, 90))
         {
-            targetY = -180;
+            targetY = 0;
         }
         else
         {
-            targetY = 180;
+            targetY = -180;
         }
 
         if (characterMove.flipCam)
@@ -156,8 +146,6 @@ public class CameraMovement : MonoBehaviour
         }
 
         transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(currentRotationX, targetY, currentRotationZ), Time.deltaTime * rotationSpeed);
-
-
     }
 
     private void ChangeWalkFOV()

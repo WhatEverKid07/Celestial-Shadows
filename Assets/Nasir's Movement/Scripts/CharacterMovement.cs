@@ -149,6 +149,7 @@ public class CharacterMovement : MonoBehaviour
         }
         else
         {
+            canWallJump = false;
             if (setWallRunTime < wallRunTime)
             {
                 setWallRunTime += .5f;
@@ -159,8 +160,7 @@ public class CharacterMovement : MonoBehaviour
             }
         }
 
-
-        //Debug.Log(setWallRunTime);
+        //Debug.Log();
     }
     
     private void FixedUpdate()
@@ -175,7 +175,7 @@ public class CharacterMovement : MonoBehaviour
         }
 
         //COYOTE TIME
-        if (setCoyoteTime == 0f)
+        if (setCoyoteTime <= 0f)
         {
             ApplyGravity();
         }
@@ -299,15 +299,9 @@ public class CharacterMovement : MonoBehaviour
         Vector3 up = transform.TransformDirection(Vector3.up);
         Vector3 jumpDir = (wallNormal + up).normalized;
 
-        float jumpDuration = .2f;
-        float elaspedTime = 0f;
+        rb.AddForce(jumpDir * (jumpPower * 3), ForceMode.VelocityChange);
 
-        while (elaspedTime < jumpDuration)
-        {
-            rb.AddForce((jumpDir * jumpPower), ForceMode.Force);
-            elaspedTime += Time.deltaTime;
-        }
-        yield return null;
+        yield return new WaitForSeconds(1f);
 
         isWallJumping = false;
     }
@@ -408,7 +402,7 @@ public class CharacterMovement : MonoBehaviour
 
     private bool GroundedDistanceForWall()
     {
-        return !Physics.Raycast(transform.position, Vector3.down, .5f, ground);
+        return !Physics.Raycast(transform.position, Vector3.down, 1f, ground);
     }
 
     public void CheckForWall()
