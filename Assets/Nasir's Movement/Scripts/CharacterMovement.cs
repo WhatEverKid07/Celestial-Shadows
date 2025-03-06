@@ -22,6 +22,7 @@ public class CharacterMovement : MonoBehaviour
     [Range(60, 100)]
     [SerializeField] private int fov;
     [SerializeField] private float offsetDistance;
+    public bool flipCam { get; private set; }
 
     [Header("Walking & Running")]
     private Vector3 moveDir;
@@ -238,6 +239,11 @@ public class CharacterMovement : MonoBehaviour
         if ((transform.forward - wallBackward).magnitude  > (transform.forward - -wallBackward).magnitude)
         {
             wallBackward = -wallBackward;
+            flipCam = true;
+        }
+        else
+        {
+            flipCam = false;
         }
 
         rb.AddForce(wallBackward * wallRunForce, ForceMode.Force);
@@ -290,16 +296,15 @@ public class CharacterMovement : MonoBehaviour
     {
         Vector3 wallNormal = isLeftWalled ? leftHit.normal : rightHit.normal;
 
-        rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
         Vector3 up = transform.TransformDirection(Vector3.up);
-        float wallDir = Vector3.Dot(wallNormal, up);
+        Vector3 jumpDir = (wallNormal + up).normalized;
 
         float jumpDuration = .2f;
         float elaspedTime = 0f;
 
         while (elaspedTime < jumpDuration)
         {
-            rb.AddForce(rb.velocity * wallDir, ForceMode.VelocityChange);
+            rb.AddForce((jumpDir * jumpPower), ForceMode.Force);
             elaspedTime += Time.deltaTime;
         }
         yield return null;
@@ -324,7 +329,7 @@ public class CharacterMovement : MonoBehaviour
     {
         if (enableDash)
         {
-            if (canDash && !isDashing)
+            if (canDash && !isDashing && !isWallRunning)
             {
                 isDashing = true;
 

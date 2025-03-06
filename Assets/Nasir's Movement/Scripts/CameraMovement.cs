@@ -50,11 +50,11 @@ public class CameraMovement : MonoBehaviour
         mouseX = axisX.action.ReadValue<float>();
         mouseY = axisY.action.ReadValue<float>();
 
-        if (characterMove.isRightWalled && characterMove.isWallRunning && !characterMove.isWallJumping)
+        if (characterMove.isRightWalled && characterMove.isWallRunning)
         {
             ChangeCameraRightWallAngle();
         }
-        else if (characterMove.isLeftWalled && characterMove.isWallRunning && !characterMove.isWallJumping)
+        else if (characterMove.isLeftWalled && characterMove.isWallRunning)
         {
             ChangeCameraLeftWallAngle();
         }
@@ -97,7 +97,29 @@ public class CameraMovement : MonoBehaviour
         currentRotationZ += rotationX;
         currentRotationZ = Mathf.Clamp(currentRotationZ, 5f, 15f);
 
-        transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(currentRotationX, 0, currentRotationZ), Time.deltaTime * rotationSpeed);
+        float currentRotationY = player.transform.rotation.eulerAngles.y;
+        if (currentRotationY > 180)
+        {
+            currentRotationY -= 360;
+        }
+
+        float targetY;
+
+        if (Mathf.Abs(currentRotationY - (-180)) < Mathf.Abs(currentRotationY - 180))
+        {
+            targetY = 180;
+        }
+        else
+        {
+            targetY = -180;
+        }
+
+        if (characterMove.flipCam)
+        {
+            targetY = -targetY;
+        }
+
+        transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(currentRotationX, targetY, currentRotationZ), Time.deltaTime * rotationSpeed);
     }
 
     private void ChangeCameraLeftWallAngle()
@@ -111,7 +133,31 @@ public class CameraMovement : MonoBehaviour
         currentRotationZ += rotationX;
         currentRotationZ = Mathf.Clamp(currentRotationZ, -15f, -5f);
 
-        transform.rotation = Quaternion.Slerp(transform.rotation,Quaternion.Euler(currentRotationX, -180, currentRotationZ), Time.deltaTime * rotationSpeed);
+        float currentRotationY = player.transform.rotation.eulerAngles.y;
+        if (currentRotationY > 180)
+        {
+            currentRotationY -= 360;
+        }
+
+        float targetY;
+
+        if (Mathf.Abs(currentRotationY - (-180)) < Mathf.Abs(currentRotationY - 180))
+        {
+            targetY = -180;
+        }
+        else
+        {
+            targetY = 180;
+        }
+
+        if (characterMove.flipCam)
+        {
+            targetY = -targetY;
+        }
+
+        transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(currentRotationX, targetY, currentRotationZ), Time.deltaTime * rotationSpeed);
+
+
     }
 
     private void ChangeWalkFOV()
