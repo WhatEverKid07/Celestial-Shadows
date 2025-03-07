@@ -83,6 +83,8 @@ public class CharacterMovement : MonoBehaviour
     [Header("Ledge Grabbing")]
     [SerializeField] private float grabLedgeSpeed;
     [SerializeField] private float maxLedgeGrabDist;
+    public bool isHoldingLedge { get; private set; }
+    private Coroutine holdLedgeCoroutine;
 
     [Header("Dashing")]
     [SerializeField] private bool enableDash;
@@ -133,12 +135,6 @@ public class CharacterMovement : MonoBehaviour
 
     private void Update()
     {
-        //FORCED RESTRICTION
-        if (restricted)
-        {
-            return;
-        }
-
         //MOVE INPUT
         moveDir = playerCntrls.action.ReadValue<Vector3>();
 
@@ -220,23 +216,29 @@ public class CharacterMovement : MonoBehaviour
     
     private void FixedUpdate()
     {
+        //FORCED RESTRICTION
+        if (restricted)
+        {
+            return;
+        }
+
         //WALKING & RUNNING
         Move();
 
         //JUMPING
-        if (jump.ReadValue<float>() > 0f && !canWallJump)
+        if (jump.ReadValue<float>() > 0f && !canWallJump && !isHoldingLedge)
         {
             Jump();
         }
 
         //GRAVITY
-        if (setCoyoteTime <= 0f && !isDashing)
+        if (setCoyoteTime <= 0f && !isDashing && !isHoldingLedge)
         {
             ApplyGravity();
         }
 
         //WALL RUNNING
-        if (isWallRunning && setWallRunTime > 0f && !isWallJumping)
+        if (isWallRunning && setWallRunTime > 0f && !isWallJumping && !isHoldingLedge)
         {
             WallRunningMove();
         }
@@ -495,7 +497,8 @@ public class CharacterMovement : MonoBehaviour
 
     private void CheckForLedge()
     {
-        bool foundLedge = Physics.SphereCast(transform.position, .5f, transform.forward, out ledgeHit, ledgeCheckDist, ledge);
+        Vector3 horizontal = new(0f, transform.position.y, transform.position.z);
+        bool foundLedge = Physics.SphereCast(transform.position, .5f, horizontal, out ledgeHit, ledgeCheckDist, ledge);
 
         if (!foundLedge)
         {
@@ -506,48 +509,55 @@ public class CharacterMovement : MonoBehaviour
             Debug.DrawRay(transform.position, ledgeHit.point, Color.blue);
         }
 
-        Vector3 fwd = new Vector3(0f, transform.position.y, transform.position.z);
-        float distToLedge = Vector3.Distance(fwd, ledgeHit.point);
+        Vector3 playerPos = new Vector3(0f, transform.position.y, transform.position.z);
+        Vector3 ledgePos = new Vector3(0f, transform.position.y, ledgeHit.point.z);
+        float distToLedge = Vector3.Distance(playerPos, ledgePos);
         //Debug.Log("The distance to ledge is: " + distToLedge);
 
-        if (distToLedge < maxLedgeGrabDist)
+        if (distToLedge < maxLedgeGrabDist && !isHoldingLedge)
         {
+            currentLedge = ledgeHit.transform;
+            lastLedge = currentLedge;
+
+            restricted = true;
+            rb.useGravity = false;
+
+            isHoldingLedge = true;
+
             EnterLedgeGrab();
         }
     }
 
     private void EnterLedgeGrab()
     {
-        currentLedge = ledgeHit.transform;
-        lastLedge = currentLedge;
-
-        restricted = true;
-        rb.useGravity = false;
-
-        Invoke(nameof(PerformLedgeGrab), .5f);
+        holdLedgeCoroutine = StartCoroutine(PerformLedgeGrab());
     }
 
-    private void PerformLedgeGrab()
+    private IEnumerator PerformLedgeGrab()
     {
         Vector3 ledgeDir = currentLedge.position - transform.position;
         float ledgeDist = Vector3.Distance(transform.position, currentLedge.position);
 
         Debug.Log("The ledge distance is: " + ledgeDist);
 
-        if (ledgeDist < maxLedgeGrabDist)
+        while (ledgeDist > 1f)
         {
-            MoveToClosestGround();
-            rb.velocity = Vector3.zero;
+            if (rb.velocity.magnitude < grabLedgeSpeed)
+            {
+                rb.AddForce(1000f * grabLedgeSpeed * Time.deltaTime * ledgeDir.normalized);
+            }
+
+            transform.position = new(ledgeDist, ledgeDist, ledgeDist);
+            yield return null;
         }
-        else
-        {
-            rb.AddForce(1000f * grabLedgeSpeed * Time.deltaTime * ledgeDir.normalized);
-        }
+
+        rb.velocity = Vector3.zero;
+        MoveToClosestGround();
     }
 
     private void MoveToClosestGround()
     {
-        float searchRadius = 10f;
+        float searchRadius = 5f;
         Collider[] groundColliders = Physics.OverlapSphere(transform.position, searchRadius, ground);
 
         if (groundColliders.Length > 0)
@@ -565,27 +575,13 @@ public class CharacterMovement : MonoBehaviour
                 }
             }
 
-            transform.position = closestGround.position + (Vector3.up * 1.2f); 
+            restricted = false;
             rb.useGravity = true;
-
-            Debug.Log(closestGround);
+            isHoldingLedge = false;
+            Vector3 closestGroundPosition = closestGround.position;
+            transform.position = new Vector3(closestGroundPosition.x, closestGroundPosition.y + 1.2f, closestGroundPosition.z);
         }
     }
-
-    private void ExitLedgeGrab()
-    {
-        restricted = false;
-        rb.useGravity = true;
-
-        StopAllCoroutines();
-        Invoke(nameof(ResetLastLedge), 1f);
-    }
-
-    private void ResetLastLedge()
-    {
-        lastLedge = null;
-    }
-
 
     private void ShowDebugs()
     {
