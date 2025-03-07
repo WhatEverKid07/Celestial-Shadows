@@ -80,7 +80,6 @@ public class SniperGunController : MonoBehaviour
         reload.Enable();
         zoomInOrOut.Enable();
 
-
         zoomInOrOut.performed += ctx => ChangeFOV(targetZoomFOV);
         zoomInOrOut.canceled += ctx => ChangeFOV(originalFOV);
         zoomInOrOut.performed += ctx => gunManager.canSwitch = false;
@@ -99,12 +98,14 @@ public class SniperGunController : MonoBehaviour
 
     void OnEnable()
     {
+        Debug.Log("sniper enabled");
         isReloading = false;
         ammoText.gameObject.SetActive(true);
         UpdateAmmoText();
     }
     private void OnDisable()
     {
+        Debug.Log("sniper disabled");
         if (ammoText != null)
             ammoText.gameObject.SetActive(false);
     }
@@ -112,7 +113,10 @@ public class SniperGunController : MonoBehaviour
     void Update()
     {
         if (!gameObject.activeInHierarchy)
+        {
+
             return;
+        }
 
         if (gameObject.activeInHierarchy && reload.ReadValue<float>() > 0)
         {
@@ -136,6 +140,7 @@ public class SniperGunController : MonoBehaviour
                 canShoot = false;
             }
         };
+        Debug.Log(zoomInOrOut.ReadValue<float>());
         GunSight();
     }
 
@@ -143,7 +148,6 @@ public class SniperGunController : MonoBehaviour
     {
         float zoomInput = zoomInOrOut.ReadValue<float>();
         float targetZoom = zoomInput > 0.5f ? 1f : 0f;
-
         zoomLevel = Mathf.Lerp(zoomLevel, targetZoom, Time.deltaTime * zoomSpeed);
         //animator.SetFloat("ZoomBlend", zoomLevel);
     }

@@ -5,7 +5,7 @@ using UnityEngine.InputSystem;
 
 public class GunManagement : MonoBehaviour
 {
-    [SerializeField] private List<GameObject> guns;
+    [SerializeField] private List<GameObject> weapons;
     [SerializeField] private InputActionAsset gunControls;
     
     private int currentGunIndex = 0;
@@ -23,7 +23,7 @@ public class GunManagement : MonoBehaviour
     {
         float z = scroll.ReadValue<float>();
         //Debug.Log(z); // *For Debugging*
-
+        Debug.Log(canSwitch);
         if (z > 0 && canSwitch)
         {
             NextGun();
@@ -36,28 +36,28 @@ public class GunManagement : MonoBehaviour
 
     void NextGun()
     {
-        currentGunIndex = (currentGunIndex + 1) % guns.Count;
+        currentGunIndex = (currentGunIndex + 1) % weapons.Count;
         UpdateGunSelection();
     }
 
     void PreviousGun()
     {
-        currentGunIndex = (currentGunIndex - 1 + guns.Count) % guns.Count;
+        currentGunIndex = (currentGunIndex - 1 + weapons.Count) % weapons.Count;
         UpdateGunSelection();
     }
 
     void UpdateGunSelection()
     {
         // Deactivate all guns first
-        foreach (GameObject gun in guns)
+        foreach (GameObject gun in weapons)
         {
             gun.SetActive(false);
         }
 
         // Activate only the selected gun
-        if (guns.Count > 0)
+        if (weapons.Count > 0)
         {
-            guns[currentGunIndex].SetActive(true);
+            weapons[currentGunIndex].SetActive(true);
         }
     }
 }

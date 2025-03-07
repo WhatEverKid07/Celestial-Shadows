@@ -21,6 +21,7 @@ public class AutoAndSemiAutoGunController : MonoBehaviour
     [SerializeField] private float recoilIncreaseMultiplier = 1.2f;
     [SerializeField] private float semiAutoShotDelay = 0.2f;
     [SerializeField] private float coneAngle;
+    [SerializeField] private bool useSight = false;
 
     private bool isReloading = false;
     private bool canShoot = true;
@@ -102,8 +103,10 @@ public class AutoAndSemiAutoGunController : MonoBehaviour
 
         shoot.Enable();
         reload.Enable();
-        zoomInOrOut.Enable();
 
+        if (!useSight)
+            return;
+        zoomInOrOut.Enable();
         zoomInOrOut.performed += ctx => ChangeFOV(targetZoomFOV);
         zoomInOrOut.performed += ctx => gunManager.canSwitch = false;
         zoomInOrOut.canceled += ctx => gunManager.canSwitch = true;
@@ -164,7 +167,8 @@ public class AutoAndSemiAutoGunController : MonoBehaviour
             }
         };
         shoot.canceled += ctx => { StopRecoil(); };
-        GunSight();
+        if (useSight)
+            GunSight();
 
         float smoothX = Mathf.SmoothDampAngle(transform.localEulerAngles.x, (initialRotation * Quaternion.Euler(-accumulatedRecoil)).eulerAngles.x, ref recoilVelocityX, recoilSmoothTime);
         float smoothY = Mathf.SmoothDampAngle(transform.localEulerAngles.y, (initialRotation * Quaternion.Euler(-accumulatedRecoil)).eulerAngles.y, ref recoilVelocityY, recoilSmoothTime);

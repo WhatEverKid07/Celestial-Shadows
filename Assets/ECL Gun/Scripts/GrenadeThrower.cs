@@ -1,20 +1,30 @@
 using Unity.PlasticSCM.Editor.WebApi;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
 
 public class GrenadeThrower : MonoBehaviour
 {
-    [SerializeField] private Grenade grenadeScript;
-    [SerializeField] private GameObject grenadePrefab;
-    [SerializeField] private Transform throwPoint;
+    [Space(20)]
+    [Header("Grenade Attributes")]
     [SerializeField] private float throwForce = 10f;
     [SerializeField] private float throwDelay = 2f;
     [SerializeField] private int grenadeAmount = 2;
+    [Space(10)]
+    [SerializeField] private GameObject grenadePrefab;
+    [SerializeField] private Transform throwPoint;
+
+    [Space(20)]
     [SerializeField] private GameObject grenadeThrower;
     [SerializeField] private InputActionAsset controls;
+    
+    [Space(20)]
+    [Header("UI")]
+    [SerializeField] private Text ammoText;
 
     private InputAction throwGrenade;
-    public float currentThrowDelay;
+    private float currentThrowDelay;
+    private Grenade grenadeScript;
 
     private void Start()
     {
@@ -22,6 +32,17 @@ public class GrenadeThrower : MonoBehaviour
         throwGrenade.Enable();
 
         currentThrowDelay = throwDelay;
+    }
+
+    void OnEnable()
+    {
+        ammoText.gameObject.SetActive(true);
+        UpdateAmmoText();
+    }
+    private void OnDisable()
+    {
+        if (ammoText != null)
+            ammoText.gameObject.SetActive(false);
     }
 
     void Update()
@@ -69,5 +90,10 @@ public class GrenadeThrower : MonoBehaviour
             grenadeScript = null;
         }
         grenadeAmount--;
+        UpdateAmmoText();
+    }
+    void UpdateAmmoText()
+    {
+        ammoText.text = grenadeAmount.ToString() + " Grenades Remaining";
     }
 }
