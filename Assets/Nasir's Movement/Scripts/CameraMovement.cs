@@ -64,7 +64,7 @@ public class CameraMovement : MonoBehaviour
         }
 
 
-        if (characterMove.isRunning || characterMove.isWallRunning)
+        if (characterMove.isRunning || characterMove.isWallRunning && !characterMove.isWallJumping)
         {
             ChangeWalkFOV();
         }

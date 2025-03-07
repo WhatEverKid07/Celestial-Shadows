@@ -194,6 +194,54 @@
                     "isPartOfComposite": false
                 }
             ]
+        },
+        {
+            "name": "Debug Controls",
+            "id": "43a6f0af-37e7-421c-9519-6637a81d6e43",
+            "actions": [
+                {
+                    "name": "EnableRaycasts",
+                    "type": "Button",
+                    "id": "1da56dd7-15a9-4096-ad41-58362b804581",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "DisableRaycasts",
+                    "type": "Button",
+                    "id": "b9568cb3-f150-4524-ad9f-535a861cee0c",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "82982ee1-288c-4abd-a9ed-201d05a1942a",
+                    "path": "<Keyboard>/leftBracket",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "EnableRaycasts",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "cff1725b-1c36-4cd4-8eed-687837975457",
+                    "path": "<Keyboard>/rightBracket",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "DisableRaycasts",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
         }
     ],
     "controlSchemes": []
