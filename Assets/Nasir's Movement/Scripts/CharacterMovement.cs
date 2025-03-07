@@ -495,15 +495,15 @@ public class CharacterMovement : MonoBehaviour
 
     private void CheckForLedge()
     {
-        bool foundLedge = Physics.SphereCast(transform.position, .5f, transform.forward, out ledgeHit, ledgeCheckDist, ledge);
-        if (foundLedge)
-        {
-            Debug.DrawRay(transform.position, transform.forward * ledgeCheckDist, Color.blue);
-        }
+        bool foundLedge = Physics.SphereCast(transform.position, .8f, transform.forward, out ledgeHit, ledgeCheckDist, ledge);
 
         if (!foundLedge)
         {
             return;
+        }
+        else
+        {
+            Debug.DrawRay(transform.position, ledgeHit.point, Color.blue);
         }
 
         float distToLedge = Vector3.Distance(transform.position, ledgeHit.transform.position);
@@ -520,14 +520,13 @@ public class CharacterMovement : MonoBehaviour
         lastLedge = currentLedge;
 
         restricted = true;
+        rb.useGravity = false;
 
         Invoke(nameof(PerformLedgeGrab), .5f);
     }
 
     private void PerformLedgeGrab()
     {
-        rb.useGravity = false;
-
         Vector3 ledgeDir = currentLedge.position - transform.position;
         float ledgeDist = Vector3.Distance(transform.position, currentLedge.position);
 
@@ -571,7 +570,7 @@ public class CharacterMovement : MonoBehaviour
                 }
             }
 
-            transform.position = closestGround.position + Vector3.up * 0.5f; 
+            transform.position = closestGround.position + Vector3.up * 1.2f; 
             rb.useGravity = true; 
         }
 
