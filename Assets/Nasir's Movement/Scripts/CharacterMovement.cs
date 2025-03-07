@@ -133,6 +133,12 @@ public class CharacterMovement : MonoBehaviour
 
     private void Update()
     {
+        //FORCED RESTRICTION
+        if (restricted)
+        {
+            return;
+        }
+
         //MOVE INPUT
         moveDir = playerCntrls.action.ReadValue<Vector3>();
 
@@ -214,12 +220,6 @@ public class CharacterMovement : MonoBehaviour
     
     private void FixedUpdate()
     {
-        //FORCED RESTRICTION
-        if (restricted)
-        {
-            return;
-        }
-
         //WALKING & RUNNING
         Move();
 
@@ -495,7 +495,7 @@ public class CharacterMovement : MonoBehaviour
 
     private void CheckForLedge()
     {
-        bool foundLedge = Physics.SphereCast(transform.position, .8f, transform.forward, out ledgeHit, ledgeCheckDist, ledge);
+        bool foundLedge = Physics.SphereCast(transform.position, .5f, transform.forward, out ledgeHit, ledgeCheckDist, ledge);
 
         if (!foundLedge)
         {
@@ -506,7 +506,9 @@ public class CharacterMovement : MonoBehaviour
             Debug.DrawRay(transform.position, ledgeHit.point, Color.blue);
         }
 
-        float distToLedge = Vector3.Distance(transform.position, ledgeHit.transform.position);
+        Vector3 fwd = new Vector3(0f, transform.position.y, transform.position.z);
+        float distToLedge = Vector3.Distance(fwd, ledgeHit.point);
+        //Debug.Log("The distance to ledge is: " + distToLedge);
 
         if (distToLedge < maxLedgeGrabDist)
         {
@@ -530,30 +532,23 @@ public class CharacterMovement : MonoBehaviour
         Vector3 ledgeDir = currentLedge.position - transform.position;
         float ledgeDist = Vector3.Distance(transform.position, currentLedge.position);
 
-        if (ledgeDist > 1f)
+        Debug.Log("The ledge distance is: " + ledgeDist);
+
+        if (ledgeDist < maxLedgeGrabDist)
         {
-            if (rb.velocity.magnitude < grabLedgeSpeed)
-            {
-                rb.AddForce(1000f * grabLedgeSpeed * Time.deltaTime * ledgeDir.normalized);
-            }
+            MoveToClosestGround();
+            rb.velocity = Vector3.zero;
         }
         else
         {
-            rb.velocity = Vector3.zero;
-            MoveToClosestGround();
-        }
-
-        if (ledgeDist > maxLedgeGrabDist)
-        {
-            ExitLedgeGrab();
+            rb.AddForce(1000f * grabLedgeSpeed * Time.deltaTime * ledgeDir.normalized);
         }
     }
 
     private void MoveToClosestGround()
     {
-        float searchRadius = 5f;
-        int groundLayer = ground;
-        Collider[] groundColliders = Physics.OverlapSphere(transform.position, searchRadius, groundLayer);
+        float searchRadius = 10f;
+        Collider[] groundColliders = Physics.OverlapSphere(transform.position, searchRadius, ground);
 
         if (groundColliders.Length > 0)
         {
@@ -570,11 +565,11 @@ public class CharacterMovement : MonoBehaviour
                 }
             }
 
-            transform.position = closestGround.position + Vector3.up * 1.2f; 
-            rb.useGravity = true; 
-        }
+            transform.position = closestGround.position + (Vector3.up * 1.2f); 
+            rb.useGravity = true;
 
-        Debug.Log(groundColliders);
+            Debug.Log(closestGround);
+        }
     }
 
     private void ExitLedgeGrab()
@@ -590,6 +585,7 @@ public class CharacterMovement : MonoBehaviour
     {
         lastLedge = null;
     }
+
 
     private void ShowDebugs()
     {
