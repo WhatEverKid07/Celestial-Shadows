@@ -72,10 +72,6 @@ public class SniperGunController : MonoBehaviour
         currentAmmo = maxAmmo;
         UpdateAmmoText();
 
-        shoot = gunControls.FindActionMap("Gun Controls").FindAction("Shoot");
-        reload = gunControls.FindActionMap("Gun Controls").FindAction("Reload");
-        zoomInOrOut = gunControls.FindActionMap("Gun Controls").FindAction("Zoom in/out");
-
         shoot.Enable();
         reload.Enable();
         zoomInOrOut.Enable();
@@ -89,6 +85,10 @@ public class SniperGunController : MonoBehaviour
 
     private void Awake()
     {
+        shoot = gunControls.FindActionMap("Gun Controls").FindAction("Shoot");
+        reload = gunControls.FindActionMap("Gun Controls").FindAction("Reload");
+        zoomInOrOut = gunControls.FindActionMap("Gun Controls").FindAction("Zoom in/out");
+
         if (fPSCam == null)
         {
             fPSCam = Camera.main;
@@ -98,25 +98,22 @@ public class SniperGunController : MonoBehaviour
 
     void OnEnable()
     {
-        Debug.Log("sniper enabled");
         isReloading = false;
         ammoText.gameObject.SetActive(true);
         UpdateAmmoText();
+        zoomInOrOut.Enable();
     }
-    private void OnDisable()
+    void OnDisable()
     {
-        Debug.Log("sniper disabled");
         if (ammoText != null)
             ammoText.gameObject.SetActive(false);
+        zoomInOrOut.Disable();
     }
 
     void Update()
     {
         if (!gameObject.activeInHierarchy)
-        {
-
             return;
-        }
 
         if (gameObject.activeInHierarchy && reload.ReadValue<float>() > 0)
         {

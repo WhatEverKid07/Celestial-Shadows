@@ -97,10 +97,6 @@ public class AutoAndSemiAutoGunController : MonoBehaviour
         currentAmmo = maxAmmo;
         UpdateAmmoText();
 
-        shoot = gunControls.FindActionMap("Gun Controls").FindAction("Shoot");
-        reload = gunControls.FindActionMap("Gun Controls").FindAction("Reload");
-        zoomInOrOut = gunControls.FindActionMap("Gun Controls").FindAction("Zoom in/out");
-
         shoot.Enable();
         reload.Enable();
 
@@ -115,6 +111,10 @@ public class AutoAndSemiAutoGunController : MonoBehaviour
 
     private void Awake()
     {
+        shoot = gunControls.FindActionMap("Gun Controls").FindAction("Shoot");
+        reload = gunControls.FindActionMap("Gun Controls").FindAction("Reload");
+        zoomInOrOut = gunControls.FindActionMap("Gun Controls").FindAction("Zoom in/out");
+
         if (playerCam == null)
         {
             playerCam = Camera.main;
