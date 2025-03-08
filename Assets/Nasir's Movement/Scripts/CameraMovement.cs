@@ -18,18 +18,15 @@ public class CameraMovement : MonoBehaviour
 
     [Header("Camera")]
     [SerializeField] private Camera fpsCam;
-    [Range(90, 100)]
-    [SerializeField] private int fov;
-    [SerializeField] private float rotationSpeed;
+    [SerializeField] [Range(90, 100)] private int fov;
+    [SerializeField] [Range(8, 12)] private float rotationSpeed;
 
     [Header("Sensitivity")]
     private float mouseX;
     private float mouseY;
 
-    [Range(5f, 50f)]
-    [SerializeField] private float sensX;
-    [Range(5f, 50f)]
-    [SerializeField] private float sensY;
+    [SerializeField] [Range(5f, 50f)] private float sensX;
+    [SerializeField] [Range(5f, 50f)] private float sensY;
 
     private float currentRotationX = 0f;
     private float currentRotationZ = 0f;
@@ -45,8 +42,6 @@ public class CameraMovement : MonoBehaviour
 
     private void Update()
     {
-        transform.position = new Vector3(player.transform.position.x, player.transform.position.y, player.transform.position.z);
-
         mouseX = axisX.action.ReadValue<float>();
         mouseY = axisY.action.ReadValue<float>();
 
@@ -74,6 +69,12 @@ public class CameraMovement : MonoBehaviour
         }
     }
 
+    private void LateUpdate()
+    {
+        //transform.position = Vector3.SmoothDamp(transform.position, player.transform.position, ref velocity, 0.05f);
+        transform.position = player.transform.position;
+    }
+
     private void ChangeCameraWalkAngle()
     {
         float rotationX = mouseX * sensX / 100;
@@ -95,7 +96,7 @@ public class CameraMovement : MonoBehaviour
         currentRotationX = Mathf.Clamp(currentRotationX, -20f, 20f);
 
         currentRotationZ += rotationX;
-        currentRotationZ = Mathf.Clamp(currentRotationZ, 5f, 15f);
+        currentRotationZ = Mathf.Clamp(currentRotationZ, 5f, 20f);
 
         float currentRotationY = player.transform.rotation.eulerAngles.y;
         float targetY;
@@ -126,7 +127,7 @@ public class CameraMovement : MonoBehaviour
         currentRotationX = Mathf.Clamp(currentRotationX, -20f, 20f);
 
         currentRotationZ += rotationX;
-        currentRotationZ = Mathf.Clamp(currentRotationZ, -15f, -5f);
+        currentRotationZ = Mathf.Clamp(currentRotationZ, -20f, -5f);
 
         float currentRotationY = player.transform.rotation.eulerAngles.y;
         float targetY;

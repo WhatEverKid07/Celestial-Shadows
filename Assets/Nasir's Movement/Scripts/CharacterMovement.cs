@@ -23,21 +23,21 @@ public class CharacterMovement : MonoBehaviour
 
     [Header("Camera")]
     [SerializeField] private Transform camDir;
-    [Range(60, 100)]
-    [SerializeField] private int fov;
+    [SerializeField] [Range(60, 100)] private int fov;
     public bool flipCam { get; private set; }
 
     [Header("Walking & Running")]
-    private Vector3 moveDir;
-    [SerializeField] private float walkSpeed;
-    [SerializeField] private float runSpeed;
+    [SerializeField] [Range(5,8)] private float walkSpeed;
+    [SerializeField] [Range(10,13)] private float runSpeed;
+
+    public Vector3 moveDir { get; private set; }
     public bool isRunning { get; private set; }
     public bool isGrounded { get; private set; }
 
     [Header("Wall Running")]
-    [SerializeField] private float wallRunForce;
-    [SerializeField] private float wallRunForceMulti;
-    [SerializeField] private float wallRunTime;
+    [SerializeField] [Range(300, 500)] private float wallRunForce;
+    [SerializeField] [Range(1.2f, 1.5f)] private float wallRunForceMulti;
+    [SerializeField] [Range(1, 3)] private float wallRunTime;
     private float setWallRunTime;
 
     public bool facingForward { get; private set; }
@@ -51,18 +51,17 @@ public class CharacterMovement : MonoBehaviour
     public bool isWallRunning { get; private set; }
 
     [Header("Jumping")]
-    [Range(5f, 10f)]
-    [SerializeField] private float jumpPower;
+    [SerializeField] [Range(5, 10)] private float jumpPower;
     private bool isJumping = false;
+    private bool hasLanded;
 
-    [Range(1f, 3f)]
-    [SerializeField] private float fallMulti;
+    [SerializeField] [Range(1, 3)] private float fallMulti;
 
-    [Range(.1f, .25f)]
-    [SerializeField] private float coyoteTime;
+    [SerializeField] [Range(.1f, .25f)] private float coyoteTime;
     private float setCoyoteTime;
 
     private LayerMask ground;
+    private RaycastHit groundHit;
     private GameObject groundChecker;
 
     [Header("Wall Jumping")]
@@ -72,7 +71,7 @@ public class CharacterMovement : MonoBehaviour
     public bool isWallJumping { get; private set; }
 
     [Header("Ledge Climbing")]
-    [SerializeField] private float ledgeCheckDist;
+    private float ledgeCheckDist = 1.2f;
     private LayerMask ledge;
 
     private Transform lastLedge;
@@ -81,20 +80,18 @@ public class CharacterMovement : MonoBehaviour
     private RaycastHit ledgeHit;
 
     [Header("Ledge Grabbing")]
-    [SerializeField] private float grabLedgeSpeed;
-    [SerializeField] private float maxLedgeGrabDist;
+    private float grabLedgeSpeed = 3f;
+    private float maxLedgeGrabDist = .8f;
     public bool isHoldingLedge { get; private set; }
     private Coroutine holdLedgeCoroutine;
 
     [Header("Dashing")]
     [SerializeField] private bool enableDash;
-    [Range(1f, 3f)]
-    [SerializeField] private float dashPower;
+    [SerializeField] [Range(1, 3)] private float dashPower;
     private bool canDash;
     private bool isDashing = false;
 
-    [Range(.5f, 2f)]
-    [SerializeField] private float DashTime;
+    [SerializeField] [Range(.5f, 2)] private float DashTime;
     private float setDashTime;
 
     private Vector3 dashMomentum = Vector3.zero;
@@ -103,6 +100,7 @@ public class CharacterMovement : MonoBehaviour
 
     [Header("Debugging")]
     private bool enableDebug = false;
+    [SerializeField] private LayerMask ignore;
 
     private void Start()
     {
@@ -207,6 +205,12 @@ public class CharacterMovement : MonoBehaviour
             }
         }
 
+        //FORCE EXIT LEDGE
+        if (isHoldingLedge && moveDir.magnitude > 0.1f)
+        {
+            ExitLedgeGrab();
+        }
+
         if (enableDebug)
         {
             ShowDebugs();
@@ -307,6 +311,7 @@ public class CharacterMovement : MonoBehaviour
             flipCam = false;
         }
 
+        //WALL WALKING & WALL RUNNING
         if (run.ReadValue<float>() > 0f)
         {
             rb.AddForce(wallRunForce * wallRunForceMulti * wallBackward, ForceMode.Force);
@@ -316,6 +321,7 @@ public class CharacterMovement : MonoBehaviour
             rb.AddForce(wallBackward * wallRunForce, ForceMode.Force);
         }
 
+        //ANY INPUT AWAY FROM THE WALL, GETS OFF THE WALL
         if (!(isLeftWalled && moveDir.x > 0f) || !(isRightWalled && -moveDir.x > 0))
         {
             rb.AddForce(-wallNormal * 100, ForceMode.Force);
@@ -329,6 +335,7 @@ public class CharacterMovement : MonoBehaviour
     {
         Move();
         rb.useGravity = true;
+        isWallRunning = false;
     }
 
     //JUMP FUNCTION
@@ -365,6 +372,7 @@ public class CharacterMovement : MonoBehaviour
         Vector3 wallNormal = isLeftWalled ? leftHit.normal : rightHit.normal;
 
         Vector3 up = transform.TransformDirection(Vector3.up);
+        //DIAGONAL JUMP FROM WALL
         Vector3 jumpDir = (wallNormal * 1.5f) + (up * 1f);
 
         rb.AddForce(jumpDir * (jumpPower * 1.5f), ForceMode.VelocityChange);
@@ -440,7 +448,8 @@ public class CharacterMovement : MonoBehaviour
             yield return null;
         }
 
-        dashMomentum = new Vector3(rb.velocity.x, verticalVelocity, rb.velocity.z);
+        //CONTINUE VELOCITY IN X,Z DIRECTIONS
+        dashMomentum = new (rb.velocity.x, verticalVelocity, rb.velocity.z);
         StartCoroutine(ApplyDashMomentum());
 
         isDashing = false;
@@ -451,6 +460,7 @@ public class CharacterMovement : MonoBehaviour
         float momentumTime = .5f;
         float elaspedTime = 0f;
 
+        //SLOWLY REMOVE THE VELOCITY OVERTIME
         while (elaspedTime < momentumTime)
         {
             rb.velocity = Vector3.Lerp(rb.velocity, dashMomentum, momentumDecay * Time.deltaTime);
@@ -497,8 +507,8 @@ public class CharacterMovement : MonoBehaviour
 
     private void CheckForLedge()
     {
-        Vector3 horizontal = new(0f, transform.position.y, transform.position.z);
-        bool foundLedge = Physics.SphereCast(transform.position, .5f, horizontal, out ledgeHit, ledgeCheckDist, ledge);
+        Vector3 horizontal = new (transform.position.x, 0f, transform.position.z);
+        bool foundLedge = Physics.SphereCast(transform.position, .2f, horizontal, out ledgeHit, ledgeCheckDist, ledge);
 
         if (!foundLedge)
         {
@@ -509,10 +519,11 @@ public class CharacterMovement : MonoBehaviour
             Debug.DrawRay(transform.position, ledgeHit.point, Color.blue);
         }
 
-        Vector3 playerPos = new Vector3(0f, transform.position.y, transform.position.z);
-        Vector3 ledgePos = new Vector3(0f, transform.position.y, ledgeHit.point.z);
+        Vector3 playerPos = new (transform.position.x, 0f, transform.position.z);
+        Vector3 ledgePos = new (transform.position.x, 0f, ledgeHit.point.z);
         float distToLedge = Vector3.Distance(playerPos, ledgePos);
-        //Debug.Log("The distance to ledge is: " + distToLedge);
+
+        Debug.Log("The ledge distance is: " + distToLedge);
 
         if (distToLedge < maxLedgeGrabDist && !isHoldingLedge)
         {
@@ -547,7 +558,7 @@ public class CharacterMovement : MonoBehaviour
                 rb.AddForce(1000f * grabLedgeSpeed * Time.deltaTime * ledgeDir.normalized);
             }
 
-            transform.position = new(ledgeDist, ledgeDist, ledgeDist);
+            ledgeDist = Vector3.Distance(transform.position, currentLedge.position);
             yield return null;
         }
 
@@ -557,35 +568,57 @@ public class CharacterMovement : MonoBehaviour
 
     private void MoveToClosestGround()
     {
-        float searchRadius = 5f;
-        Collider[] groundColliders = Physics.OverlapSphere(transform.position, searchRadius, ground);
+        float searchRadius = 1f;
+        Collider[] groundColliders = Physics.OverlapSphere(currentLedge.position, searchRadius, ground);
 
         if (groundColliders.Length > 0)
         {
-            Transform closestGround = groundColliders[0].transform;
-            float minDist = Vector3.Distance(transform.position, closestGround.position);
+            Collider closestGround = groundColliders[0];
+            float minDist = Vector3.Distance(transform.position, closestGround.ClosestPoint(transform.position));
 
             foreach (Collider col in groundColliders)
             {
-                float dist = Vector3.Distance(transform.position, col.transform.position);
+                float dist = Vector3.Distance(transform.position, col.ClosestPoint(transform.position));
                 if (dist < minDist)
                 {
                     minDist = dist;
-                    closestGround = col.transform;
+                    closestGround = col;
                 }
             }
 
-            restricted = false;
-            rb.useGravity = true;
-            isHoldingLedge = false;
-            Vector3 closestGroundPosition = closestGround.position;
-            transform.position = new Vector3(closestGroundPosition.x, closestGroundPosition.y + 1.2f, closestGroundPosition.z);
+            ExitLedgeGrab();
+            Vector3 closestGroundPosition = closestGround.ClosestPoint(transform.position);
+            Vector3 forwardOffset = transform.forward * .5f;
+
+            transform.position = new (forwardOffset.x + closestGroundPosition.x, closestGroundPosition.y + 1.2f, forwardOffset.z + closestGroundPosition.z);
+            rb.velocity = Vector3.zero;
         }
+    }
+    private void ExitLedgeGrab()
+    {
+        restricted = false;
+        isHoldingLedge = false;
+
+        StopAllCoroutines();
+        Invoke(nameof(EnableGravity), .5f);
+        Invoke(nameof(ResetLastLedge), .5f);
+    }
+
+    private void ResetLastLedge()
+    {
+        lastLedge = null;
+    }
+
+    private void EnableGravity()
+    {
+        rb.useGravity = true;
     }
 
     private void ShowDebugs()
     {
-        Debug.Log("The dash time is: " + setDashTime);
+        //Debug.Log("The dash time is: " + setDashTime);
+        Debug.Log(hasLanded);
+        Debug.DrawRay(transform.position, Vector3.down * 2f ,Color.black);
     }
 
     private void ClearDebugLog()
