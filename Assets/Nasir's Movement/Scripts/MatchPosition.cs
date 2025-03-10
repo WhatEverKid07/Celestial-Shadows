@@ -8,7 +8,8 @@ public class MatchPosition : MonoBehaviour
 
     private void Update()
     {
-        transform.position = player.transform.position;
+        Vector3 bOffset = -player.transform.forward * .15f;
+        transform.position = new(player.transform.position.x + bOffset.x, player.transform.position.y, player.transform.position.z + bOffset.z);
         transform.rotation = player.transform.rotation;
     }
 }
