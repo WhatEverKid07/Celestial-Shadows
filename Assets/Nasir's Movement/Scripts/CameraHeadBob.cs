@@ -14,7 +14,7 @@ public class CameraHeadBob : MonoBehaviour
     [SerializeField] private Transform cameraHolder;
     [SerializeField] private Transform playerCamera;
 
-    [SerializeField] [Range(8, 10)] private float bobSpeed;
+    [SerializeField] [Range(5, 10)] private float bobSpeed;
     [SerializeField] [Range(.05f, .01f)] private float bobForce;
     [SerializeField] [Range(1.2f, 1.7f)] private float bobMulti;
 
@@ -37,9 +37,9 @@ public class CameraHeadBob : MonoBehaviour
             bobTimer += Time.deltaTime * bobSpeed;
             if (characterMove.isRunning)
             {
-                float bobOffsetY = Mathf.Sin(bobTimer) * bobForce * bobMulti;
-                float bobOffsetZ = (Mathf.Sin(bobTimer) * bobForce * bobMulti) * 2;
-                playerCamera.localPosition = new Vector3(originalCameraLocalPos.x + bobOffsetY, originalCameraLocalPos.y + bobOffsetZ, originalCameraLocalPos.z);
+                float bobOffsetY = (Mathf.Sin(bobTimer) * bobForce * bobMulti) * 5;
+                float bobOffsetX = (Mathf.Sin(bobTimer) * bobForce * bobMulti) * 2;
+                playerCamera.localPosition = new Vector3(originalCameraLocalPos.x + bobOffsetX, originalCameraLocalPos.y + bobOffsetY, originalCameraLocalPos.z);
             }
             else
             {
@@ -50,7 +50,7 @@ public class CameraHeadBob : MonoBehaviour
         else
         {
             bobTimer = 0f;
-            playerCamera.localPosition = Vector3.Lerp(playerCamera.localPosition, originalCameraLocalPos, Time.deltaTime * 5f);
+            playerCamera.localPosition = Vector3.Slerp(playerCamera.localPosition, originalCameraLocalPos, Time.deltaTime * 5f);
         }
     }
 

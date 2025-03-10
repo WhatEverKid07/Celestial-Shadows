@@ -137,10 +137,13 @@ public class CharacterMovement : MonoBehaviour
         moveDir = playerCntrls.action.ReadValue<Vector3>();
 
         //COYOTE TIME
-        if (!IsGrounded() && !isWallRunning)
+        if (!IsGrounded())
         {
             isGrounded = false;
-            setCoyoteTime -= Time.deltaTime;
+            if (!isWallRunning)
+            {
+                setCoyoteTime -= Time.deltaTime;
+            }
             if (rb.velocity.y > 0f)
             {
                 setCoyoteTime = 0f;
@@ -176,6 +179,7 @@ public class CharacterMovement : MonoBehaviour
         if (isWallRunning)
         {
             canWallJump = true;
+            setCoyoteTime = coyoteTime;
             if (setWallRunTime > 0f)
             {
                 if (run.ReadValue<float>() > 0f)
@@ -190,7 +194,7 @@ public class CharacterMovement : MonoBehaviour
         }
         else
         {
-            if (setCoyoteTime == 0f)
+            if (setCoyoteTime <= 0f)
             {
                 canWallJump = false;
             }
@@ -480,7 +484,7 @@ public class CharacterMovement : MonoBehaviour
 
     private bool GroundedDistanceForWall()
     {
-        return !Physics.Raycast(transform.position, Vector3.down, 1.5f, ground);
+        return !Physics.Raycast(transform.position, Vector3.down, 1f, ground);
     }
 
     private void CheckForWall()
@@ -590,7 +594,7 @@ public class CharacterMovement : MonoBehaviour
             Vector3 closestGroundPosition = closestGround.ClosestPoint(transform.position);
             Vector3 forwardOffset = transform.forward * .5f;
 
-            transform.position = new (forwardOffset.x + closestGroundPosition.x, closestGroundPosition.y + 1.2f, forwardOffset.z + closestGroundPosition.z);
+            transform.position = new (forwardOffset.x + closestGroundPosition.x, closestGroundPosition.y + 1f, forwardOffset.z + closestGroundPosition.z);
             rb.velocity = Vector3.zero;
         }
     }
@@ -617,7 +621,8 @@ public class CharacterMovement : MonoBehaviour
     private void ShowDebugs()
     {
         //Debug.Log("The dash time is: " + setDashTime);
-        Debug.Log(hasLanded);
+       // Debug.Log(hasLanded);
+        Debug.Log(setCoyoteTime);
         Debug.DrawRay(transform.position, Vector3.down * 2f ,Color.black);
     }
 
