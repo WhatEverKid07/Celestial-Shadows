@@ -16,11 +16,18 @@ public class EnemyAI : MonoBehaviour
         agent = GetComponent<NavMeshAgent>();
         agent.speed = speed;
         agent.acceleration = acceleration;
+        GetRadius();
 
         if (target != null)
         {
             MoveToTarget();
         }
+    }
+
+    void GetRadius()
+    {
+        SphereCollider collider = target.GetComponent<SphereCollider>();
+        agent.stoppingDistance = collider.radius;
     }
 
     void Update()
