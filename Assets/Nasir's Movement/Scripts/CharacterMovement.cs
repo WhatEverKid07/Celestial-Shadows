@@ -4,6 +4,7 @@ using System.Collections;
 using System;
 using System.Reflection;
 using UnityEngine.EventSystems;
+using UnityEngine.UIElements;
 
 public class CharacterMovement : MonoBehaviour
 {
@@ -256,7 +257,7 @@ public class CharacterMovement : MonoBehaviour
         }
 
         //GRAVITY
-        if (setCoyoteTime <= 0f && !isDashing && !isHoldingLedge && exitingSlope)
+        if (setCoyoteTime <= 0f && !isDashing && !isHoldingLedge)
         {
             ApplyGravity();
         }
@@ -347,6 +348,10 @@ public class CharacterMovement : MonoBehaviour
         cameraRight.Normalize();
 
         Vector3 move = cameraForward * moveDir.z + cameraRight * moveDir.x;
+        if (move.magnitude < .1f)
+        {
+            //Debug.Log();
+        }
 
         return Vector3.ProjectOnPlane(move, slopeHit.normal).normalized;
     }
