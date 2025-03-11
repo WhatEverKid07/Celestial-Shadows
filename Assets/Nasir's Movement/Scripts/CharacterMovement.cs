@@ -40,6 +40,7 @@ public class CharacterMovement : MonoBehaviour
     [SerializeField] private float maxSlopeAngle;
     private RaycastHit slopeHit;
     private bool exitingSlope;
+    private bool reduceVelo;
 
 
     [Header("Wall Running")]
@@ -298,11 +299,11 @@ public class CharacterMovement : MonoBehaviour
             {
                 if (!exitingSlope)
                 {
-                    rb.AddForce(2f * runSpeed * GetSlopeMoveDirection(), ForceMode.Force);
+                    rb.AddForce(5f * runSpeed * GetSlopeMoveDirection(), ForceMode.Force);
                 }
-                else
+                if (rb.velocity.y > 0)
                 {
-                    rb.AddForce(Vector3.down * 80f, ForceMode.Force);
+                    rb.AddForce(Vector3.down * 10f, ForceMode.Force);
                 }
             }
    
@@ -315,11 +316,11 @@ public class CharacterMovement : MonoBehaviour
             {
                 if (!exitingSlope)
                 {
-                    rb.AddForce(2f * walkSpeed * GetSlopeMoveDirection(), ForceMode.Force);
+                    rb.AddForce(5f * walkSpeed * GetSlopeMoveDirection(), ForceMode.Force);
                 }
-                else
+                if (rb.velocity.y > 0)
                 {
-                    rb.AddForce(Vector3.down * 80f, ForceMode.Force);
+                    rb.AddForce(Vector3.down * 10f, ForceMode.Force);
                 }
             }
         }
@@ -350,7 +351,13 @@ public class CharacterMovement : MonoBehaviour
         Vector3 move = cameraForward * moveDir.z + cameraRight * moveDir.x;
         if (move.magnitude < .1f)
         {
-            //Debug.Log();
+            move = cameraForward;
+            if (Vector3.Angle(transform.forward, slopeHit.normal) > Vector3.Angle(transform.forward, -slopeHit.normal))
+            {
+                move = -cameraForward;
+            }
+
+            Debug.Log(slopeHit.normal);
         }
 
         return Vector3.ProjectOnPlane(move, slopeHit.normal).normalized;
@@ -432,6 +439,8 @@ public class CharacterMovement : MonoBehaviour
         {
             isJumping = false;
         }
+
+        exitingSlope = true;
     }
 
     private void WallJump()
