@@ -3,6 +3,7 @@ using UnityEngine;
 using System.Collections;
 using System;
 using System.Reflection;
+using UnityEngine.EventSystems;
 
 public class CharacterMovement : MonoBehaviour
 {
@@ -33,6 +34,12 @@ public class CharacterMovement : MonoBehaviour
     public Vector3 moveDir { get; private set; }
     public bool isRunning { get; private set; }
     public bool isGrounded { get; private set; }
+
+    [Header("Slope Movement")]
+    [SerializeField] private float maxSlopeAngle;
+    private RaycastHit slopeHit;
+    private bool exitingSlope;
+
 
     [Header("Wall Running")]
     [SerializeField] [Range(300, 500)] private float wallRunForce;
@@ -155,6 +162,15 @@ public class CharacterMovement : MonoBehaviour
             setCoyoteTime = coyoteTime;
         }
 
+        if (OnSlope())
+        {
+            exitingSlope = false;
+        }
+        else
+        {
+            exitingSlope = true;
+        }
+
         CheckForWall();
         CheckForLedge();
 
@@ -240,7 +256,7 @@ public class CharacterMovement : MonoBehaviour
         }
 
         //GRAVITY
-        if (setCoyoteTime <= 0f && !isDashing && !isHoldingLedge)
+        if (setCoyoteTime <= 0f && !isDashing && !isHoldingLedge && exitingSlope)
         {
             ApplyGravity();
         }
@@ -271,17 +287,70 @@ public class CharacterMovement : MonoBehaviour
 
         Vector3 move = cameraForward * moveDir.z + cameraRight * moveDir.x;
 
+        rb.useGravity = !OnSlope();
+
         if (run.ReadValue<float>() > 0)
         {
             rb.velocity = new Vector3(move.x * runSpeed, rb.velocity.y, move.z * runSpeed);
             isRunning = true;
+            if (OnSlope())
+            {
+                if (!exitingSlope)
+                {
+                    rb.AddForce(2f * runSpeed * GetSlopeMoveDirection(), ForceMode.Force);
+                }
+                else
+                {
+                    rb.AddForce(Vector3.down * 80f, ForceMode.Force);
+                }
+            }
+   
         }
         else
         {
             rb.velocity = new Vector3(move.x * walkSpeed, rb.velocity.y, move.z * walkSpeed);
             isRunning = false;
+            if (OnSlope())
+            {
+                if (!exitingSlope)
+                {
+                    rb.AddForce(2f * walkSpeed * GetSlopeMoveDirection(), ForceMode.Force);
+                }
+                else
+                {
+                    rb.AddForce(Vector3.down * 80f, ForceMode.Force);
+                }
+            }
         }
     }
+
+    private bool OnSlope()
+    {
+        if (Physics.Raycast(transform.position, Vector3.down, out slopeHit, 2f))
+        {
+            float angle = Vector3.Angle(Vector3.up, slopeHit.normal);
+            return angle < maxSlopeAngle && angle != 0;
+        }
+
+        return false;
+    }
+
+    private Vector3 GetSlopeMoveDirection()
+    {
+        //CAM DIRECTIONS
+        Vector3 cameraForward = camDir.forward;
+        Vector3 cameraRight = camDir.right;
+
+        cameraForward.y = 0f;
+        cameraRight.y = 0f;
+        cameraForward.Normalize();
+        cameraRight.Normalize();
+
+        Vector3 move = cameraForward * moveDir.z + cameraRight * moveDir.x;
+
+        return Vector3.ProjectOnPlane(move, slopeHit.normal).normalized;
+    }
+
     private void WallRunningMove()
     {
         //CAM DIRECTIONS
@@ -620,10 +689,11 @@ public class CharacterMovement : MonoBehaviour
 
     private void ShowDebugs()
     {
-        //Debug.Log("The dash time is: " + setDashTime);
-       // Debug.Log(hasLanded);
-        Debug.Log(setCoyoteTime);
+      //Debug.Log("The dash time is: " + setDashTime);
+      //Debug.Log(hasLanded);
+        Debug.Log(OnSlope());
         Debug.DrawRay(transform.position, Vector3.down * 2f ,Color.black);
+        Debug.DrawRay(transform.position, Vector3.down * 2f, Color.cyan);
     }
 
     private void ClearDebugLog()
