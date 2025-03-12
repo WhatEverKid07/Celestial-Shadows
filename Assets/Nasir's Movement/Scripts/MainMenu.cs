@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class MainMenu : MonoBehaviour
@@ -6,25 +7,36 @@ public class MainMenu : MonoBehaviour
     [SerializeField] private Transform menuCam;
     [SerializeField] private float rotationSpeed;
     private bool canRotate;
+    private bool goBack;
 
     [Header("Menus")]
     [SerializeField] private GameObject selectionMenu;
     [SerializeField] private GameObject characterMenu;
     [SerializeField] private GameObject arsenalMenu;
-    private Transform currentMenu;
+    [SerializeField] private static List<GameObject> menues = new List<GameObject>();
+    private GameObject currentMenu;
+
+    private void Start()
+    {
+        goBack = false;
+        canRotate = false;
+        menues.Add(selectionMenu);
+    }
 
     private void Update()
     {
+        if (menues.Count > 0)
+        {
+            for (int i = 0; i < menues.Count; i++)
+            {
+                currentMenu = menues[i];
+            }
+        }
+
         if (canRotate)
         {
             menuCam.rotation = Quaternion.Slerp(menuCam.rotation, currentMenu.transform.rotation, rotationSpeed * Time.deltaTime);
-            Invoke(nameof(StopRotate), rotationSpeed * Time.deltaTime);
-            if (currentMenu == characterMenu)
-            {
-                menuCam.rotation = Quaternion.Slerp(menuCam.rotation, currentMenu.rotation, rotationSpeed * Time.deltaTime);
-                Invoke(nameof(StopRotate), rotationSpeed * Time.deltaTime);
-                selectionMenu.SetActive(false);
-            }
+            Invoke(nameof(StopRotate), 5f);
         }
     }
 
@@ -32,12 +44,14 @@ public class MainMenu : MonoBehaviour
     {
         canRotate = true;
         characterMenu.SetActive(true);
-        currentMenu = characterMenu.transform;
+        menues.Add(characterMenu);
     }
 
     public void Back()
     {
         canRotate = true;
+        goBack = true;
+        menues.Remove(currentMenu);
     }
 
     public void QuitGame()
@@ -49,5 +63,6 @@ public class MainMenu : MonoBehaviour
     private void StopRotate()
     {
         canRotate = false;
+        goBack = false;
     }
 }
