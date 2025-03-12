@@ -6,6 +6,7 @@ TagManager:
   tags:
   - FxTemporaire
   - Target
+  - Obstacle/Wall
   layers:
   - Default
   - TransparentFX

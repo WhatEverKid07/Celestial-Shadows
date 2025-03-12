@@ -4,94 +4,90 @@ using UnityEngine.AI;
 public class EnemyAI : MonoBehaviour
 {
     public Transform target;
+    public Transform player;
     public float rotationSpeed;
     public float speed;
     public float acceleration;
+    public float detectionRange = 10f;
+    public float fieldOfViewAngle = 120f;
+    public LayerMask obstructionMask;
 
     private NavMeshAgent agent;
     private bool hasReachedTarget = false;
+    private bool hasPerformedAction = false;
+    public Transform currentTarget;
 
     void Start()
     {
         agent = GetComponent<NavMeshAgent>();
         agent.speed = speed;
         agent.acceleration = acceleration;
-        GetRadius();
-
-        if (target != null)
-        {
-            MoveToTarget();
-        }
-    }
-
-    void GetRadius()
-    {
-        SphereCollider collider = target.GetComponent<SphereCollider>();
-        agent.stoppingDistance = collider.radius;
+        currentTarget = target;
+        MoveToTarget(target);
     }
 
     void Update()
     {
-        if (target == null) return;
+        if (player == null || target == null)
+            return;
 
-        // Keep updating the target position dynamically
-        if (!hasReachedTarget)
+        if (IsPlayerVisible())
         {
-            agent.SetDestination(target.position);
+            currentTarget = player;
+            MoveToTarget(player);
+        }
+        else
+        {
+            currentTarget = target;
+            //MoveToTarget(target);
         }
 
-        // Check if the agent reached the target
-        if (!hasReachedTarget && agent.remainingDistance <= agent.stoppingDistance && !agent.pathPending)
+        //agent.SetDestination(currentTarget.position);
+
+        if (!hasReachedTarget && agent.remainingDistance <= agent.stoppingDistance && !agent.pathPending && agent.velocity.magnitude == 0)
         {
+            hasReachedTarget = true;
             OnReachedTarget();
         }
-
-        MovementUpdate();
     }
 
-    private void MoveToTarget()
+    bool IsPlayerVisible()
     {
-        if (target != null)
+        if (player == null) return false;  // Ensure player reference is valid
+
+        Vector3 directionToPlayer = (player.position - transform.position).normalized;
+
+        // Visualize the raycast (for debugging)
+        Debug.DrawRay(transform.position, directionToPlayer * detectionRange, Color.red);
+
+        if (detectionRange > 0 && Physics.Raycast(transform.position, directionToPlayer, out RaycastHit hit, detectionRange, obstructionMask))
         {
-            agent.isStopped = false;
-            agent.SetDestination(target.position);
-            hasReachedTarget = false;
+            return hit.transform == player;
         }
+
+        return false;
     }
 
-    private void MovementUpdate()
+    private void MoveToTarget(Transform newTarget)
     {
-        if (agent.hasPath)
-        {
-            Vector3 lookRotation = agent.steeringTarget - transform.position;
-            if (lookRotation != Vector3.zero)
-            {
-                transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(lookRotation), rotationSpeed * Time.deltaTime);
-            }
-        }
+        agent.isStopped = false;
+        agent.SetDestination(newTarget.position);
+        hasReachedTarget = false;
+        hasPerformedAction = false;
     }
 
     private void OnReachedTarget()
     {
-        hasReachedTarget = true;
+        if (hasPerformedAction) return;
+        hasPerformedAction = true;
         agent.isStopped = true;
         Debug.Log("Target Reached!");
 
-        // Call a custom method ONCE when the target is reached
         PerformActionOnArrival();
     }
 
     private void PerformActionOnArrival()
     {
         Debug.Log("Performing arrival action...");
-    }
-
-    private void LateUpdate()
-    {
-        // If moved manually or by force, resume movement
-        if (hasReachedTarget && Vector3.Distance(transform.position, target.position) > agent.stoppingDistance)
-        {
-            MoveToTarget();
-        }
     }
 }
