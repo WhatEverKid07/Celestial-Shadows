@@ -134,7 +134,7 @@ GameObject:
   - component: {fileID: 196039964}
   - component: {fileID: 196039963}
   - component: {fileID: 196039962}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Obstacle (3)
   m_TagString: Obstacle/Wall
   m_Icon: {fileID: 0}
@@ -221,8 +221,8 @@ Transform:
   m_GameObject: {fileID: 196039961}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 1.75, y: 0.1519372, z: -0.02}
-  m_LocalScale: {x: 1.9994515, y: 0.22656819, z: 0.2110239}
+  m_LocalPosition: {x: 1.75, y: 0.583, z: -0.02}
+  m_LocalScale: {x: 1.9994515, y: 0.84511626, z: 0.2110239}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1016311898}
@@ -239,7 +239,7 @@ GameObject:
   - component: {fileID: 446331645}
   - component: {fileID: 446331644}
   - component: {fileID: 446331643}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Obstacle (4)
   m_TagString: Obstacle/Wall
   m_Icon: {fileID: 0}
@@ -326,8 +326,8 @@ Transform:
   m_GameObject: {fileID: 446331642}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: 0.70710677, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: -1.5552461, y: 0.1519372, z: -2.5934837}
-  m_LocalScale: {x: 1.9994515, y: 0.38085595, z: 0.7814215}
+  m_LocalPosition: {x: -1.5552461, y: 0.583, z: -2.5934837}
+  m_LocalScale: {x: 1.9994515, y: 1.420621, z: 0.7814215}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1016311898}
@@ -344,7 +344,7 @@ GameObject:
   - component: {fileID: 638479524}
   - component: {fileID: 638479523}
   - component: {fileID: 638479522}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Obstacle
   m_TagString: Obstacle/Wall
   m_Icon: {fileID: 0}
@@ -431,8 +431,8 @@ Transform:
   m_GameObject: {fileID: 638479520}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.98, y: 0.1519372, z: -0.02}
-  m_LocalScale: {x: 1.9994515, y: 0.38085595, z: 0.2110239}
+  m_LocalPosition: {x: -0.98, y: 0.583, z: -0.02}
+  m_LocalScale: {x: 1.9994515, y: 1.420621, z: 0.2110239}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1016311898}
@@ -542,7 +542,7 @@ GameObject:
   - component: {fileID: 1016311896}
   - component: {fileID: 1016311895}
   - component: {fileID: 1016311899}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Floor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -685,7 +685,7 @@ GameObject:
   - component: {fileID: 1382976639}
   - component: {fileID: 1382976638}
   - component: {fileID: 1382976637}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Obstacle (5)
   m_TagString: Obstacle/Wall
   m_Icon: {fileID: 0}
@@ -772,8 +772,8 @@ Transform:
   m_GameObject: {fileID: 1382976636}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: 0.70710677, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: 1.4623955, y: 0.1519372, z: 2.6103656}
-  m_LocalScale: {x: 1.9994515, y: 0.38085595, z: 0.2110239}
+  m_LocalPosition: {x: 1.4624, y: 0.583, z: 2.6103656}
+  m_LocalScale: {x: 1.9994515, y: 1.420621, z: 0.2110239}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1016311898}
@@ -788,7 +788,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1409839357}
   - component: {fileID: 1409839356}
-  m_Layer: 0
+  m_Layer: 15
   m_Name: '"Player"'
   m_TagString: Player
   m_Icon: {fileID: 7174288486110832750, guid: 0000000000000000d000000000000000, type: 0}
@@ -815,7 +815,7 @@ SphereCollider:
   m_Enabled: 1
   serializedVersion: 3
   m_Radius: 1
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Center: {x: 0, y: 1, z: 0}
 --- !u!4 &1409839357
 Transform:
   m_ObjectHideFlags: 0
@@ -825,7 +825,7 @@ Transform:
   m_GameObject: {fileID: 1409839355}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -8.47, y: 0, z: 3.86}
+  m_LocalPosition: {x: -11.1, y: 0, z: 7.6}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -843,7 +843,7 @@ GameObject:
   - component: {fileID: 1517502021}
   - component: {fileID: 1517502020}
   - component: {fileID: 1517502019}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Obstacle (2)
   m_TagString: Obstacle/Wall
   m_Icon: {fileID: 0}
@@ -930,8 +930,8 @@ Transform:
   m_GameObject: {fileID: 1517502018}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: 0.70710677, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: 3.1526968, y: 0.1519372, z: 0.6436229}
-  m_LocalScale: {x: 1.9994515, y: 0.38085595, z: 0.2110239}
+  m_LocalPosition: {x: 3.1526968, y: 0.583, z: 0.6436229}
+  m_LocalScale: {x: 1.9994515, y: 1.420621, z: 0.2110239}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1016311898}
@@ -951,7 +951,7 @@ GameObject:
   - component: {fileID: 1735038720}
   - component: {fileID: 1735038719}
   - component: {fileID: 1735038718}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Enemy
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -972,11 +972,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   target: {fileID: 2048951802}
   player: {fileID: 1409839357}
-  rotationSpeed: 4
+  rotationSpeed: 5
   speed: 3
   acceleration: 15
-  detectionRange: 10
-  fieldOfViewAngle: 120
+  detectionRange: 40
+  fieldOfViewAngle: 180
   obstructionMask:
     serializedVersion: 2
     m_Bits: 128
@@ -995,7 +995,7 @@ NavMeshAgent:
   m_Acceleration: 400
   avoidancePriority: 50
   m_AngularSpeed: 120
-  m_StoppingDistance: 0
+  m_StoppingDistance: 2
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
   m_AutoRepath: 1
@@ -1278,7 +1278,7 @@ GameObject:
   - component: {fileID: 2094552095}
   - component: {fileID: 2094552094}
   - component: {fileID: 2094552093}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Obstacle (1)
   m_TagString: Obstacle/Wall
   m_Icon: {fileID: 0}
@@ -1365,8 +1365,8 @@ Transform:
   m_GameObject: {fileID: 2094552092}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -3.57, y: 0.1519372, z: -0.03}
-  m_LocalScale: {x: 1.9994515, y: 0.38085595, z: 0.2110239}
+  m_LocalPosition: {x: -3.57, y: 0.583, z: -0.03}
+  m_LocalScale: {x: 1.9994515, y: 1.420621, z: 0.2110239}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1016311898}
