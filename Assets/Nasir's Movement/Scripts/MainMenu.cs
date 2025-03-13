@@ -1,24 +1,54 @@
+using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.Android;
+using UnityEngine.UI;
 
 public class MainMenu : MonoBehaviour
 {
+    [Header("Inputs")]
+    [SerializeField] private InputActionAsset playerCntrlsAss;
+    private InputAction goBack;
+
     [Header("Camera")]
     [SerializeField] private Transform menuCam;
-    [SerializeField] private float rotationSpeed;
+    private float rotationSpeed = 5f;
     private bool canRotate;
-    private bool goBack;
+
+    private Coroutine rotateCoroutine;
 
     [Header("Menus")]
-    [SerializeField] private GameObject selectionMenu;
-    [SerializeField] private GameObject characterMenu;
-    [SerializeField] private GameObject arsenalMenu;
+    private GameObject selectionMenu;
+    private GameObject characterMenu;
+    private GameObject arsenalMenu;
+    private GameObject settingsMenu;
+
     [SerializeField] private static List<GameObject> menues = new List<GameObject>();
     private GameObject currentMenu;
 
+    [Header("Buttons")]
+    [SerializeField] private Button[] allButtons; 
+
+    [Header("Modes")]
+    private bool goToStory;
+    private bool goToEndless;
+
     private void Start()
     {
-        goBack = false;
+        menuCam = Camera.main.transform;
+
+        goBack = playerCntrlsAss.FindActionMap("Menu Controls").FindAction("GoBack");
+        goBack.performed += ctx => GoBack();
+
+        selectionMenu = GameObject.Find("SelectionMenu");
+        characterMenu = GameObject.Find("CharacterMenu");
+        arsenalMenu = GameObject.Find("ArsenalMenu");
+        settingsMenu = GameObject.Find("SettingsMenu");
+
+        allButtons = FindObjectsByType<Button>(FindObjectsSortMode.None);
+
         canRotate = false;
         menues.Add(selectionMenu);
     }
@@ -31,27 +61,56 @@ public class MainMenu : MonoBehaviour
             {
                 currentMenu = menues[i];
             }
+        
         }
 
         if (canRotate)
         {
-            menuCam.rotation = Quaternion.Slerp(menuCam.rotation, currentMenu.transform.rotation, rotationSpeed * Time.deltaTime);
-            Invoke(nameof(StopRotate), 5f);
+            foreach (Button button in allButtons)
+            {
+                button.interactable = false;
+            }
+
+           rotateCoroutine = StartCoroutine(RotateMenu());
+           canRotate = false;
         }
     }
 
-    public void EnterCharacterMode()
+    public void EnterStory()
     {
+        goToStory = true;
+        goToEndless = false;
+
         canRotate = true;
         characterMenu.SetActive(true);
         menues.Add(characterMenu);
     }
 
-    public void Back()
+    public void EnterEndless()
+    {
+        goToStory = false;
+        goToEndless = true;
+
+        canRotate = true;
+        characterMenu.SetActive(true);
+        menues.Add(characterMenu);
+    }
+
+    public void EnterArsenal()
     {
         canRotate = true;
-        goBack = true;
+        menues.Add(arsenalMenu);
+    }
+
+    public void GoBack()
+    {
+        canRotate = true;
         menues.Remove(currentMenu);
+    }
+
+    public void EnterSettings()
+    {
+        settingsMenu.SetActive(true);
     }
 
     public void QuitGame()
@@ -60,9 +119,23 @@ public class MainMenu : MonoBehaviour
         Debug.Log("Exit");
     }
 
-    private void StopRotate()
+    private IEnumerator RotateMenu()
     {
-        canRotate = false;
-        goBack = false;
+        float rotationTime = 1f;
+        float elaspedTime = 0f;
+
+        while (elaspedTime < rotationTime)
+        {
+            menuCam.rotation = Quaternion.Slerp(menuCam.rotation, currentMenu.transform.rotation, rotationSpeed * Time.deltaTime);
+            elaspedTime += Time.deltaTime;
+
+            yield return null;
+        }
+
+        foreach (Button button in allButtons)
+        {
+            button.interactable = true;
+        }
+
     }
 }
