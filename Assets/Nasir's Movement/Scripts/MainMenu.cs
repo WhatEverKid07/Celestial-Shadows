@@ -10,12 +10,13 @@ public class MainMenu : MonoBehaviour
 {
     [Header("Inputs")]
     [SerializeField] private InputActionAsset playerCntrlsAss;
-    private InputAction goBack;
+    private InputAction back;
 
     [Header("Camera")]
     [SerializeField] private Transform menuCam;
     private float rotationSpeed = 5f;
     private bool canRotate;
+    private bool isRotating = false;
 
     private Coroutine rotateCoroutine;
 
@@ -24,9 +25,11 @@ public class MainMenu : MonoBehaviour
     private GameObject characterMenu;
     private GameObject arsenalMenu;
     private GameObject settingsMenu;
+    private GameObject quitMenu;
 
     [SerializeField] private static List<GameObject> menues = new List<GameObject>();
     private GameObject currentMenu;
+    private GameObject previousMenu;
 
     [Header("Buttons")]
     [SerializeField] private Button[] allButtons; 
@@ -39,13 +42,15 @@ public class MainMenu : MonoBehaviour
     {
         menuCam = Camera.main.transform;
 
-        goBack = playerCntrlsAss.FindActionMap("Menu Controls").FindAction("GoBack");
-        goBack.performed += ctx => GoBack();
+        back = playerCntrlsAss.FindActionMap("Menu Controls").FindAction("GoBack");
+        back.Enable();
+        back.performed += ctx => GoBack();
 
         selectionMenu = GameObject.Find("SelectionMenu");
         characterMenu = GameObject.Find("CharacterMenu");
         arsenalMenu = GameObject.Find("ArsenalMenu");
         settingsMenu = GameObject.Find("SettingsMenu");
+        quitMenu = GameObject.Find("QuitMenu");
 
         allButtons = FindObjectsByType<Button>(FindObjectsSortMode.None);
 
@@ -55,24 +60,28 @@ public class MainMenu : MonoBehaviour
 
     private void Update()
     {
+        Debug.Log(isRotating);
         if (menues.Count > 0)
         {
             for (int i = 0; i < menues.Count; i++)
             {
                 currentMenu = menues[i];
+                previousMenu = menues[menues.Count - 1];
             }
         
         }
 
-        if (canRotate)
+        if (canRotate && !isRotating)
         {
             foreach (Button button in allButtons)
             {
                 button.interactable = false;
             }
 
-           rotateCoroutine = StartCoroutine(RotateMenu());
-           canRotate = false;
+            isRotating = true;
+            rotateCoroutine = StartCoroutine(RotateMenuCamera());
+
+            canRotate = false;
         }
     }
 
@@ -104,8 +113,11 @@ public class MainMenu : MonoBehaviour
 
     public void GoBack()
     {
-        canRotate = true;
-        menues.Remove(currentMenu);
+        if (!canRotate && !isRotating && currentMenu != selectionMenu)
+        {
+            canRotate = true;
+            menues.Remove(currentMenu);
+        }
     }
 
     public void EnterSettings()
@@ -115,27 +127,43 @@ public class MainMenu : MonoBehaviour
 
     public void QuitGame()
     {
-        Application.Quit();
-        Debug.Log("Exit");
+        quitMenu.SetActive(true);
     }
 
-    private IEnumerator RotateMenu()
+    private IEnumerator RotateMenuCamera()
     {
-        float rotationTime = 1f;
+        float rotationTime = .1f;
         float elaspedTime = 0f;
 
         while (elaspedTime < rotationTime)
         {
-            menuCam.rotation = Quaternion.Slerp(menuCam.rotation, currentMenu.transform.rotation, rotationSpeed * Time.deltaTime);
+            currentMenu.transform.rotation = Quaternion.Slerp(currentMenu.transform.rotation, Quaternion.Euler(0f, currentMenu.transform.rotation.eulerAngles.y - 10f, 0f), (rotationSpeed/2) * Time.deltaTime);
+            previousMenu.transform.rotation = Quaternion.Slerp(previousMenu.transform.rotation, Quaternion.Euler(0f, previousMenu.transform.rotation.eulerAngles.y + 10f, 0f), (rotationSpeed / 2) * Time.deltaTime);
             elaspedTime += Time.deltaTime;
 
             yield return null;
+        }
+
+        float camRotationTime = 1f;
+        float camElaspedTime = 0f;
+
+        if (elaspedTime > rotationTime)
+        {
+            while (camElaspedTime < camRotationTime)
+            {
+                menuCam.rotation = Quaternion.Slerp(menuCam.rotation, currentMenu.transform.rotation, rotationSpeed * Time.deltaTime);
+                camElaspedTime += Time.deltaTime;
+
+                yield return null;
+            }
         }
 
         foreach (Button button in allButtons)
         {
             button.interactable = true;
         }
+
+        isRotating = false;
 
     }
 }
