@@ -1,17 +1,30 @@
 using UnityEngine;
 using UnityEngine.AI;
 using System.Collections;
+using Unity.VisualScripting;
 
 public class EnemyAI : MonoBehaviour
 {
-    public Transform target; // Default target
-    public Transform player; // Player reference
+    /*
+     bool wasInvoked;
+
+void LevelManager()
+{
+    if (!wasInvoked && level == 3)
+    {
+        EnemySpawner.GetComponent<EnemySpawner>().Spawn();
+        wasInvoked = true;
+    }
+}
+    */
+    public Transform target;
+    public Transform player;
     public float rotationSpeed = 5f;
     public float speed = 3.5f;
     public float acceleration = 8f;
     public float detectionRange = 10f;
     public float fieldOfViewAngle = 120f;
-    public LayerMask obstructionMask; // Set to block walls, etc.
+    public LayerMask obstructionMask;
 
     private NavMeshAgent agent;
     public Transform currentTarget;
@@ -20,16 +33,16 @@ public class EnemyAI : MonoBehaviour
     private bool hasReachedTarget = false;
     private bool hasPerformedAction = false;
 
+    private bool resumeAllowed = false;
+
     void Start()
     {
         agent = GetComponent<NavMeshAgent>();
         agent.speed = speed;
         agent.acceleration = acceleration;
         currentTarget = target;
-        InvokeRepeating("MoveToTarget", 0, 1);
-        //MoveToTarget(target);
+        InvokeRepeating("MoveToTarget", 0, 0.3f);
 
-        // Start checking visibility every 1 second
         if (!hasReachedTarget)
         {
             StartCoroutine(CheckPlayerVisibility());
@@ -43,7 +56,7 @@ public class EnemyAI : MonoBehaviour
             bool wasVisible = playerVisible;
             playerVisible = IsPlayerVisible();
 
-            if (playerVisible)
+            if (playerVisible && !wasVisible)
             {
                 Debug.Log("Going to player");
                 currentTarget = player;
@@ -55,8 +68,8 @@ public class EnemyAI : MonoBehaviour
                 Debug.Log("Lost sight of player");
                 StopMoving();
                 yield return new WaitForSeconds(2f);
-                agent.isStopped = false;
                 currentTarget = target;
+                StartCoroutine(ResumeMoving());
             }
 
             yield return new WaitForSeconds(1f);
@@ -64,14 +77,12 @@ public class EnemyAI : MonoBehaviour
     }
     private void Update()
     {
-        //agent.SetDestination(currentTarget.position);
-
         if (!hasReachedTarget && agent.remainingDistance <= agent.stoppingDistance && !agent.pathPending && agent.velocity.magnitude == 0)
         {
             hasReachedTarget = true;
             OnReachedTarget();
         }
-        if(agent.velocity.magnitude > 0 && agent.remainingDistance >= agent.stoppingDistance)
+        if(agent.velocity.magnitude > 0 && agent.remainingDistance >= agent.stoppingDistance && hasReachedTarget)
         {
             //StartCoroutine(ResumeMoving());
         }
@@ -98,7 +109,7 @@ public class EnemyAI : MonoBehaviour
             if (hit.transform == player)
             {
                 agent.isStopped = false;
-                //StartCoroutine(ResumeMoving());
+                StartCoroutine(ResumeMoving());
                 return true;
             }
         }
@@ -109,11 +120,6 @@ public class EnemyAI : MonoBehaviour
     private void MoveToTarget()
     {
         agent.SetDestination(currentTarget.position);
-        /*
-        if (newTarget == null) return;
-
-        currentTarget = newTarget;
-        */
         Debug.Log("Moving to: " + currentTarget.name);
     }
 
