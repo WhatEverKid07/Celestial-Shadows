@@ -890,7 +890,7 @@ PrefabInstance:
     - target: {fileID: -7139619836258572859, guid: 6e5228e4c87e5ba44a579bea62062b82, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 2100000, guid: 85a6e0f3e4ff31e499b3abacf3198e51, type: 2}
     - target: {fileID: 919132149155446097, guid: 6e5228e4c87e5ba44a579bea62062b82, type: 3}
       propertyPath: m_Name
       value: Sawed-off
