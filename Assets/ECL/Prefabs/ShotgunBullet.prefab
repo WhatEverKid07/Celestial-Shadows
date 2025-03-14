@@ -4839,7 +4839,7 @@ GameObject:
   - component: {fileID: 7919176739341494283}
   - component: {fileID: 2060163549857610154}
   m_Layer: 0
-  m_Name: PistolBullet 1
+  m_Name: ShotgunBullet
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4943,10 +4943,10 @@ BoxCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
-  m_Size: {x: 0.0012332153, y: 0.0025245466, z: 0.016114883}
-  m_Center: {x: 0.000000011001248, y: 0, z: 0}
+  m_Size: {x: 0.0012042201, y: 0.002466558, z: 0.01623088}
+  m_Center: {x: 0.000014508997, y: 7.761022e-11, z: -0.000000006519258}
 --- !u!54 &2060163549857610154
 Rigidbody:
   m_ObjectHideFlags: 0

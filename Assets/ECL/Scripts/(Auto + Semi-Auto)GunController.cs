@@ -171,6 +171,7 @@ public class AutoAndSemiAutoGunController : MonoBehaviour
 
         float smoothX = Mathf.SmoothDampAngle(transform.localEulerAngles.x, (initialRotation * Quaternion.Euler(-accumulatedRecoil)).eulerAngles.x, ref recoilVelocityX, recoilSmoothTime);
         float smoothY = Mathf.SmoothDampAngle(transform.localEulerAngles.y, (initialRotation * Quaternion.Euler(-accumulatedRecoil)).eulerAngles.y, ref recoilVelocityY, recoilSmoothTime);
+
         transform.localRotation = Quaternion.Euler(smoothX, 0, smoothY);
 
         HandleRecoil();
