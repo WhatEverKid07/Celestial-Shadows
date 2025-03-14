@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -24,16 +25,22 @@ public class MainMenu : MonoBehaviour
     private GameObject selectionMenu;
     private GameObject characterMenu;
     private GameObject arsenalMenu;
-    private GameObject settingsMenu;
+    private GameObject settingsGO;
+    private Canvas settingsMenu;
     private GameObject quitMenu;
 
-    [SerializeField] private static List<GameObject> menues = new List<GameObject>();
+    [SerializeField] private static List<GameObject> menus = new List<GameObject>();
     private GameObject currentMenu;
     private GameObject previousMenu;
 
     [Header("Buttons")]
     [SerializeField] private Button[] allButtons;
-    [SerializeField] private GameObject exitButton;
+    private GameObject exitGO;
+    private GameObject backGO;
+    private Button exitButton;
+    private TextMeshProUGUI exitButtonTxt;
+    private Button backButton;
+    private TextMeshProUGUI backButtonTxt;
 
     [Header("Modes")]
     private bool goToStory;
@@ -50,24 +57,35 @@ public class MainMenu : MonoBehaviour
         selectionMenu = GameObject.Find("SelectionMenu");
         characterMenu = GameObject.Find("CharacterMenu");
         arsenalMenu = GameObject.Find("ArsenalMenu");
-        settingsMenu = GameObject.Find("SettingsMenu");
+        settingsGO = GameObject.Find("SettingsMenu");
         quitMenu = GameObject.Find("QuitMenu");
+        exitGO = GameObject.Find("Exit");
+        backGO = GameObject.Find("Back");
+
+        settingsMenu = settingsGO.GetComponentInChildren<Canvas>();
+
+        exitButton = exitGO.GetComponentInChildren<Button>();
+        backButton = backGO.GetComponentInChildren<Button>();
+
+        exitButtonTxt = exitButton.GetComponentInChildren<TextMeshProUGUI>();
+        backButtonTxt = backButton.GetComponentInChildren<TextMeshProUGUI>();
 
         allButtons = FindObjectsByType<Button>(FindObjectsSortMode.None);
 
         canRotate = false;
-        menues.Add(selectionMenu);
+        menus.Add(selectionMenu);
     }
 
     private void Update()
     {
         Debug.Log(isRotating);
-        if (menues.Count > 0)
+
+        if (menus.Count > 0)
         {
-            for (int i = 0; i < menues.Count; i++)
+            for (int i = 0; i < menus.Count; i++)
             {
-                currentMenu = menues[i];
-                previousMenu = menues[menues.Count - 1];
+                currentMenu = menus[i];
+                previousMenu = menus[menus.Count - 1];
             }
         
         }
@@ -76,13 +94,27 @@ public class MainMenu : MonoBehaviour
         {
             foreach (Button button in allButtons)
             {
-                button.interactable = false;
+                if (button != exitButton && button != backButton)
+                {
+                    button.interactable = false;
+                }
             }
 
             isRotating = true;
             rotateCoroutine = StartCoroutine(RotateMenuCamera());
 
             canRotate = false;
+        }
+
+        if (currentMenu == selectionMenu)
+        {
+            ExitButtonOn();
+            BackButtonOff();
+        }
+        else
+        {
+            ExitButtonOff();
+            BackButtonOn();
         }
     }
 
@@ -93,7 +125,7 @@ public class MainMenu : MonoBehaviour
 
         canRotate = true;
         characterMenu.SetActive(true);
-        menues.Add(characterMenu);
+        menus.Add(characterMenu);
     }
 
     public void EnterEndless()
@@ -103,13 +135,13 @@ public class MainMenu : MonoBehaviour
 
         canRotate = true;
         characterMenu.SetActive(true);
-        menues.Add(characterMenu);
+        menus.Add(characterMenu);
     }
 
     public void EnterArsenal()
     {
         canRotate = true;
-        menues.Add(arsenalMenu);
+        menus.Add(arsenalMenu);
     }
 
     public void GoBack()
@@ -117,18 +149,17 @@ public class MainMenu : MonoBehaviour
         if (!canRotate && !isRotating && currentMenu != selectionMenu)
         {
             canRotate = true;
-            menues.Remove(currentMenu);
+            menus.Remove(currentMenu);
         }
     }
 
     public void EnterSettings()
     {
-        settingsMenu.SetActive(true);
+        settingsMenu.enabled = true;
     }
 
     public void QuitGame()
     {
-        quitMenu.SetActive(true);
     }
 
     private IEnumerator RotateMenuCamera()
@@ -161,10 +192,38 @@ public class MainMenu : MonoBehaviour
 
         foreach (Button button in allButtons)
         {
-            button.interactable = true;
+            if (button != exitButton && button != backButton)
+            {
+                button.interactable = true;
+            }
         }
+
 
         isRotating = false;
 
+    }
+
+    private void ExitButtonOn()
+    {
+        exitButton.interactable = true;
+        exitButtonTxt.enabled = true;
+    }
+
+    private void ExitButtonOff()
+    {
+        exitButton.interactable = false;
+        exitButtonTxt.enabled = false;
+    }
+
+    private void BackButtonOn()
+    {
+        backButton.interactable = true;
+        backButtonTxt.enabled = true;
+    }
+
+    private void BackButtonOff()
+    {
+        backButton.interactable = false;
+        backButtonTxt.enabled = false;
     }
 }
