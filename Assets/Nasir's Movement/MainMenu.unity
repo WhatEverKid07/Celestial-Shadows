@@ -445,7 +445,6 @@ MonoBehaviour:
   playerCntrlsAss: {fileID: -944628639613478452, guid: 6126e80c064e030429ec21c4ef4ffc4d, type: 3}
   menuCam: {fileID: 2045644985}
   allButtons: []
-  exitButton: {fileID: 0}
 --- !u!114 &82249025
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -957,7 +956,6 @@ MonoBehaviour:
   playerCntrlsAss: {fileID: -944628639613478452, guid: 6126e80c064e030429ec21c4ef4ffc4d, type: 3}
   menuCam: {fileID: 2045644985}
   allButtons: []
-  exitButton: {fileID: 0}
 --- !u!1 &212749319
 GameObject:
   m_ObjectHideFlags: 0
@@ -1045,7 +1043,6 @@ MonoBehaviour:
   playerCntrlsAss: {fileID: -944628639613478452, guid: 6126e80c064e030429ec21c4ef4ffc4d, type: 3}
   menuCam: {fileID: 2045644985}
   allButtons: []
-  exitButton: {fileID: 0}
 --- !u!114 &216696753
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1928,7 +1925,6 @@ MonoBehaviour:
   playerCntrlsAss: {fileID: -944628639613478452, guid: 6126e80c064e030429ec21c4ef4ffc4d, type: 3}
   menuCam: {fileID: 2045644985}
   allButtons: []
-  exitButton: {fileID: 0}
 --- !u!1 &821131519
 GameObject:
   m_ObjectHideFlags: 0
@@ -2939,10 +2935,10 @@ RectTransform:
   - {fileID: 106831850}
   m_Father: {fileID: 1532035142}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 100, y: -920}
+  m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1242943610
 MonoBehaviour:
@@ -3053,7 +3049,6 @@ MonoBehaviour:
   playerCntrlsAss: {fileID: -944628639613478452, guid: 6126e80c064e030429ec21c4ef4ffc4d, type: 3}
   menuCam: {fileID: 2045644985}
   allButtons: []
-  exitButton: {fileID: 0}
 --- !u!1 &1276688053
 GameObject:
   m_ObjectHideFlags: 0
@@ -3331,7 +3326,6 @@ MonoBehaviour:
   playerCntrlsAss: {fileID: -944628639613478452, guid: 6126e80c064e030429ec21c4ef4ffc4d, type: 3}
   menuCam: {fileID: 2045644985}
   allButtons: []
-  exitButton: {fileID: 0}
 --- !u!1 &1362361270
 GameObject:
   m_ObjectHideFlags: 0
@@ -3387,7 +3381,6 @@ MonoBehaviour:
   playerCntrlsAss: {fileID: -944628639613478452, guid: 6126e80c064e030429ec21c4ef4ffc4d, type: 3}
   menuCam: {fileID: 2045644985}
   allButtons: []
-  exitButton: {fileID: 0}
 --- !u!114 &1362361273
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3679,7 +3672,6 @@ GameObject:
   - component: {fileID: 1532035146}
   - component: {fileID: 1532035145}
   - component: {fileID: 1532035144}
-  - component: {fileID: 1532035143}
   m_Layer: 0
   m_Name: ExtGrid
   m_TagString: Untagged
@@ -3709,30 +3701,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 1920, y: 1080}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1532035143
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1532035141}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8a8695521f0d02e499659fee002a26c2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Padding:
-    m_Left: 50
-    m_Right: 0
-    m_Top: 0
-    m_Bottom: 110
-  m_ChildAlignment: 6
-  m_StartCorner: 0
-  m_StartAxis: 0
-  m_CellSize: {x: 100, y: 100}
-  m_Spacing: {x: 20, y: 0}
-  m_Constraint: 0
-  m_ConstraintCount: 2
 --- !u!114 &1532035144
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3831,10 +3799,10 @@ RectTransform:
   - {fileID: 83342020}
   m_Father: {fileID: 1532035142}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 220, y: -920}
+  m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1551405574
 MonoBehaviour:
@@ -3881,12 +3849,12 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1551405577}
-        m_TargetAssemblyTypeName: 
-        m_MethodName: 
+        m_TargetAssemblyTypeName: MainMenu, Assembly-CSharp
+        m_MethodName: EnterSettings
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -3945,7 +3913,6 @@ MonoBehaviour:
   playerCntrlsAss: {fileID: -944628639613478452, guid: 6126e80c064e030429ec21c4ef4ffc4d, type: 3}
   menuCam: {fileID: 2045644985}
   allButtons: []
-  exitButton: {fileID: 0}
 --- !u!1 &1622292778
 GameObject:
   m_ObjectHideFlags: 0
@@ -4001,7 +3968,6 @@ MonoBehaviour:
   playerCntrlsAss: {fileID: -944628639613478452, guid: 6126e80c064e030429ec21c4ef4ffc4d, type: 3}
   menuCam: {fileID: 2045644985}
   allButtons: []
-  exitButton: {fileID: 0}
 --- !u!114 &1622292781
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4194,7 +4160,7 @@ Canvas:
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
   m_VertexColorAlwaysGammaSpace: 0
-  m_AdditionalShaderChannelsFlag: 0
+  m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
   m_SortingOrder: -1
@@ -4234,10 +4200,10 @@ RectTransform:
   - {fileID: 1898154056}
   m_Father: {fileID: 1532035142}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 100, y: -920}
+  m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1653200767
 MonoBehaviour:
@@ -4348,7 +4314,6 @@ MonoBehaviour:
   playerCntrlsAss: {fileID: -944628639613478452, guid: 6126e80c064e030429ec21c4ef4ffc4d, type: 3}
   menuCam: {fileID: 2045644985}
   allButtons: []
-  exitButton: {fileID: 0}
 --- !u!1 &1693657001
 GameObject:
   m_ObjectHideFlags: 0
@@ -4706,7 +4671,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: <--
+  m_text: Exit
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
