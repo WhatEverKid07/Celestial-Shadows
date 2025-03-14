@@ -144,7 +144,7 @@ void LevelManager()
         agent.isStopped = true;
         Debug.Log("Target Reached!");
 
-        Attack();
+        //Attack();
     }
 
     private void Attack()

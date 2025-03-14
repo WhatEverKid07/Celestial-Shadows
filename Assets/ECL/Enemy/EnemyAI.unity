@@ -950,7 +950,7 @@ GameObject:
   - component: {fileID: 1735038721}
   - component: {fileID: 1735038720}
   - component: {fileID: 1735038719}
-  - component: {fileID: 1735038718}
+  - component: {fileID: 1735038725}
   m_Layer: 10
   m_Name: Enemy
   m_TagString: Untagged
@@ -958,29 +958,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1735038718
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1735038717}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ec5f6f18cccd5ca4c947f32f4769f80a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  target: {fileID: 2048951802}
-  player: {fileID: 1409839357}
-  rotationSpeed: 5
-  speed: 3
-  acceleration: 15
-  detectionRange: 40
-  fieldOfViewAngle: 180
-  obstructionMask:
-    serializedVersion: 2
-    m_Bits: 128
-  currentTarget: {fileID: 0}
 --- !u!195 &1735038719
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -1119,6 +1096,29 @@ Transform:
   - {fileID: 2095835550}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1735038725
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1735038717}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8cd66ee0ab3b514449e9c8936bfa2116, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  target: {fileID: 2048951802}
+  player: {fileID: 1409839357}
+  rotationSpeed: 5
+  speed: 3
+  acceleration: 15
+  detectionRange: 40
+  fieldOfViewAngle: 180
+  obstructionLayer:
+    serializedVersion: 2
+    m_Bits: 128
+  currentTarget: {fileID: 0}
 --- !u!1 &1858896250
 GameObject:
   m_ObjectHideFlags: 0
