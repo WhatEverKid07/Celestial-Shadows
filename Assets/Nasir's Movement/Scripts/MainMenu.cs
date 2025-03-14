@@ -32,7 +32,8 @@ public class MainMenu : MonoBehaviour
     private GameObject previousMenu;
 
     [Header("Buttons")]
-    [SerializeField] private Button[] allButtons; 
+    [SerializeField] private Button[] allButtons;
+    [SerializeField] private GameObject exitButton;
 
     [Header("Modes")]
     private bool goToStory;
