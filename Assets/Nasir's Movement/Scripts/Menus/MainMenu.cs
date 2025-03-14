@@ -1,10 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.InputSystem.Android;
 using UnityEngine.UI;
 
 public class MainMenu : MonoBehaviour
@@ -25,9 +23,16 @@ public class MainMenu : MonoBehaviour
     private GameObject selectionMenu;
     private GameObject characterMenu;
     private GameObject arsenalMenu;
+
     private GameObject settingsGO;
     private Canvas settingsMenu;
-    private GameObject quitMenu;
+
+    private GameObject quitGO;
+    private Canvas quitMenu;
+
+    private GameObject constantMenuGO;
+    private Canvas constantMenu;
+
 
     [SerializeField] private static List<GameObject> menus = new List<GameObject>();
     private GameObject currentMenu;
@@ -35,12 +40,21 @@ public class MainMenu : MonoBehaviour
 
     [Header("Buttons")]
     [SerializeField] private Button[] allButtons;
+
     private GameObject exitGO;
-    private GameObject backGO;
     private Button exitButton;
     private TextMeshProUGUI exitButtonTxt;
+    private Image exitButtonImage;
+
+    private GameObject backGO;
     private Button backButton;
     private TextMeshProUGUI backButtonTxt;
+    private Image backButtonImage;
+
+    private GameObject settingsButtonGO;
+    private Button settingsButton;
+    private TextMeshProUGUI settingsTxt;
+    private Image settingsImage;
 
     [Header("Modes")]
     private bool goToStory;
@@ -57,18 +71,32 @@ public class MainMenu : MonoBehaviour
         selectionMenu = GameObject.Find("SelectionMenu");
         characterMenu = GameObject.Find("CharacterMenu");
         arsenalMenu = GameObject.Find("ArsenalMenu");
-        settingsGO = GameObject.Find("SettingsMenu");
-        quitMenu = GameObject.Find("QuitMenu");
+
+        settingsGO = GameObject.Find("SettingsDisplay");
+        settingsButtonGO = GameObject.Find("SettingsBackButton");
+        quitGO = GameObject.Find("QuitDisplay");
         exitGO = GameObject.Find("Exit");
         backGO = GameObject.Find("Back");
+        constantMenuGO = GameObject.Find("MenuConstants");
 
         settingsMenu = settingsGO.GetComponentInChildren<Canvas>();
+        quitMenu = quitGO.GetComponentInChildren<Canvas>();
+        constantMenu = constantMenuGO.GetComponentInChildren<Canvas>();
+
+        settingsMenu.enabled = false;
+        quitMenu.enabled = false;
 
         exitButton = exitGO.GetComponentInChildren<Button>();
         backButton = backGO.GetComponentInChildren<Button>();
+        settingsButton = settingsButtonGO.GetComponentInChildren<Button>();
 
         exitButtonTxt = exitButton.GetComponentInChildren<TextMeshProUGUI>();
         backButtonTxt = backButton.GetComponentInChildren<TextMeshProUGUI>();
+        settingsTxt = settingsButton.GetComponentInChildren<TextMeshProUGUI>();
+
+        exitButtonImage = exitGO.GetComponentInChildren<Image>();
+        backButtonImage = backGO.GetComponentInChildren<Image>();
+        settingsImage = settingsGO.GetComponentInChildren<Image>();
 
         allButtons = FindObjectsByType<Button>(FindObjectsSortMode.None);
 
@@ -78,8 +106,6 @@ public class MainMenu : MonoBehaviour
 
     private void Update()
     {
-        Debug.Log(isRotating);
-
         if (menus.Count > 0)
         {
             for (int i = 0; i < menus.Count; i++)
@@ -106,16 +132,25 @@ public class MainMenu : MonoBehaviour
             canRotate = false;
         }
 
-        if (currentMenu == selectionMenu)
+        if (!settingsMenu.enabled && !quitMenu.enabled)
         {
-            ExitButtonOn();
-            BackButtonOff();
+            if(currentMenu == selectionMenu)
+            {
+                ExitButtonOn();
+                BackButtonOff();
+            }
+            else
+            {
+                ExitButtonOff();
+                BackButtonOn();
+            }
         }
         else
         {
             ExitButtonOff();
-            BackButtonOn();
+            BackButtonOff();
         }
+
     }
 
     public void EnterStory()
@@ -156,10 +191,26 @@ public class MainMenu : MonoBehaviour
     public void EnterSettings()
     {
         settingsMenu.enabled = true;
+        constantMenu.enabled = false;
     }
 
-    public void QuitGame()
+    public void ExitSettings()
     {
+        settingsMenu.enabled = false;
+        constantMenu.enabled = true;
+        
+    }
+
+    public void EnterQuit()
+    {
+        quitMenu.enabled = true;
+        constantMenu.enabled = false;
+    }
+
+    public void ExitQuit()
+    {
+        quitMenu.enabled = false;
+        constantMenu.enabled = true;
     }
 
     private IEnumerator RotateMenuCamera()
@@ -207,23 +258,27 @@ public class MainMenu : MonoBehaviour
     {
         exitButton.interactable = true;
         exitButtonTxt.enabled = true;
+        exitButtonImage.enabled = true;
     }
 
     private void ExitButtonOff()
     {
         exitButton.interactable = false;
         exitButtonTxt.enabled = false;
+        exitButtonImage.enabled = false;
     }
 
     private void BackButtonOn()
     {
         backButton.interactable = true;
         backButtonTxt.enabled = true;
+        backButtonImage.enabled = true;
     }
 
     private void BackButtonOff()
     {
         backButton.interactable = false;
         backButtonTxt.enabled = false;
+        backButtonImage.enabled = false;
     }
 }
