@@ -18,6 +18,9 @@ public class EnemyAI2 : MonoBehaviour
     private NavMeshAgent agent;
     private bool playerVisible = false;
     private bool hasReachedTarget = false;
+    private Vector3 lastPos;
+    public float threshold = 1f;
+    private bool isAtTarget = false;
     //private bool hasPerformedAction = false;
     void Start()
     {
@@ -25,7 +28,6 @@ public class EnemyAI2 : MonoBehaviour
         agent.speed = speed;
         agent.acceleration = acceleration;
         InvokeRepeating("MoveToTarget", 0, 0.3f);
-        //InvokeRepeating("UpdateIfHasReachedTarget", 0, 0.5f);
         StartCoroutine(CheckPlayerVisibility());
         currentTarget = target;
         // update the target to go to
@@ -35,11 +37,8 @@ public class EnemyAI2 : MonoBehaviour
     {
         ExtraRotation();
         UpdateIfHasReachedTarget();
-    }
-    void ExtraRotation()
-    {
-        Vector3 lookrotation = agent.steeringTarget - transform.position;
-        transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(lookrotation), rotationSpeed * Time.deltaTime);
+        if (currentTarget == player)
+            UpdateObjectPosition(player);
     }
     bool IsPlayerVisible()
     {
@@ -84,7 +83,7 @@ public class EnemyAI2 : MonoBehaviour
                 Debug.Log("Lost sight of player");
                 StartCoroutine(ChangeCurrentTarget(target));
             }
-            yield return new WaitForSeconds(1f);
+            yield return new WaitForSeconds(0.8f);
         }
     }
     IEnumerator ChangeCurrentTarget(Transform changeToo)
@@ -96,13 +95,16 @@ public class EnemyAI2 : MonoBehaviour
         agent.isStopped = false;
     }
 
+    private void ExtraRotation()
+    {
+        Vector3 lookrotation = agent.steeringTarget - transform.position;
+        transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(lookrotation), rotationSpeed * Time.deltaTime);
+    }
     private void UpdateIfHasReachedTarget()
     {
-        bool isAtTarget = false;
         if (!hasReachedTarget && !isAtTarget && agent.remainingDistance <= agent.stoppingDistance && !agent.pathPending && agent.velocity.magnitude == 0)
         {
             Debug.Log("UpdateIfHasReachedTarget");
-            isAtTarget = true;
             OnReachedTarget();
         }
         else if (hasReachedTarget && isAtTarget && agent.remainingDistance >= agent.stoppingDistance)//agent.velocity.magnitude > 0 && agent.remainingDistance >= agent.stoppingDistance && isAtTarget)
@@ -113,16 +115,37 @@ public class EnemyAI2 : MonoBehaviour
             agent.isStopped = false;
         }
     }
+    private void UpdateObjectPosition(Transform obj)
+    {
+        Vector3 offset = obj.position - lastPos;
+        if (offset.x > threshold)
+        {
+            lastPos = obj.position; // update lastPos
+            hasReachedTarget = false;
+            MoveToTarget();
+            agent.SetDestination(currentTarget.position);// code to execute when X is getting bigger
+        }
+        else if (offset.x < -threshold)
+        {
+            lastPos = obj.position; // update lastPos
+            hasReachedTarget = false;
+            MoveToTarget();
+            agent.SetDestination(currentTarget.position);// code to execute when X is getting smaller 
+        }
+    }
     private void MoveToTarget()
     {
         if (hasReachedTarget) return;
+        isAtTarget = false;
+        agent.isStopped = false;
         agent.SetDestination(currentTarget.position);
         Debug.Log("Moving to: " + currentTarget.name);
     }
     private void OnReachedTarget()
     {
-        if (hasReachedTarget) return;
+        if (hasReachedTarget || isAtTarget) return;
         hasReachedTarget = true;
+        isAtTarget = true;
         agent.isStopped = true;
         Debug.Log("Target Reached!");
         // Attack and whatever

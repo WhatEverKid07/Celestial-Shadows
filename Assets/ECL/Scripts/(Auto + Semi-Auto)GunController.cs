@@ -44,10 +44,9 @@ public class AutoAndSemiAutoGunController : MonoBehaviour
 
 
     [Space(20)]
-    [Header("Animations")]
+    [Header("Animation")]
     [SerializeField] private Animator animator;
-    [SerializeField] private string zoomBool;
-    [SerializeField] private string trigger;
+    [SerializeField] private string nameOfShootTrigger;
 
 
     [Space(20)]
@@ -183,7 +182,6 @@ public class AutoAndSemiAutoGunController : MonoBehaviour
         float targetZoom = zoomInput > 0.5f ? 1f : 0f;
 
         zoomLevel = Mathf.Lerp(zoomLevel, targetZoom, Time.deltaTime * zoomSpeed);
-        //animator.SetFloat("ZoomBlend", zoomLevel);
     }
 
     public void ChangeFOV(float newFOV)
@@ -219,8 +217,8 @@ public class AutoAndSemiAutoGunController : MonoBehaviour
         Invoke("CanShootReset", semiAutoShotDelay);
         if (currentAmmo >= 1)
         {
+            animator.SetTrigger(nameOfShootTrigger);
             camController.GunController();
-            // Shoot animations
             AddRecoil();
             currentAmmo--;
             UpdateAmmoText();
@@ -311,12 +309,10 @@ public class AutoAndSemiAutoGunController : MonoBehaviour
         }
         accumulatedRecoil = Vector3.zero;
     }
-
     void CanShootReset()
     {
         canShoot = true;
     }
-
     void UpdateAmmoText()
     {
         ammoText.text = currentAmmo.ToString() + " / " + maxAmmo.ToString();
