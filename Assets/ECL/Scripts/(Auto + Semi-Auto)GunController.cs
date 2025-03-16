@@ -74,6 +74,7 @@ public class AutoAndSemiAutoGunController : MonoBehaviour
     [SerializeField] private float transitionDuration = 1f;
     [SerializeField] private float rotationX;
     [SerializeField] private float rotationY;
+    [SerializeField] private float rotationZ;
 
     private InputAction shoot;
     private InputAction reload;
@@ -85,6 +86,7 @@ public class AutoAndSemiAutoGunController : MonoBehaviour
     private float currentConeAngle;
 
     private Vector3 currentRecoil = Vector3.zero;
+    private Quaternion accumulatedRecoilRotation = Quaternion.identity;
 
     void Start()
     {
@@ -129,7 +131,7 @@ public class AutoAndSemiAutoGunController : MonoBehaviour
     }
     private void OnDisable()
     {
-        if(ammoText != null)
+        if (ammoText != null)
             ammoText.gameObject.SetActive(false);
     }
 
@@ -218,6 +220,10 @@ public class AutoAndSemiAutoGunController : MonoBehaviour
         Invoke("CanShootReset", semiAutoShotDelay);
         if (currentAmmo >= 1)
         {
+            if (muzzleFlash != null)
+                muzzleFlash.Play();
+            gunAudioSource.PlayOneShot(shootClip);
+
             animator.SetTrigger(nameOfShootTrigger);
             camController.GunController();
             AddRecoil();
@@ -232,9 +238,6 @@ public class AutoAndSemiAutoGunController : MonoBehaviour
                 Vector3 bulletDirection = GetConeSpreadDirection(bulletSpawn.transform.forward, currentConeAngle);
                 rb.velocity = bulletDirection * bulletSpeed;
             }
-            if(muzzleFlash != null)
-                muzzleFlash.Play();
-            gunAudioSource.PlayOneShot(shootClip);
         }
     }
 
@@ -267,21 +270,19 @@ public class AutoAndSemiAutoGunController : MonoBehaviour
 
     private void HandleRecoil()
     {
-        currentRecoil = Vector3.Lerp(currentRecoil, Vector3.zero, recoilResetSpeed * Time.deltaTime * 0.5f);
-        transform.localEulerAngles = new Vector3(rotationX - currentRecoil.x, rotationY + currentRecoil.y, 0);
+        transform.localRotation = initialRotation * accumulatedRecoilRotation;
+        accumulatedRecoilRotation = Quaternion.Slerp(accumulatedRecoilRotation, Quaternion.identity, recoilResetSpeed * Time.deltaTime);
     }
 
     private void AddRecoil()
     {
+        float upAmount = Random.Range(-currentUpRecoil.x * recoilIncreaseMultiplier, currentUpRecoil.x * recoilIncreaseMultiplier);
         float sideAmount = Random.Range(-currentSideRecoil.y * recoilIncreaseMultiplier, currentSideRecoil.y * recoilIncreaseMultiplier);
-        float upAmount = Random.Range(currentUpRecoil.x * 0.8f, currentUpRecoil.x * recoilIncreaseMultiplier);
+        float tiltAmount = Random.Range(-5f, 5f);
 
-        Vector3 recoil = new Vector3(upAmount, sideAmount, 0f);
-        currentSideRecoil *= recoilIncreaseMultiplier;
-        currentUpRecoil *= recoilIncreaseMultiplier;
+        Quaternion recoilRotation = Quaternion.Euler(upAmount, sideAmount, tiltAmount);
 
-        currentRecoil += recoil;
-        currentConeAngle *= 1.1f;
+        accumulatedRecoilRotation *= recoilRotation;
     }
 
     private void StopRecoil()

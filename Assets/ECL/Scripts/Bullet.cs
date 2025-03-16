@@ -14,22 +14,25 @@ public class Bullet : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        Target target = collision.transform.GetComponent<Target>();
-        if (target != null)
+        if (!collision.gameObject.CompareTag("Bullet"))
         {
-            target.TakeDamage(damage);
+            Target target = collision.transform.GetComponent<Target>();
+            if (target != null)
+            {
+                target.TakeDamage(damage);
+            }
+            /*
+            if (collision.rigidbody != null)
+            {
+                collision.rigidbody.AddForce(-collision.contacts[0].normal * impactForce, ForceMode.Impulse);
+            }
+            */
+            if (impactEffect != null)
+            {
+                GameObject impactGO = Instantiate(impactEffect, collision.contacts[0].point, Quaternion.LookRotation(collision.contacts[0].normal));
+                Destroy(impactGO, 2f);
+            }
+            Destroy(gameObject);
         }
-        /*
-        if (collision.rigidbody != null)
-        {
-            collision.rigidbody.AddForce(-collision.contacts[0].normal * impactForce, ForceMode.Impulse);
-        }
-        */
-        if (impactEffect != null)
-        {
-            GameObject impactGO = Instantiate(impactEffect, collision.contacts[0].point, Quaternion.LookRotation(collision.contacts[0].normal));
-            Destroy(impactGO, 2f);
-        }
-        Destroy(gameObject);
     }
 }

@@ -4840,7 +4840,7 @@ GameObject:
   - component: {fileID: 2060163549857610154}
   m_Layer: 0
   m_Name: ShotgunBullet
-  m_TagString: Untagged
+  m_TagString: Bullet
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -4855,7 +4855,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 12, y: 12, z: 12}
+  m_LocalScale: {x: 5, y: 5, z: 5}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 3031785247914953055}
@@ -4925,7 +4925,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   damage: 20
   impactEffect: {fileID: 100002, guid: 99c73c92ac40473459640b165473206f, type: 3}
-  lifeTime: 5
+  lifeTime: 2
 --- !u!65 &7919176739341494283
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -4943,10 +4943,10 @@ BoxCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
-  m_Enabled: 0
+  m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.0012042201, y: 0.002466558, z: 0.01623088}
-  m_Center: {x: 0.000014508997, y: 7.761022e-11, z: -0.000000006519258}
+  m_Size: {x: 0.0012042201, y: 0.0024040954, z: 0.015819728}
+  m_Center: {x: 0.000014508982, y: -0.000020934456, z: 0.00010015518}
 --- !u!54 &2060163549857610154
 Rigidbody:
   m_ObjectHideFlags: 0
