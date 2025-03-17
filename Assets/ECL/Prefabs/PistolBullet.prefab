@@ -4926,7 +4926,6 @@ MonoBehaviour:
   damage: 20
   impactEffect: {fileID: 100002, guid: 99c73c92ac40473459640b165473206f, type: 3}
   lifeTime: 5
-  colliderEnablePause: 0
 --- !u!65 &7919176739341494283
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -4974,4 +4973,4 @@ Rigidbody:
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 0
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1

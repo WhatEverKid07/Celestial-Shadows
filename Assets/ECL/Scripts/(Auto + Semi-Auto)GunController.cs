@@ -3,6 +3,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
+using static UnityEditor.Timeline.TimelinePlaybackControls;
 
 public class AutoAndSemiAutoGunController : MonoBehaviour
 {
@@ -104,10 +105,30 @@ public class AutoAndSemiAutoGunController : MonoBehaviour
         if (!useSight)
             return;
         zoomInOrOut.Enable();
-        zoomInOrOut.performed += ctx => ChangeFOV(targetZoomFOV);
-        zoomInOrOut.performed += ctx => gunManager.canSwitch = false;
-        zoomInOrOut.canceled += ctx => gunManager.canSwitch = true;
-        zoomInOrOut.canceled += ctx => ChangeFOV(originalFOV);
+
+        zoomInOrOut.performed += Sighted;
+        zoomInOrOut.canceled += Sighted;
+        //zoomInOrOut.performed += ctx => ChangeFOV(targetZoomFOV);
+        //zoomInOrOut.performed += ctx => gunManager.canSwitch = false;
+        //zoomInOrOut.canceled += ctx => gunManager.canSwitch = true;
+        //zoomInOrOut.canceled += ctx => ChangeFOV(originalFOV);
+    }
+    public void Sighted(InputAction.CallbackContext zoom)
+    {
+        if (zoom.performed) // Button pressed
+        {
+            ChangeFOV(targetZoomFOV);
+            gunManager.canSwitch = false;
+            animator.Play("InSightShotgun");
+        }
+
+        if (zoom.canceled) // Button released
+        {
+            Debug.Log("Canceleed");
+            zoomInOrOut.canceled += ctx => gunManager.canSwitch = true;
+            zoomInOrOut.canceled += ctx => ChangeFOV(originalFOV);
+            //animator.SetBool("IsSighted");
+        }
     }
 
     private void Awake()
