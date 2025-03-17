@@ -23,7 +23,7 @@ public class GunManagement : MonoBehaviour
     {
         float z = scroll.ReadValue<float>();
         //Debug.Log(z); // *For Debugging*
-        Debug.Log(canSwitch);
+        //Debug.Log(canSwitch);
         if (z > 0 && canSwitch)
         {
             NextGun();
