@@ -53,27 +53,20 @@ public class MainMenu : MonoBehaviour
 
     private GameObject settingsButtonGO;
     private Button settingsButton;
-    private TextMeshProUGUI settingsTxt;
-    private Image settingsImage;
+    private TextMeshProUGUI settingsButtonTxt;
+    private Image settingsButtonImage;
 
-    [Header("Modes")]
-    private bool goToStory;
-    private bool goToEndless;
+    public bool goToStory { get; private set; }
+    public bool goToEndless { get; private set; }
 
-    private void Start()
+    private void Awake()
     {
-        menuCam = Camera.main.transform;
-
-        back = playerCntrlsAss.FindActionMap("Menu Controls").FindAction("GoBack");
-        back.Enable();
-        back.performed += ctx => GoBack();
-
         selectionMenu = GameObject.Find("SelectionMenu");
         characterMenu = GameObject.Find("CharacterMenu");
         arsenalMenu = GameObject.Find("ArsenalMenu");
 
         settingsGO = GameObject.Find("SettingsDisplay");
-        settingsButtonGO = GameObject.Find("SettingsBackButton");
+        settingsButtonGO = GameObject.Find("Settings");
         quitGO = GameObject.Find("QuitDisplay");
         exitGO = GameObject.Find("Exit");
         backGO = GameObject.Find("Back");
@@ -92,15 +85,24 @@ public class MainMenu : MonoBehaviour
 
         exitButtonTxt = exitButton.GetComponentInChildren<TextMeshProUGUI>();
         backButtonTxt = backButton.GetComponentInChildren<TextMeshProUGUI>();
-        settingsTxt = settingsButton.GetComponentInChildren<TextMeshProUGUI>();
+        settingsButtonTxt = settingsButton.GetComponentInChildren<TextMeshProUGUI>();
 
         exitButtonImage = exitGO.GetComponentInChildren<Image>();
         backButtonImage = backGO.GetComponentInChildren<Image>();
-        settingsImage = settingsGO.GetComponentInChildren<Image>();
+        settingsButtonImage = settingsButton.GetComponentInChildren<Image>();
+    }
 
-        allButtons = FindObjectsByType<Button>(FindObjectsSortMode.None);
+    private void Start()
+    {
+        menuCam = Camera.main.transform;
+
+        back = playerCntrlsAss.FindActionMap("Menu Controls").FindAction("GoBack");
+        back.Enable();
+        back.performed += ctx => GoBack();
 
         canRotate = false;
+
+        allButtons = FindObjectsByType<Button>(FindObjectsSortMode.None);
         menus.Add(selectionMenu);
     }
 
@@ -150,7 +152,6 @@ public class MainMenu : MonoBehaviour
             ExitButtonOff();
             BackButtonOff();
         }
-
     }
 
     public void EnterStory()
@@ -192,25 +193,37 @@ public class MainMenu : MonoBehaviour
     {
         settingsMenu.enabled = true;
         constantMenu.enabled = false;
+        SettingsButtonOff();
+        ExitButtonOff();
+        BackButtonOff();
     }
 
     public void ExitSettings()
     {
         settingsMenu.enabled = false;
         constantMenu.enabled = true;
-        
+        SettingsButtonOn();
+        ExitButtonOn();
+        BackButtonOn();
+
     }
 
     public void EnterQuit()
     {
         quitMenu.enabled = true;
         constantMenu.enabled = false;
+        SettingsButtonOff();
+        ExitButtonOff();
+        BackButtonOff();
     }
 
     public void ExitQuit()
     {
         quitMenu.enabled = false;
         constantMenu.enabled = true;
+        SettingsButtonOn();
+        ExitButtonOn();
+        BackButtonOn();
     }
 
     private IEnumerator RotateMenuCamera()
@@ -266,6 +279,20 @@ public class MainMenu : MonoBehaviour
         exitButton.interactable = false;
         exitButtonTxt.enabled = false;
         exitButtonImage.enabled = false;
+    }
+
+    private void SettingsButtonOn()
+    {
+        settingsButton.interactable = true;
+        settingsButtonTxt.enabled = true;
+        settingsButtonImage.enabled = true;
+    }
+
+    private void SettingsButtonOff()
+    {
+        settingsButton.interactable = false;
+        settingsButtonTxt.enabled = false;
+        settingsButtonImage.enabled = false;
     }
 
     private void BackButtonOn()

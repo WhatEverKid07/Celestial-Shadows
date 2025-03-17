@@ -8,9 +8,19 @@ public class MenuFunctions : MonoBehaviour
     [Header("Scripts")]
     [SerializeField] private MainMenu mainMenuScript;
 
+    [Header("Guns")]
+    [SerializeField] private GameObject[] allGuns;
+    private GameObject currentGun;
+
     private void Start()
     {
         mainMenuScript = FindAnyObjectByType<MainMenu>();
+        currentGun = allGuns[0];
+    }
+
+    private void Update()
+    {
+
     }
 
     public void QuitGame()
@@ -26,5 +36,15 @@ public class MenuFunctions : MonoBehaviour
     public void CancelSettings()
     {
         mainMenuScript.ExitSettings();
+    }
+
+    public void ScrollMenuUp()
+    {
+
+    }
+
+    public void ScrollMenuDown()
+    {
+
     }
 }
