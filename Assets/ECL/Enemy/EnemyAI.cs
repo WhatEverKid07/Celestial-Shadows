@@ -1,93 +1,45 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
-using System.Collections;
-using Unity.VisualScripting;
 
 public class EnemyAI : MonoBehaviour
 {
-    /*
-     bool wasInvoked;
+    [SerializeField] private Transform target;
+    [SerializeField] private Transform player;
+    [SerializeField] private float rotationSpeed;
+    [SerializeField] private float speed;
+    [SerializeField] private float acceleration;
+    [SerializeField] private float detectionRange = 10f;
+    [SerializeField] private float fieldOfViewAngle = 120f;
+    [SerializeField] private LayerMask obstructionLayer;
 
-void LevelManager()
-{
-    if (!wasInvoked && level == 3)
-    {
-        EnemySpawner.GetComponent<EnemySpawner>().Spawn();
-        wasInvoked = true;
-    }
-}
-    */
-    public Transform target;
-    public Transform player;
-    public float rotationSpeed = 5f;
-    public float speed = 3.5f;
-    public float acceleration = 8f;
-    public float detectionRange = 10f;
-    public float fieldOfViewAngle = 120f;
-    public LayerMask obstructionMask;
-
+    private Transform currentTarget;
     private NavMeshAgent agent;
-    public Transform currentTarget;
     private bool playerVisible = false;
-
     private bool hasReachedTarget = false;
-    private bool hasPerformedAction = false;
-
-    private bool resumeAllowed = false;
-
+    private Vector3 lastPos;
+    private float threshold = 1f;
+    private bool isAtTarget = false;
+    //private bool hasPerformedAction = false;
     void Start()
     {
         agent = GetComponent<NavMeshAgent>();
         agent.speed = speed;
         agent.acceleration = acceleration;
-        currentTarget = target;
         InvokeRepeating("MoveToTarget", 0, 0.3f);
-
-        if (!hasReachedTarget)
-        {
-            StartCoroutine(CheckPlayerVisibility());
-        }
+        StartCoroutine(CheckPlayerVisibility());
+        currentTarget = target;
+        // update the target to go to
+        // update target location
     }
-
-    IEnumerator CheckPlayerVisibility()
+    void Update()
     {
-        while (true)
-        {
-            bool wasVisible = playerVisible;
-            playerVisible = IsPlayerVisible();
-
-            if (playerVisible && !wasVisible)
-            {
-                Debug.Log("Going to player");
-                currentTarget = player;
-                StartCoroutine(ResumeMoving());
-                agent.isStopped = true;
-            }
-            else if (!playerVisible && wasVisible)
-            {
-                Debug.Log("Lost sight of player");
-                StopMoving();
-                yield return new WaitForSeconds(2f);
-                currentTarget = target;
-                StartCoroutine(ResumeMoving());
-            }
-
-            yield return new WaitForSeconds(1f);
-        }
+        ExtraRotation();
+        UpdateIfHasReachedTarget();
+        if (currentTarget == player)
+            UpdateObjectPosition(player);
     }
-    private void Update()
-    {
-        if (!hasReachedTarget && agent.remainingDistance <= agent.stoppingDistance && !agent.pathPending && agent.velocity.magnitude == 0)
-        {
-            hasReachedTarget = true;
-            OnReachedTarget();
-        }
-        if(agent.velocity.magnitude > 0 && agent.remainingDistance >= agent.stoppingDistance && hasReachedTarget)
-        {
-            //StartCoroutine(ResumeMoving());
-        }
-    }
-
     bool IsPlayerVisible()
     {
         if (player == null) return false;
@@ -109,46 +61,93 @@ void LevelManager()
             if (hit.transform == player)
             {
                 agent.isStopped = false;
-                StartCoroutine(ResumeMoving());
                 return true;
             }
         }
-
         return false;
     }
+    IEnumerator CheckPlayerVisibility()
+    {
+        while (true)
+        {
+            bool wasVisible = playerVisible;
+            playerVisible = IsPlayerVisible();
 
+            if (playerVisible && !wasVisible)
+            {
+                Debug.Log("Found player");
+                StartCoroutine(ChangeCurrentTarget(player));
+            }
+            else if (!playerVisible && wasVisible)
+            {
+                Debug.Log("Lost sight of player");
+                StartCoroutine(ChangeCurrentTarget(target));
+            }
+            yield return new WaitForSeconds(0.8f);
+        }
+    }
+    IEnumerator ChangeCurrentTarget(Transform changeToo)
+    {
+        agent.isStopped = true;
+        currentTarget = changeToo;
+        hasReachedTarget = false;
+        yield return new WaitForSeconds(1f);
+        agent.isStopped = false;
+    }
+
+    private void ExtraRotation()
+    {
+        Vector3 lookrotation = agent.steeringTarget - transform.position;
+        transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(lookrotation), rotationSpeed * Time.deltaTime);
+    }
+    private void UpdateIfHasReachedTarget()
+    {
+        if (!hasReachedTarget && !isAtTarget && agent.remainingDistance <= agent.stoppingDistance && !agent.pathPending && agent.velocity.magnitude == 0)
+        {
+            Debug.Log("UpdateIfHasReachedTarget");
+            OnReachedTarget();
+        }
+        else if (hasReachedTarget && isAtTarget && agent.remainingDistance >= agent.stoppingDistance)//agent.velocity.magnitude > 0 && agent.remainingDistance >= agent.stoppingDistance && isAtTarget)
+        {
+            Debug.Log("UpdateIfHasReachedTarget 2");
+            isAtTarget = false;
+            hasReachedTarget = false;
+            agent.isStopped = false;
+        }
+    }
+    private void UpdateObjectPosition(Transform obj)
+    {
+        Vector3 offset = obj.position - lastPos;
+        if (offset.x > threshold)
+        {
+            lastPos = obj.position; // update lastPos
+            hasReachedTarget = false;
+            MoveToTarget();
+            agent.SetDestination(currentTarget.position);// code to execute when X is getting bigger
+        }
+        else if (offset.x < -threshold)
+        {
+            lastPos = obj.position; // update lastPos
+            hasReachedTarget = false;
+            MoveToTarget();
+            agent.SetDestination(currentTarget.position);// code to execute when X is getting smaller 
+        }
+    }
     private void MoveToTarget()
     {
+        if (hasReachedTarget) return;
+        isAtTarget = false;
+        agent.isStopped = false;
         agent.SetDestination(currentTarget.position);
         Debug.Log("Moving to: " + currentTarget.name);
     }
-
-    private void StopMoving()
-    {
-        agent.isStopped = true; // Stop AI movement
-    }
-
-    IEnumerator ResumeMoving()
-    {
-        yield return new WaitForSeconds(2f);
-        agent.isStopped = false;
-        hasReachedTarget = false;
-        hasPerformedAction = false;
-        Debug.Log("Moving");
-    }
-
     private void OnReachedTarget()
     {
-        if (hasPerformedAction) return;
-        hasPerformedAction = true;
+        if (hasReachedTarget || isAtTarget) return;
+        hasReachedTarget = true;
+        isAtTarget = true;
         agent.isStopped = true;
         Debug.Log("Target Reached!");
-
-        //Attack();
-    }
-
-    private void Attack()
-    {
-        Debug.Log("Performing arrival action...");
+        // Attack and whatever
     }
 }

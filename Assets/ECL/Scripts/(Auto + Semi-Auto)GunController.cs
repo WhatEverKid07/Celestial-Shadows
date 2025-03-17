@@ -47,7 +47,9 @@ public class AutoAndSemiAutoGunController : MonoBehaviour
     [Space(20)]
     [Header("Animation")]
     [SerializeField] private Animator animator;
+    [SerializeField] private Animator animatorForShotgun;
     [SerializeField] private string nameOfShootTrigger;
+    [SerializeField] private string nameOfSightBool;
 
 
     [Space(20)]
@@ -108,10 +110,6 @@ public class AutoAndSemiAutoGunController : MonoBehaviour
 
         zoomInOrOut.performed += Sighted;
         zoomInOrOut.canceled += Sighted;
-        //zoomInOrOut.performed += ctx => ChangeFOV(targetZoomFOV);
-        //zoomInOrOut.performed += ctx => gunManager.canSwitch = false;
-        //zoomInOrOut.canceled += ctx => gunManager.canSwitch = true;
-        //zoomInOrOut.canceled += ctx => ChangeFOV(originalFOV);
     }
     public void Sighted(InputAction.CallbackContext zoom)
     {
@@ -119,15 +117,14 @@ public class AutoAndSemiAutoGunController : MonoBehaviour
         {
             ChangeFOV(targetZoomFOV);
             gunManager.canSwitch = false;
-            animator.Play("InSightShotgun");
+            animatorForShotgun.Play("InSightShotgun");
         }
-
-        if (zoom.canceled) // Button released
+        else if (zoom.canceled) // Button released
         {
             Debug.Log("Canceleed");
-            zoomInOrOut.canceled += ctx => gunManager.canSwitch = true;
-            zoomInOrOut.canceled += ctx => ChangeFOV(originalFOV);
-            //animator.SetBool("IsSighted");
+            ChangeFOV(originalFOV);
+            gunManager.canSwitch = true;
+            animatorForShotgun.Play("InSightShotgunReverse");
         }
     }
 
