@@ -34,6 +34,10 @@ public class MenuFunctions : MonoBehaviour
 
     private void Update()
     {
+        if (canSwitchUp || canSwitchDown)
+        {
+            SwitchGun();
+        }
 
         if (canSwitchUp && !isSwitching)
         {
@@ -70,31 +74,15 @@ public class MenuFunctions : MonoBehaviour
 
     public void ScrollMenuUp()
     {
-        int currentIndex = System.Array.IndexOf(allGuns, currentGun);
-        currentIndex = currentIndex < 0 ? 0 : currentIndex;
-
-        Debug.Log("Current index: " + currentIndex);
-        Debug.Log("Previous gun" + previousGun);
-        Debug.Log("Current gun: " + currentGun);
-
-        if (currentIndex < allGuns.Length) 
-        {
-            currentGun = allGuns[currentIndex + 1];
-
-            if (currentIndex != 0)
-            {
-                previousGun = allGuns[currentIndex - 1];
-            }
-            else
-            {
-                previousGun = allGuns[currentIndex];
-            }
-
-            canSwitchUp = true;
-        }
+        canSwitchUp = true;
     }
 
     public void ScrollMenuDown()
+    {
+        canSwitchDown = true;
+    }
+
+    private void SwitchGun()
     {
         int currentIndex = System.Array.IndexOf(allGuns, currentGun);
         currentIndex = currentIndex < 0 ? 0 : currentIndex;
@@ -103,11 +91,31 @@ public class MenuFunctions : MonoBehaviour
         Debug.Log("Previous gun" + previousGun);
         Debug.Log("Current gun: " + currentGun);
 
-        if (currentIndex > 0) 
+        if (canSwitchUp)
         {
-            currentGun = allGuns[currentIndex - 1];
-            previousGun = allGuns[currentIndex - 2];
-            canSwitchDown = true;
+            if (currentIndex < allGuns.Length - 1)
+            {
+                currentGun = allGuns[currentIndex + 1];
+                currentIndex++;
+
+                if (currentIndex != 0)
+                {
+                    previousGun = allGuns[currentIndex - 1];
+                }
+                else
+                {
+                    previousGun = allGuns[currentIndex];
+                }
+            }
+        }
+
+        if (canSwitchDown)
+        {
+            if (currentIndex > 0)
+            {
+                currentGun = allGuns[currentIndex - 1];
+                previousGun = currentIndex > 1 ? allGuns[currentIndex - 2] : allGuns[currentIndex];
+            }
         }
     }
 

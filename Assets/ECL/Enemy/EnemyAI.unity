@@ -133,7 +133,7 @@ GameObject:
   - component: {fileID: 5156492}
   - component: {fileID: 5156493}
   m_Layer: 0
-  m_Name: Machinegun
+  m_Name: RangeAttack
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

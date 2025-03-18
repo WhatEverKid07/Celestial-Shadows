@@ -51,7 +51,6 @@ public class MainMenu : MonoBehaviour
 
     private GameObject settingsButtonGO;
     private Button settingsButton;
-    private TextMeshProUGUI settingsButtonTxt;
     private Image settingsButtonImage;
 
     public bool goToStory { get; private set; }
@@ -80,8 +79,6 @@ public class MainMenu : MonoBehaviour
         exitButton = exitGO.GetComponentInChildren<Button>();
         backButton = backGO.GetComponentInChildren<Button>();
         settingsButton = settingsButtonGO.GetComponentInChildren<Button>();
-
-        settingsButtonTxt = settingsButton.GetComponentInChildren<TextMeshProUGUI>();
 
         exitButtonImage = exitGO.GetComponentInChildren<Image>();
         backButtonImage = backGO.GetComponentInChildren<Image>();
@@ -278,14 +275,12 @@ public class MainMenu : MonoBehaviour
     private void SettingsButtonOn()
     {
         settingsButton.interactable = true;
-        settingsButtonTxt.enabled = true;
         settingsButtonImage.enabled = true;
     }
 
     private void SettingsButtonOff()
     {
         settingsButton.interactable = false;
-        settingsButtonTxt.enabled = false;
         settingsButtonImage.enabled = false;
     }
 

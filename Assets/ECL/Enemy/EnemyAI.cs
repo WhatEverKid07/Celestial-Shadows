@@ -6,6 +6,8 @@ using UnityEngine.AI;
 
 public class EnemyAI : MonoBehaviour
 {
+    private EnemyAIAttack enemyAttack;
+
     [SerializeField] private Transform target;
     [SerializeField] private Transform player;
     [SerializeField] private float rotationSpeed;
@@ -24,6 +26,7 @@ public class EnemyAI : MonoBehaviour
     private bool isAtTarget = false;
     void Start()
     {
+        enemyAttack = GetComponentInChildren<EnemyAIAttack>();
         agent = GetComponent<NavMeshAgent>();
         agent.speed = speed;
         agent.acceleration = acceleration;
@@ -91,6 +94,7 @@ public class EnemyAI : MonoBehaviour
         hasReachedTarget = false;
         yield return new WaitForSeconds(1f);
         agent.isStopped = false;
+        enemyAttack.isAttacking = false;
     }
 
     private void ExtraRotation()
@@ -108,6 +112,7 @@ public class EnemyAI : MonoBehaviour
         else if (hasReachedTarget && isAtTarget && agent.remainingDistance >= agent.stoppingDistance)
         {
             Debug.Log("UpdateIfHasReachedTarget 2");
+            //enemyAttack.isAttacking = false;
             isAtTarget = false;
             hasReachedTarget = false;
             agent.isStopped = false;
@@ -120,6 +125,7 @@ public class EnemyAI : MonoBehaviour
         {
             lastPos = obj.position;
             hasReachedTarget = false;
+            enemyAttack.isAttacking = false;
             MoveToTarget();
             agent.SetDestination(currentTarget.position);
         }
@@ -127,6 +133,7 @@ public class EnemyAI : MonoBehaviour
         {
             lastPos = obj.position;
             hasReachedTarget = false;
+            enemyAttack.isAttacking = false;
             MoveToTarget();
             agent.SetDestination(currentTarget.position);
         }
@@ -149,5 +156,6 @@ public class EnemyAI : MonoBehaviour
         agent.isStopped = true;
         Debug.Log("Target Reached!");
         // Attack and whatever
+        enemyAttack.isAttacking = true;
     }
 }

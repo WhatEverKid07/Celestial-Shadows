@@ -13,7 +13,7 @@ public class EnemyAIAttack : MonoBehaviour
     [SerializeField] private bool range = false;
 
     [Tooltip("For Testing")]
-    public bool isAttacking = false; // Public for testing
+    public bool isAttacking = false; // Public for testing. Make Internal
 
     [Header("Ranged Attack")]
     [SerializeField] private float coneAngle;
