@@ -29,8 +29,8 @@ public class CharacterMovement : MonoBehaviour
     public bool flipCam { get; private set; }
 
     [Header("Walking & Running")]
-    [SerializeField] [Range(5,8)] private float walkSpeed;
-    [SerializeField] [Range(10,13)] private float runSpeed;
+    [SerializeField] private float walkSpeed;
+    [SerializeField] private float runSpeed;
 
     public Vector3 moveDir { get; private set; }
     public bool isRunning { get; private set; }
