@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -21,7 +22,6 @@ public class EnemyAI : MonoBehaviour
     private Vector3 lastPos;
     private float threshold = 1f;
     private bool isAtTarget = false;
-    //private bool hasPerformedAction = false;
     void Start()
     {
         agent = GetComponent<NavMeshAgent>();
@@ -30,8 +30,6 @@ public class EnemyAI : MonoBehaviour
         InvokeRepeating("MoveToTarget", 0, 0.3f);
         StartCoroutine(CheckPlayerVisibility());
         currentTarget = target;
-        // update the target to go to
-        // update target location
     }
     void Update()
     {
@@ -107,7 +105,7 @@ public class EnemyAI : MonoBehaviour
             Debug.Log("UpdateIfHasReachedTarget");
             OnReachedTarget();
         }
-        else if (hasReachedTarget && isAtTarget && agent.remainingDistance >= agent.stoppingDistance)//agent.velocity.magnitude > 0 && agent.remainingDistance >= agent.stoppingDistance && isAtTarget)
+        else if (hasReachedTarget && isAtTarget && agent.remainingDistance >= agent.stoppingDistance)
         {
             Debug.Log("UpdateIfHasReachedTarget 2");
             isAtTarget = false;
@@ -120,22 +118,24 @@ public class EnemyAI : MonoBehaviour
         Vector3 offset = obj.position - lastPos;
         if (offset.x > threshold)
         {
-            lastPos = obj.position; // update lastPos
+            lastPos = obj.position;
             hasReachedTarget = false;
             MoveToTarget();
-            agent.SetDestination(currentTarget.position);// code to execute when X is getting bigger
+            agent.SetDestination(currentTarget.position);
         }
         else if (offset.x < -threshold)
         {
-            lastPos = obj.position; // update lastPos
+            lastPos = obj.position;
             hasReachedTarget = false;
             MoveToTarget();
-            agent.SetDestination(currentTarget.position);// code to execute when X is getting smaller 
+            agent.SetDestination(currentTarget.position);
         }
     }
+
     private void MoveToTarget()
     {
-        if (hasReachedTarget) return;
+        if (hasReachedTarget)
+            return;
         isAtTarget = false;
         agent.isStopped = false;
         agent.SetDestination(currentTarget.position);
