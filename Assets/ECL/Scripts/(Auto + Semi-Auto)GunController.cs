@@ -3,7 +3,6 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
-using static UnityEditor.Timeline.TimelinePlaybackControls;
 
 public class AutoAndSemiAutoGunController : MonoBehaviour
 {
@@ -179,7 +178,7 @@ public class AutoAndSemiAutoGunController : MonoBehaviour
 
         shoot.performed += ctx =>
         {
-            if (!automatic && canShoot == true && gameObject.activeInHierarchy)
+            if (!automatic && canShoot && gameObject.activeInHierarchy)
             {
                 Shoot(shootHowManyBullets);
                 canShoot = false;

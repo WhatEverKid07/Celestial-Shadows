@@ -43,12 +43,10 @@ public class MainMenu : MonoBehaviour
 
     private GameObject exitGO;
     private Button exitButton;
-    private TextMeshProUGUI exitButtonTxt;
     private Image exitButtonImage;
 
     private GameObject backGO;
     private Button backButton;
-    private TextMeshProUGUI backButtonTxt;
     private Image backButtonImage;
 
     private GameObject settingsButtonGO;
@@ -83,8 +81,6 @@ public class MainMenu : MonoBehaviour
         backButton = backGO.GetComponentInChildren<Button>();
         settingsButton = settingsButtonGO.GetComponentInChildren<Button>();
 
-        exitButtonTxt = exitButton.GetComponentInChildren<TextMeshProUGUI>();
-        backButtonTxt = backButton.GetComponentInChildren<TextMeshProUGUI>();
         settingsButtonTxt = settingsButton.GetComponentInChildren<TextMeshProUGUI>();
 
         exitButtonImage = exitGO.GetComponentInChildren<Image>();
@@ -270,14 +266,12 @@ public class MainMenu : MonoBehaviour
     private void ExitButtonOn()
     {
         exitButton.interactable = true;
-        exitButtonTxt.enabled = true;
         exitButtonImage.enabled = true;
     }
 
     private void ExitButtonOff()
     {
         exitButton.interactable = false;
-        exitButtonTxt.enabled = false;
         exitButtonImage.enabled = false;
     }
 
@@ -298,14 +292,12 @@ public class MainMenu : MonoBehaviour
     private void BackButtonOn()
     {
         backButton.interactable = true;
-        backButtonTxt.enabled = true;
         backButtonImage.enabled = true;
     }
 
     private void BackButtonOff()
     {
         backButton.interactable = false;
-        backButtonTxt.enabled = false;
         backButtonImage.enabled = false;
     }
 }
