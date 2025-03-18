@@ -76,12 +76,12 @@ public class EnemyAI : MonoBehaviour
 
             if (playerVisible && !wasVisible)
             {
-                Debug.Log("Found player");
+                //Debug.Log("Found player");
                 StartCoroutine(ChangeCurrentTarget(player));
             }
             else if (!playerVisible && wasVisible)
             {
-                Debug.Log("Lost sight of player");
+                //Debug.Log("Lost sight of player");
                 StartCoroutine(ChangeCurrentTarget(target));
             }
             yield return new WaitForSeconds(0.8f);
@@ -93,8 +93,12 @@ public class EnemyAI : MonoBehaviour
         currentTarget = changeToo;
         hasReachedTarget = false;
         yield return new WaitForSeconds(1f);
-        agent.isStopped = false;
-        enemyAttack.isAttacking = false;
+        if (!hasReachedTarget)
+        {
+            agent.isStopped = false;
+            //Debug.Log("Attack False 1");
+            enemyAttack.isAttacking = false;
+        }
     }
 
     private void ExtraRotation()
@@ -104,20 +108,23 @@ public class EnemyAI : MonoBehaviour
     }
     private void UpdateIfHasReachedTarget()
     {
-        if (!hasReachedTarget && !isAtTarget && agent.remainingDistance <= agent.stoppingDistance && !agent.pathPending && agent.velocity.magnitude == 0)
+        float remainingDistance = agent.remainingDistance;
+
+        if (!hasReachedTarget && !isAtTarget && remainingDistance <= agent.stoppingDistance && !agent.pathPending && agent.velocity.magnitude == 0)
         {
-            Debug.Log("UpdateIfHasReachedTarget");
+            //Debug.Log("UpdateIfHasReachedTarget: Target Reached");
+            agent.isStopped = true;
             OnReachedTarget();
         }
-        else if (hasReachedTarget && isAtTarget && agent.remainingDistance >= agent.stoppingDistance)
+        else if (hasReachedTarget && isAtTarget && remainingDistance >= agent.stoppingDistance * 1.05f)
         {
-            Debug.Log("UpdateIfHasReachedTarget 2");
-            //enemyAttack.isAttacking = false;
+            //Debug.Log("UpdateIfHasReachedTarget: Moving Away from Target");
             isAtTarget = false;
             hasReachedTarget = false;
             agent.isStopped = false;
         }
     }
+
     private void UpdateObjectPosition(Transform obj)
     {
         Vector3 offset = obj.position - lastPos;
@@ -125,6 +132,7 @@ public class EnemyAI : MonoBehaviour
         {
             lastPos = obj.position;
             hasReachedTarget = false;
+            //Debug.Log("Attack False 2");
             enemyAttack.isAttacking = false;
             MoveToTarget();
             agent.SetDestination(currentTarget.position);
@@ -133,6 +141,7 @@ public class EnemyAI : MonoBehaviour
         {
             lastPos = obj.position;
             hasReachedTarget = false;
+            //Debug.Log("Attack False 3");
             enemyAttack.isAttacking = false;
             MoveToTarget();
             agent.SetDestination(currentTarget.position);
@@ -146,7 +155,7 @@ public class EnemyAI : MonoBehaviour
         isAtTarget = false;
         agent.isStopped = false;
         agent.SetDestination(currentTarget.position);
-        Debug.Log("Moving to: " + currentTarget.name);
+        //Debug.Log("Moving to: " + currentTarget.name);
     }
     private void OnReachedTarget()
     {
@@ -154,8 +163,8 @@ public class EnemyAI : MonoBehaviour
         hasReachedTarget = true;
         isAtTarget = true;
         agent.isStopped = true;
-        Debug.Log("Target Reached!");
-        // Attack and whatever
+        //Debug.Log("Target Reached!");
+        //Debug.Log("Attack True");
         enemyAttack.isAttacking = true;
     }
 }
