@@ -1,9 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
 
-public class MenuFunctions : MonoBehaviour
+public class ArsenalFunction : MonoBehaviour
 {
     [Header("Scripts")]
     [SerializeField] private MainMenu mainMenuScript;
@@ -14,8 +13,8 @@ public class MenuFunctions : MonoBehaviour
     private GameObject previousGun;
     [SerializeField] private Transform currentOrientation;
 
-    private bool canSwitchUp;
-    private bool canSwitchDown;
+    private bool canSwitchUp = false;
+    private bool canSwitchDown = false;
     private bool isSwitching = false;
 
     private Coroutine switchUpCoroutine;
@@ -28,48 +27,27 @@ public class MenuFunctions : MonoBehaviour
 
         if (allGuns.Length > 0)
         {
-            currentGun = allGuns[0]; 
+            currentGun = allGuns[0];
+            previousGun = currentGun;
         }
     }
 
     private void Update()
     {
-        if (canSwitchUp || canSwitchDown)
-        {
-            SwitchGun();
-        }
+        Debug.Log("Previous gun: " + previousGun);
+        Debug.Log("Current gun: " + currentGun);
+
 
         if (canSwitchUp && !isSwitching)
         {
-            isSwitching = true;
-            switchUpCoroutine = StartCoroutine(SwitchGunUp());
-
-            canSwitchUp = false;
+            CanSwitchGunUp();
         }
 
         if (canSwitchDown && !isSwitching)
         {
-            isSwitching = true;
-            switchDownCoroutine = StartCoroutine(SwitchGunDown());
-
-            canSwitchDown = false;
+            CanSwitchGunDown();
         }
 
-    }
-
-    public void QuitGame()
-    {
-        Application.Quit();
-    }
-
-    public void CancelQuit()
-    {
-        mainMenuScript.ExitQuit();
-    }
-
-    public void CancelSettings()
-    {
-        mainMenuScript.ExitSettings();
     }
 
     public void ScrollMenuUp()
@@ -82,43 +60,47 @@ public class MenuFunctions : MonoBehaviour
         canSwitchDown = true;
     }
 
-    private void SwitchGun()
+    private void CanSwitchGunUp()
     {
         int currentIndex = System.Array.IndexOf(allGuns, currentGun);
-        currentIndex = currentIndex < 0 ? 0 : currentIndex;
 
         Debug.Log("Current index: " + currentIndex);
-        Debug.Log("Previous gun" + previousGun);
+        Debug.Log("Previous gun: " + previousGun);
         Debug.Log("Current gun: " + currentGun);
 
-        if (canSwitchUp)
+        if (currentIndex < allGuns.Length - 1)
         {
-            if (currentIndex < allGuns.Length - 1)
-            {
-                currentGun = allGuns[currentIndex + 1];
-                currentIndex++;
-
-                if (currentIndex != 0)
-                {
-                    previousGun = allGuns[currentIndex - 1];
-                }
-                else
-                {
-                    previousGun = allGuns[currentIndex];
-                }
-            }
+            currentGun = allGuns[currentIndex + 1];
+            previousGun = currentIndex > 0 ? allGuns[currentIndex - 1] : currentGun;
         }
 
-        if (canSwitchDown)
-        {
-            if (currentIndex > 0)
-            {
-                currentGun = allGuns[currentIndex - 1];
-                previousGun = currentIndex > 1 ? allGuns[currentIndex - 2] : allGuns[currentIndex];
-            }
-        }
+        isSwitching = true;
+        switchUpCoroutine = StartCoroutine(SwitchGunUp());
+
+        canSwitchUp = false;
+
     }
 
+    private void CanSwitchGunDown()
+    {
+        int currentIndex = System.Array.IndexOf(allGuns, currentGun);
+
+        Debug.Log("Current index: " + currentIndex);
+        Debug.Log("Previous gun: " + previousGun);
+        Debug.Log("Current gun: " + currentGun);
+
+        if (currentIndex > 0)
+        {
+            currentGun = allGuns[currentIndex - 1];
+            previousGun = currentIndex > 1 ? allGuns[currentIndex - 2] : allGuns[0];
+        }
+
+        isSwitching = true;
+        switchDownCoroutine = StartCoroutine(SwitchGunDown());
+
+        canSwitchDown = false;
+
+    }
     private IEnumerator SwitchGunUp()
     {
         float rotationTime = 1f;

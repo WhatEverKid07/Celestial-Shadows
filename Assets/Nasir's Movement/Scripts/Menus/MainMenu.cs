@@ -22,7 +22,7 @@ public class MainMenu : MonoBehaviour
     [Header("Menus")]
     private GameObject selectionMenu;
     private GameObject characterMenu;
-    private GameObject arsenalMenu;
+    public GameObject arsenalMenu { get; private set; }
 
     private GameObject settingsGO;
     private Canvas settingsMenu;
@@ -35,7 +35,7 @@ public class MainMenu : MonoBehaviour
 
 
     [SerializeField] private static List<GameObject> menus = new List<GameObject>();
-    private GameObject currentMenu;
+    public GameObject currentMenu { get; private set; }
     private GameObject previousMenu;
 
     [Header("Buttons")]
