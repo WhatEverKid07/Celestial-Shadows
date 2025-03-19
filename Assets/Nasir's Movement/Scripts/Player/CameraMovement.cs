@@ -1,4 +1,5 @@
 using System;
+using Unity.Properties;
 using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
@@ -135,10 +136,18 @@ public class CameraMovement : MonoBehaviour
         if (Mathf.DeltaAngle(currentRotationY, -90) < Mathf.DeltaAngle(currentRotationY, 90))
         {
             targetY = 0;
+            if (characterMove.turnCam90)
+            {
+                targetY = targetY + 90;
+            }
         }
         else
         {
             targetY = -180;
+            if (characterMove.turnCam90)
+            {
+                targetY = targetY + 90;
+            }
         }
 
         if (characterMove.flipCam)
@@ -148,6 +157,7 @@ public class CameraMovement : MonoBehaviour
 
         transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(currentRotationX, targetY, currentRotationZ), Time.deltaTime * rotationSpeed);
     }
+
 
     private void ChangeWalkFOV()
     {
