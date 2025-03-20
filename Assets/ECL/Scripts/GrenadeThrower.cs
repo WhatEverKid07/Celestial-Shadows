@@ -5,6 +5,7 @@ using UnityEngine.UI;
 
 public class GrenadeThrower : MonoBehaviour
 {
+    [SerializeField] private Animator animator;
     [Space(20)]
     [Header("Grenade Attributes")]
     [SerializeField] private float throwForce = 10f;
@@ -25,6 +26,8 @@ public class GrenadeThrower : MonoBehaviour
     private InputAction throwGrenade;
     private float currentThrowDelay;
     private Grenade grenadeScript;
+    private float grenadeAnimPause = 1.2f;
+    private bool thrown = false;
 
     private void Start()
     {
@@ -69,8 +72,13 @@ public class GrenadeThrower : MonoBehaviour
             if (currentThrowDelay <= 0 && gameObject.activeInHierarchy)
             {
                 Debug.Log("2");
-                ThrowGrenade();
-                currentThrowDelay = throwDelay;
+                if (!thrown)
+                {
+                    thrown = true;
+                    animator.Play("WholeGrenadeAnimation");
+                    Invoke("ThrowGrenade", grenadeAnimPause);
+                    currentThrowDelay = throwDelay;
+                }
             }
         };
 
@@ -91,6 +99,7 @@ public class GrenadeThrower : MonoBehaviour
         }
         grenadeAmount--;
         UpdateAmmoText();
+        thrown = false;
     }
     void UpdateAmmoText()
     {
