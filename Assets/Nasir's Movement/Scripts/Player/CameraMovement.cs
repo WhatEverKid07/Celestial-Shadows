@@ -1,7 +1,5 @@
+
 using System;
-using Unity.Properties;
-using Unity.VisualScripting;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -31,7 +29,9 @@ public class CameraMovement : MonoBehaviour
 
     private bool isForwardWalled;
     private bool wasForwardWalled;
+
     private bool isBackWalled;
+    private bool wasBackWalled;
 
     [Header("Sensitivity")]
     private float mouseX;
@@ -59,6 +59,7 @@ public class CameraMovement : MonoBehaviour
         mouseY = axisY.action.ReadValue<float>();
 
         CheckForWall();
+        Debug.Log(wasForwardWalled);
 
         if (characterMove.isRightWalled && characterMove.isWallRunning && !characterMove.isWallJumping)
         {
@@ -73,11 +74,11 @@ public class CameraMovement : MonoBehaviour
             ChangeCameraWalkAngle();
         }
 
-        if (!characterMove.isWallRunning)
+        if (!characterMove.isWallRunning || characterMove.isGrounded)
         {
-
+            wasForwardWalled = false;
+            wasBackWalled = false;
         }
-
 
         if (characterMove.isRunning || characterMove.isWallRunning && !characterMove.isWallJumping)
         {
@@ -123,9 +124,9 @@ public class CameraMovement : MonoBehaviour
 
         if (Mathf.DeltaAngle(currentRotationY, -90) < Mathf.DeltaAngle(currentRotationY, 90))
         {
-            if (wasForwardWalled)
+            if (wasForwardWalled || wasBackWalled)
             {
-                targetY = 90;
+                targetY = 80;
             }
             else
             {
@@ -134,7 +135,14 @@ public class CameraMovement : MonoBehaviour
         }
         else
         {
-            targetY = -180;
+            if (wasBackWalled || wasForwardWalled)
+            {
+                targetY = -80;
+            }
+            else
+            {
+                targetY = -180;
+            }
         }
 
         if (characterMove.flipCam)
@@ -161,11 +169,25 @@ public class CameraMovement : MonoBehaviour
 
         if (Mathf.DeltaAngle(currentRotationY, -90) < Mathf.DeltaAngle(currentRotationY, 90))
         {
-            targetY = 0;
+            if (wasForwardWalled || wasBackWalled)
+            {
+                targetY = 80;
+            }
+            else
+            {
+                targetY = 0;
+            }
         }
         else
         {
-            targetY = -180;
+            if (wasBackWalled || wasForwardWalled)
+            {
+                targetY = -80;
+            }
+            else
+            {
+                targetY = -180;
+            }
         }
 
         if (characterMove.flipCam)
@@ -225,6 +247,7 @@ public class CameraMovement : MonoBehaviour
         if (isBackWalled)
         {
             Debug.DrawRay(backHit.point, backHit.normal * 5, Color.black);
+            wasBackWalled = true;
         }
     }
 }

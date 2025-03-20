@@ -49,6 +49,10 @@ public class CharacterMovement : MonoBehaviour
     [SerializeField] [Range(1, 3)] private float wallRunTime;
     private float setWallRunTime;
 
+    private float minWallRunAngle = 45f;
+    private float maxWallRunAngle = 89f;
+    private bool correctWallRunAngle;
+
     public bool facingForward { get; private set; }
 
     private float wallCheckDist = .8f;
@@ -176,7 +180,7 @@ public class CharacterMovement : MonoBehaviour
         CheckForWall();
         CheckForLedge();
 
-        if ((isRightWalled || isLeftWalled) && GroundedDistanceForWall())
+        if (correctWallRunAngle && !IsGrounded())
         {
             isWallRunning = true;
         }
@@ -568,11 +572,6 @@ public class CharacterMovement : MonoBehaviour
         return Physics.CheckSphere(groundChecker.transform.position, .2f, ground);
     }
 
-    private bool GroundedDistanceForWall()
-    {
-        return !Physics.Raycast(transform.position, Vector3.down, 1.5f, ground);
-    }
-
     private void CheckForWall()
     {
         Vector3 lft = transform.TransformDirection(Vector3.left);
@@ -583,6 +582,21 @@ public class CharacterMovement : MonoBehaviour
 
         //Debug.DrawLine(transform.position, transform.position + orientation.right * wallCheckDist, Color.green);
         //Debug.DrawLine(transform.position, transform.position + -orientation.right * wallCheckDist, Color.red);
+
+        if (isLeftWalled || isRightWalled)
+        {
+            Vector3 wallNormal = isLeftWalled ? leftHit.normal : rightHit.normal;
+            float angle = Vector3.Angle(transform.forward, -wallNormal);
+
+            //Debug.Log("Current angle from the wall: " + angle);
+            //Debug.Log("This is the correct wall angle: " + correctWallRunAngle);
+
+            correctWallRunAngle = angle >= minWallRunAngle && angle <= maxWallRunAngle;
+        }
+        else
+        {
+            correctWallRunAngle = false;
+        }
 
         if (isLeftWalled)
         {
@@ -613,7 +627,7 @@ public class CharacterMovement : MonoBehaviour
         Vector3 ledgePos = new (transform.position.x, 0f, ledgeHit.point.z);
         float distToLedge = Vector3.Distance(playerPos, ledgePos);
 
-        Debug.Log("The ledge distance is: " + distToLedge);
+        //Debug.Log("The ledge distance is: " + distToLedge);
 
         if (distToLedge < maxLedgeGrabDist && !isHoldingLedge)
         {
@@ -639,7 +653,7 @@ public class CharacterMovement : MonoBehaviour
         Vector3 ledgeDir = currentLedge.position - transform.position;
         float ledgeDist = Vector3.Distance(transform.position, currentLedge.position);
 
-        Debug.Log("The ledge distance is: " + ledgeDist);
+        //Debug.Log("The ledge distance is: " + ledgeDist);
 
         while (ledgeDist > 1f)
         {
