@@ -1071,7 +1071,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &763136938
 Transform:
   m_ObjectHideFlags: 0
@@ -3022,7 +3022,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &2043171946
 Transform:
   m_ObjectHideFlags: 0
@@ -3719,7 +3719,7 @@ Transform:
   m_GameObject: {fileID: 118249105525372753}
   serializedVersion: 2
   m_LocalRotation: {x: 0.00000011920929, y: -0.06352594, z: 0.0000005476177, w: 0.99798024}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -0.0024, y: 0, z: 0.0187}
   m_LocalScale: {x: -2.9493408, y: 2.9493408, z: 2.9493408}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -6021,7 +6021,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 43d484f8a37bad146b5e23ef04ec141c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damageAmount: 500
+  damageAmount: 10
 --- !u!65 &5341772257838137363
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -6041,8 +6041,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.09875442, y: 0.026274107, z: 0.014707449}
-  m_Center: {x: -0.053461306, y: 0.00914887, z: 0.0006616325}
+  m_Size: {x: 0.11292754, y: 0.026274107, z: 0.014707449}
+  m_Center: {x: -0.060548, y: 0.009148881, z: 0.00066163274}
 --- !u!54 &5341772257838137364
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -6068,7 +6068,7 @@ Rigidbody:
   m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 0
+  m_Constraints: 126
   m_CollisionDetection: 0
 --- !u!1 &5349003414608098465
 GameObject:

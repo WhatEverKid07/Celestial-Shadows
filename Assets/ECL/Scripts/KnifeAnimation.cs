@@ -23,11 +23,6 @@ public class KnifeAnimation : MonoBehaviour
         inspect.performed += OnButtonPressed;
         inspect.canceled += OnButtonReleased;
     }
-    private void OnEnable()
-    {
-        //inspect.Enable();
-    }
-
     private void OnDisable()
     {
         inspect.Disable();
