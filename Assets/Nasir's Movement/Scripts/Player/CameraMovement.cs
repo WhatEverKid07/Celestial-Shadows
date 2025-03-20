@@ -22,6 +22,17 @@ public class CameraMovement : MonoBehaviour
     [SerializeField] [Range(90, 100)] private int fov;
     [SerializeField] [Range(8, 12)] private float rotationSpeed;
 
+
+    private float wallCheckDist = .8f;
+    private RaycastHit forwardHit;
+    private RaycastHit backHit;
+
+    private LayerMask wall;
+
+    private bool isForwardWalled;
+    private bool wasForwardWalled;
+    private bool isBackWalled;
+
     [Header("Sensitivity")]
     private float mouseX;
     private float mouseY;
@@ -36,6 +47,7 @@ public class CameraMovement : MonoBehaviour
     {
         fpsCam.fieldOfView = fov;
         characterMove = FindFirstObjectByType<CharacterMovement>();
+        wall = LayerMask.GetMask("Wall");
 
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
@@ -45,6 +57,8 @@ public class CameraMovement : MonoBehaviour
     {
         mouseX = axisX.action.ReadValue<float>();
         mouseY = axisY.action.ReadValue<float>();
+
+        CheckForWall();
 
         if (characterMove.isRightWalled && characterMove.isWallRunning && !characterMove.isWallJumping)
         {
@@ -57,6 +71,11 @@ public class CameraMovement : MonoBehaviour
         else 
         {
             ChangeCameraWalkAngle();
+        }
+
+        if (!characterMove.isWallRunning)
+        {
+
         }
 
 
@@ -104,7 +123,14 @@ public class CameraMovement : MonoBehaviour
 
         if (Mathf.DeltaAngle(currentRotationY, -90) < Mathf.DeltaAngle(currentRotationY, 90))
         {
-            targetY = 0;
+            if (wasForwardWalled)
+            {
+                targetY = 90;
+            }
+            else
+            {
+                targetY = 0;
+            }
         }
         else
         {
@@ -136,18 +162,10 @@ public class CameraMovement : MonoBehaviour
         if (Mathf.DeltaAngle(currentRotationY, -90) < Mathf.DeltaAngle(currentRotationY, 90))
         {
             targetY = 0;
-            if (characterMove.turnCam90)
-            {
-                targetY = targetY + 90;
-            }
         }
         else
         {
             targetY = -180;
-            if (characterMove.turnCam90)
-            {
-                targetY = targetY + 90;
-            }
         }
 
         if (characterMove.flipCam)
@@ -184,6 +202,29 @@ public class CameraMovement : MonoBehaviour
         else
         {
             fpsCam.fieldOfView = walkFOV;
+        }
+    }
+
+    private void CheckForWall()
+    {
+        Vector3 forward = transform.TransformDirection(Vector3.forward);
+        Vector3 backward = transform.TransformDirection(Vector3.back);
+
+        isForwardWalled = Physics.Raycast(transform.position, forward, out forwardHit, 1.5f, wall);
+        isBackWalled = Physics.Raycast(transform.position, backward, out backHit, 1.5f, wall);
+
+        Debug.DrawLine(transform.position, transform.position + transform.forward * wallCheckDist, Color.cyan);
+        Debug.DrawLine(transform.position, transform.position + -transform.forward * wallCheckDist, Color.black);
+
+        if (isForwardWalled)
+        {
+            Debug.DrawRay(forwardHit.point, forwardHit.normal * 5, Color.cyan);
+            wasForwardWalled = true;
+        }
+
+        if (isBackWalled)
+        {
+            Debug.DrawRay(backHit.point, backHit.normal * 5, Color.black);
         }
     }
 }

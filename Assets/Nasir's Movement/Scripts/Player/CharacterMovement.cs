@@ -27,7 +27,6 @@ public class CharacterMovement : MonoBehaviour
     [SerializeField] private Transform camDir;
     [SerializeField] [Range(60, 100)] private int fov;
     public bool flipCam { get; private set; }
-    public bool turnCam90 { get; private set;}
 
     [Header("Walking & Running")]
     [SerializeField] private float walkSpeed;
@@ -55,13 +54,9 @@ public class CharacterMovement : MonoBehaviour
     private float wallCheckDist = .8f;
     private RaycastHit leftHit;
     private RaycastHit rightHit;
-    private RaycastHit forwardHit;
-    private RaycastHit backHit;
 
     public bool isLeftWalled { get; private set; }
     public bool isRightWalled { get; private set; }
-    public bool isForwardWalled { get; private set; }
-    public bool isBackWalled { get; private set; }
     public bool isWallRunning { get; private set; }
 
     [Header("Jumping")]
@@ -385,21 +380,15 @@ public class CharacterMovement : MonoBehaviour
         rb.velocity = new Vector3(move.x * rb.velocity.x, 0, move.z * rb.velocity.z);
 
         //GETS VECTOR PARALLEL TO THE WALL
-        Vector3 wallNormalHori = isLeftWalled ? leftHit.normal : rightHit.normal;
-        Vector3 wallNormalVerti = isBackWalled ? backHit.normal : forwardHit.normal;
+        Vector3 wallNormal = isLeftWalled ? leftHit.normal : rightHit.normal;
 
         //GETS VECTOR PERPENDICULAR FROM THE PLAYER TO THE WALL
-        Vector3 wallBackward = Vector3.Cross(wallNormalHori, transform.up);
-        Vector3 wallLeft = Vector3.Cross(wallNormalVerti, transform.right);
+        Vector3 wallBackward = Vector3.Cross(wallNormal, transform.up);
 
         //FLIPS VECTOR ON OPPOSITE SIDE OF THE WALL
-        float dotProductHori = Vector3.Dot(transform.forward, wallBackward);
-        float dotProductVerti = Vector3.Dot(transform.right, wallLeft);
+        float dotProduct= Vector3.Dot(transform.forward, wallBackward);
 
-        Debug.Log("Wall normalhori: " + wallNormalHori);
-        Debug.Log("Wall normalverti: " + wallNormalVerti);
-
-        if (dotProductHori < 0f) 
+        if (dotProduct < 0f) 
         {
             wallBackward = -wallBackward;
             flipCam = true;
@@ -407,17 +396,7 @@ public class CharacterMovement : MonoBehaviour
         else
         {
             flipCam = false;
-        }
-
-        if (dotProductVerti > 0f)
-        {
-            wallLeft = -wallLeft;
-            turnCam90 = true;
-        }
-        else
-        {
-            turnCam90 = false;
-        }
+        }  
 
         //WALL WALKING & WALL RUNNING
         if (run.ReadValue<float>() > 0f)
@@ -433,7 +412,7 @@ public class CharacterMovement : MonoBehaviour
         //ANY INPUT AWAY FROM THE WALL, GETS OFF THE WALL
         if (!(isLeftWalled && moveDir.x > 0f) || !(isRightWalled && -moveDir.x > 0))
         {
-            rb.AddForce(-wallNormalHori * 100, ForceMode.Force);
+            rb.AddForce(-wallNormal * 100, ForceMode.Force);
         }
 
         rb.velocity = new Vector3(move.x * rb.velocity.x, rb.velocity.y, move.z * rb.velocity.z);
@@ -598,13 +577,9 @@ public class CharacterMovement : MonoBehaviour
     {
         Vector3 lft = transform.TransformDirection(Vector3.left);
         Vector3 rght = transform.TransformDirection(Vector3.right);
-        Vector3 forward = transform.TransformDirection(Vector3.forward);
-        Vector3 backward = transform.TransformDirection(Vector3.back);
 
         isLeftWalled = Physics.Raycast(transform.position, lft, out leftHit, wallCheckDist, wall);
         isRightWalled = Physics.Raycast(transform.position, rght, out rightHit, wallCheckDist, wall);
-        isForwardWalled = Physics.Raycast(transform.position, forward, out forwardHit, wallCheckDist, wall);
-        isBackWalled = Physics.Raycast(transform.position, backward, out backHit, wallCheckDist, wall);
 
         //Debug.DrawLine(transform.position, transform.position + orientation.right * wallCheckDist, Color.green);
         //Debug.DrawLine(transform.position, transform.position + -orientation.right * wallCheckDist, Color.red);
@@ -617,16 +592,6 @@ public class CharacterMovement : MonoBehaviour
         if (isRightWalled)
         {
             Debug.DrawRay(rightHit.point, rightHit.normal * 5, Color.red);
-        }
-
-        if (isForwardWalled)
-        {
-            Debug.DrawRay(forwardHit.point, forwardHit.normal * 5, Color.cyan);
-        }
-
-        if (isBackWalled)
-        {
-            Debug.DrawRay(backHit.point, backHit.normal * 5, Color.black);
         }
     }
 
