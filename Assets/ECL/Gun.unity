@@ -3762,7 +3762,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   animator: {fileID: 788070852203163116}
   controls: {fileID: -944628639613478452, guid: 9269ee16b3aa1f0448f0710a2c982dcc, type: 3}
-  timeThreshold: 0.5
+  attackAnims:
+  - {fileID: 7400000, guid: b3b2fbe18d9061241adb652d94cbac91, type: 2}
+  - {fileID: 7400000, guid: 5fac67008059a7744b7b8342083c5eab, type: 2}
+  - {fileID: 7400000, guid: cbf0fe9d85d761548982db8d3baa2ab0, type: 2}
 --- !u!137 &791425092171732962
 SkinnedMeshRenderer:
   m_ObjectHideFlags: 0

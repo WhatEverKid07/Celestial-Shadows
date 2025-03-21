@@ -8,9 +8,12 @@ public class KnifeAnimation : MonoBehaviour
     [SerializeField] private Animator animator;
     [SerializeField] private InputActionAsset controls;
 
-    private InputAction inspect;
+    [SerializeField] private AnimationClip[] attackAnims;
 
-    public float timeThreshold = 0.5f; // Time window for rapid presses
+    private InputAction inspect;
+    private InputAction attack;
+
+    private float timeThreshold = 0.2f; // Time window for rapid presses
     private float lastPressTime = -1f;
     private bool isRapidPressing = false;
     private bool isSpinning = false;
@@ -19,10 +22,24 @@ public class KnifeAnimation : MonoBehaviour
     void Start()
     {
         inspect = controls.FindActionMap("Gun Controls").FindAction("Inspect");
+        attack = controls.FindActionMap("Gun Controls").FindAction("Shoot");
         inspect.Enable();
+        attack.Enable();
         inspect.performed += OnButtonPressed;
         inspect.canceled += OnButtonReleased;
+        attack.performed += _ => StartCoroutine(SelectAttackAnim()); 
     }
+    private IEnumerator SelectAttackAnim()
+    {
+        float waitTime;
+        if (attackAnims.Length == 0 || animator == null) return;
+        int randomIndex = Random.Range(0, attackAnims.Length);
+        string selectedAnimation = attackAnims[randomIndex].name;
+        waitTime = attackAnims[randomIndex].length;
+        animator.Play(selectedAnimation);
+        yield return new WaitForSeconds(waitTime);
+    }
+
     private void OnDisable()
     {
         inspect.Disable();
