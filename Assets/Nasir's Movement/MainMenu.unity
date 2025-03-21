@@ -357,7 +357,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 82249028}
-        m_TargetAssemblyTypeName: MenuFunctions, Assembly-CSharp
+        m_TargetAssemblyTypeName: ArsenalFunction, Assembly-CSharp
         m_MethodName: ScrollMenuDown
         m_Mode: 1
         m_Arguments:
@@ -415,7 +415,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 82249022}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 075674ceb57664e4f9c9a061de543d99, type: 3}
+  m_Script: {fileID: 11500000, guid: 69aff7de47d30694c88ebaa70e4edc68, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   mainMenuScript: {fileID: 82249024}
@@ -423,7 +423,7 @@ MonoBehaviour:
   - {fileID: 1704065107}
   - {fileID: 1893040208}
   currentOrientation: {fileID: 1448702080}
-  switchSpeed: 5
+  switchSpeed: 3
 --- !u!1 &171839467
 GameObject:
   m_ObjectHideFlags: 0
@@ -4530,7 +4530,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1622292784}
-        m_TargetAssemblyTypeName: MenuFunctions, Assembly-CSharp
+        m_TargetAssemblyTypeName: ArsenalFunction, Assembly-CSharp
         m_MethodName: ScrollMenuUp
         m_Mode: 1
         m_Arguments:
@@ -4588,7 +4588,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1622292778}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 075674ceb57664e4f9c9a061de543d99, type: 3}
+  m_Script: {fileID: 11500000, guid: 69aff7de47d30694c88ebaa70e4edc68, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   mainMenuScript: {fileID: 1622292780}
@@ -4596,7 +4596,7 @@ MonoBehaviour:
   - {fileID: 1704065107}
   - {fileID: 1893040208}
   currentOrientation: {fileID: 1448702080}
-  switchSpeed: 5
+  switchSpeed: 3
 --- !u!4 &1640609638 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: fc8d10e714315ec43a6893652f5f2eef, type: 3}

@@ -49,7 +49,7 @@ public class CharacterMovement : MonoBehaviour
     [SerializeField] [Range(1, 3)] private float wallRunTime;
     private float setWallRunTime;
 
-    private float minWallRunAngle = 45f;
+    private float minWallRunAngle = 55f;
     private float maxWallRunAngle = 89f;
     private bool correctWallRunAngle;
 

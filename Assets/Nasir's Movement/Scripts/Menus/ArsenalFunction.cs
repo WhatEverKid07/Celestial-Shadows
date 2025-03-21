@@ -27,7 +27,6 @@ public class ArsenalFunction : MonoBehaviour
 
         if (allGuns.Length > 0)
         {
-            currentGun = allGuns[0];
             previousGun = currentGun;
         }
     }
@@ -52,12 +51,18 @@ public class ArsenalFunction : MonoBehaviour
 
     public void ScrollMenuUp()
     {
-        canSwitchUp = true;
+        if (currentGun != allGuns[1])
+        {
+            canSwitchUp = true;
+        }
     }
 
     public void ScrollMenuDown()
     {
-        canSwitchDown = true;
+        if (currentGun != allGuns[0])
+        {
+            canSwitchDown = true;
+        }
     }
 
     private void CanSwitchGunUp()

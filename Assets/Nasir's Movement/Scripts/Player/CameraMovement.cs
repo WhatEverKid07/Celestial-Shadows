@@ -232,8 +232,8 @@ public class CameraMovement : MonoBehaviour
         Vector3 forward = transform.TransformDirection(Vector3.forward);
         Vector3 backward = transform.TransformDirection(Vector3.back);
 
-        isForwardWalled = Physics.Raycast(transform.position, forward, out forwardHit, 1.5f, wall);
-        isBackWalled = Physics.Raycast(transform.position, backward, out backHit, 1.5f, wall);
+        isForwardWalled = Physics.Raycast(transform.position, forward, out forwardHit, wallCheckDist, wall);
+        isBackWalled = Physics.Raycast(transform.position, backward, out backHit, wallCheckDist, wall);
 
         Debug.DrawLine(transform.position, transform.position + transform.forward * wallCheckDist, Color.cyan);
         Debug.DrawLine(transform.position, transform.position + -transform.forward * wallCheckDist, Color.black);
