@@ -17,6 +17,7 @@ public class KnifeAnimation : MonoBehaviour
     private float lastPressTime = -1f;
     private bool isRapidPressing = false;
     private bool isSpinning = false;
+    private bool animCanPlay = true;
 
     public bool IsRapidPressing => isRapidPressing; // Public getter for the bool
     void Start()
@@ -27,17 +28,27 @@ public class KnifeAnimation : MonoBehaviour
         attack.Enable();
         inspect.performed += OnButtonPressed;
         inspect.canceled += OnButtonReleased;
-        attack.performed += _ => StartCoroutine(SelectAttackAnim()); 
+        attack.performed += _ => StartAttackAnimation(); 
+    }
+    private void StartAttackAnimation()
+    {
+        if (animCanPlay)
+        {
+            StartCoroutine(SelectAttackAnim());
+        }
     }
     private IEnumerator SelectAttackAnim()
     {
-        float waitTime;
-        if (attackAnims.Length == 0 || animator == null) return;
+        if (!animCanPlay || attackAnims.Length == 0 || animator == null) yield break;
+
+        animCanPlay = false;
         int randomIndex = Random.Range(0, attackAnims.Length);
         string selectedAnimation = attackAnims[randomIndex].name;
-        waitTime = attackAnims[randomIndex].length;
+        float waitTime = attackAnims[randomIndex].length;
+
         animator.Play(selectedAnimation);
         yield return new WaitForSeconds(waitTime);
+        animCanPlay = true;
     }
 
     private void OnDisable()
