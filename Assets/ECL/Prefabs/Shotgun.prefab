@@ -147,7 +147,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   camController: {fileID: 0}
   gunManager: {fileID: 0}
-  maxAmmo: 8
+  maxAmmo: 2
   shootHowManyBullets: 6
   reloadTime: 2
   automatic: 0

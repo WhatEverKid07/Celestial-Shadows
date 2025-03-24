@@ -6,11 +6,9 @@ public class CameraController : MonoBehaviour
     [Header("Camera Movement Settings")]
     [SerializeField] private float speed = 10.0f;
     [SerializeField] private float sensitivity = 5.0f;
-    [SerializeField] private InputActionAsset gunControls;
 
     private float rotationY = 0.0f;
     private float rotationX = 0.0f;
-    private InputAction shoot;
 
     [Header("Recoil Settings")]
     [SerializeField] private Vector3 upRecoil;
@@ -25,14 +23,12 @@ public class CameraController : MonoBehaviour
     {
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
-        shoot = gunControls.FindActionMap("Gun Controls").FindAction("Shoot");
-        shoot.Enable();
     }
 
     void Update()
     {
-        HandleMovement();
-        HandleMouseLook();
+        //HandleMovement();
+        //HandleMouseLook();
         HandleRecoil();
     }
 

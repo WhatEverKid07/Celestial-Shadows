@@ -10897,7 +10897,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &289504640
 Transform:
   m_ObjectHideFlags: 0
@@ -10931,10 +10931,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8bdd7fd24fa037043934e99966218f6d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  camController: {fileID: 1561448235}
+  camMovement: {fileID: 1561448235}
+  camController: {fileID: 1149627384}
   gunManager: {fileID: 655801312}
   maxAmmo: 10
-  reloadTime: 4
+  reloadTime: 700
   shotDelay: 0.5
   coneAngle: 20
   coneAngleWhenSighted: 0
@@ -11591,7 +11592,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 10
   sensitivity: 5
-  gunControls: {fileID: -944628639613478452, guid: 9269ee16b3aa1f0448f0710a2c982dcc, type: 3}
   upRecoil: {x: -2, y: 0, z: 0}
   sideRecoil: {x: 0, y: 2, z: 0}
   recoilCooldown: 0.1
@@ -16907,7 +16907,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &623258874
 Transform:
   m_ObjectHideFlags: 0
@@ -23574,6 +23574,7 @@ GameObject:
   - component: {fileID: 1149627380}
   - component: {fileID: 1149627382}
   - component: {fileID: 1149627381}
+  - component: {fileID: 1149627384}
   m_Layer: 0
   m_Name: PlayerCam
   m_TagString: MainCamera
@@ -23674,6 +23675,24 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1561448234}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1149627384
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1149627379}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 175835d551ea5b44daf7af307f6189e9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  speed: 10
+  sensitivity: 5
+  upRecoil: {x: -2, y: 0, z: 0}
+  sideRecoil: {x: 0, y: 2, z: 0}
+  recoilCooldown: 0.1
+  recoilRecoverySpeed: 2
 --- !u!1 &1162089211
 GameObject:
   m_ObjectHideFlags: 0
@@ -49575,7 +49594,8 @@ MonoBehaviour:
   axisX: {fileID: 446297968139386490, guid: 6126e80c064e030429ec21c4ef4ffc4d, type: 3}
   axisY: {fileID: -2871428396282351197, guid: 6126e80c064e030429ec21c4ef4ffc4d, type: 3}
   fpsCam: {fileID: 1149627380}
-  fov: 70
+  fov: 60
+  runFOV: 70
   rotationSpeed: 10
   sensX: 15
   sensY: 15
@@ -49664,7 +49684,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: da2ac12809156bc4f9afc6ff3c393194, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  camController: {fileID: 1561448235}
+  camMovement: {fileID: 0}
+  camController: {fileID: 0}
   gunManager: {fileID: 655801312}
   maxAmmo: 30
   shootHowManyBullets: 1
@@ -55626,7 +55647,7 @@ PrefabInstance:
     - target: {fileID: 8143555180331720374, guid: 0194e7bddc477da47a48c8c62c526d3e, type: 3}
       propertyPath: camController
       value: 
-      objectReference: {fileID: 1561448235}
+      objectReference: {fileID: 0}
     - target: {fileID: 8143555180331720374, guid: 0194e7bddc477da47a48c8c62c526d3e, type: 3}
       propertyPath: gunAudioSource
       value: 
@@ -56571,7 +56592,7 @@ PrefabInstance:
     - target: {fileID: 6848513967037698454, guid: 311263a73da92fd4dafd378fda29e169, type: 3}
       propertyPath: camController
       value: 
-      objectReference: {fileID: 1561448235}
+      objectReference: {fileID: 0}
     - target: {fileID: 6848513967037698454, guid: 311263a73da92fd4dafd378fda29e169, type: 3}
       propertyPath: gunAudioSource
       value: 

@@ -36,7 +36,7 @@ public class KnifeAnimation : MonoBehaviour
     }
     private void StartAttackAnimation()
     {
-        if (animCanPlay)
+        if (animCanPlay && gameObject.activeInHierarchy)
         {
             StartCoroutine(SelectAttackAnim());
         }

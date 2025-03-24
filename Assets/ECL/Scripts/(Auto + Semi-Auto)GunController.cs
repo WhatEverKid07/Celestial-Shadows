@@ -6,7 +6,8 @@ using UnityEngine.UI;
 
 public class AutoAndSemiAutoGunController : MonoBehaviour
 {
-    [SerializeField] private CameraMovement camController;
+    [SerializeField] private CameraMovement camMovement;
+    [SerializeField] private CameraController camController;
     [SerializeField] private GunManagement gunManager;
 
     [Header("Gun Attributes")]
@@ -142,12 +143,18 @@ public class AutoAndSemiAutoGunController : MonoBehaviour
 
     void OnEnable()
     {
+        shoot.Enable();
+        reload.Enable();
+        zoomInOrOut.Enable();
         isReloading = false;
         ammoText.gameObject.SetActive(true);
         UpdateAmmoText();
     }
     private void OnDisable()
     {
+        shoot.Disable();
+        reload.Disable();
+        zoomInOrOut.Disable();
         if (ammoText != null)
             ammoText.gameObject.SetActive(false);
     }

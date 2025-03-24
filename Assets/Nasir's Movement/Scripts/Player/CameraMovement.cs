@@ -17,6 +17,8 @@ public class CameraMovement : MonoBehaviour
     [Header("Camera")]
     [SerializeField] internal Camera fpsCam;
     [SerializeField] [Range(5, 100)] internal float fov;
+    [SerializeField] [Range(5, 100)] private float runFOV;
+    //[SerializeField] [Range(5, 100)] private float walkFOV;
     [SerializeField] [Range(8, 12)] private float rotationSpeed;
 
 
@@ -68,7 +70,7 @@ public class CameraMovement : MonoBehaviour
         mouseY = axisY.action.ReadValue<float>();
 
         CheckForWall();
-        HandleRecoil();
+        //HandleRecoil();
         Debug.Log(wasForwardWalled);
 
         if (characterMove.isRightWalled && characterMove.isWallRunning && !characterMove.isWallJumping)
@@ -92,13 +94,15 @@ public class CameraMovement : MonoBehaviour
 
         if (characterMove.isRunning || characterMove.isWallRunning && !characterMove.isWallJumping)
         {
-            ChangeWalkFOV();
+            //ChangeWalkFOV();
             Debug.Log("FOV change 1");
+            ChangeFOV(runFOV, 0.1f);
         }
         else
         {
             ChangeRunFOV();
             Debug.Log("FOV change 2");
+            ChangeFOV(fov, 0.1f);
         }
     }
 
@@ -212,7 +216,17 @@ public class CameraMovement : MonoBehaviour
 
         transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(currentRotationX, targetY, currentRotationZ), Time.deltaTime * rotationSpeed);
     }
-
+    public void ChangeFOV(float newFOV, float transitionSpeed)
+    {
+        if (fpsCam.fieldOfView < newFOV)
+        {
+            fpsCam.fieldOfView += transitionSpeed;
+        }
+        else
+        {
+            fpsCam.fieldOfView = newFOV;
+        }
+    }
 
     private void ChangeWalkFOV()
     {
@@ -241,18 +255,6 @@ public class CameraMovement : MonoBehaviour
             fpsCam.fieldOfView = walkFOV;
         }
     }
-    /*
-    public void ChangeFOV(float newFOV, float transitionDur)
-    {
-        if (fpsCam.fieldOfView > newFOV)
-        {
-            fpsCam.fieldOfView -= transitionDur;
-        }
-        else
-        {
-            fpsCam.fieldOfView = newFOV;
-        }
-    }*/
 
     private void CheckForWall()
     {
