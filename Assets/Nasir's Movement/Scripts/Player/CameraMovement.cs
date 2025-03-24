@@ -1,5 +1,4 @@
 
-using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -17,7 +16,7 @@ public class CameraMovement : MonoBehaviour
 
     [Header("Camera")]
     [SerializeField] private Camera fpsCam;
-    [SerializeField] [Range(90, 100)] private int fov;
+    [SerializeField] [Range(60, 100)] private int fov;
     [SerializeField] [Range(8, 12)] private float rotationSpeed;
 
 
@@ -43,6 +42,16 @@ public class CameraMovement : MonoBehaviour
     private float currentRotationX = 0f;
     private float currentRotationZ = 0f;
 
+    [Header("Recoil Settings")]
+    [SerializeField] private Vector3 upRecoil;
+    [SerializeField] private Vector3 sideRecoil;
+    [SerializeField] private float recoilCooldown = 0.1f;
+    [SerializeField] private float recoilRecoverySpeed = 2f;
+
+    private Vector3 currentRecoil = Vector3.zero;
+    private float nextRecoilTime = 0f;
+    private float currentRotationY = 0f;
+
     private void Start()
     {
         fpsCam.fieldOfView = fov;
@@ -59,6 +68,7 @@ public class CameraMovement : MonoBehaviour
         mouseY = axisY.action.ReadValue<float>();
 
         CheckForWall();
+        HandleRecoil();
         Debug.Log(wasForwardWalled);
 
         if (characterMove.isRightWalled && characterMove.isWallRunning && !characterMove.isWallJumping)
@@ -103,6 +113,7 @@ public class CameraMovement : MonoBehaviour
 
         currentRotationX -= rotationY;
         currentRotationX = Mathf.Clamp(currentRotationX, -80f, 80f);
+        currentRotationY = Mathf.Clamp(rotationY, -90, 90);
 
         transform.rotation = Quaternion.Euler(currentRotationX, transform.rotation.eulerAngles.y + rotationX, 0);
         player.transform.rotation = Quaternion.Euler(0, transform.rotation.eulerAngles.y, 0);
@@ -249,5 +260,33 @@ public class CameraMovement : MonoBehaviour
             Debug.DrawRay(backHit.point, backHit.normal * 5, Color.black);
             wasBackWalled = true;
         }
+    }
+
+    public void GunController()
+    {
+        if (Time.time >= nextRecoilTime)
+        {
+            AddRecoil();
+            nextRecoilTime = Time.time + recoilCooldown;
+        }
+    }
+
+    private void HandleRecoil()
+    {
+        // Smoothly reduce recoil over time
+        currentRecoil = Vector3.Lerp(currentRecoil, Vector3.zero, recoilRecoverySpeed * Time.deltaTime);
+
+        // Apply recoil as an offset to the current rotation
+        Quaternion recoilRotation = Quaternion.Euler(currentRecoil.x, currentRecoil.y, 0);
+        transform.rotation = recoilRotation * transform.rotation; // Apply recoil after normal rotation
+    }
+
+    private void AddRecoil()
+    {
+        float sideAmount = Random.Range(-sideRecoil.y, sideRecoil.y);
+        float upAmount = Random.Range(upRecoil.x / 2, upRecoil.x); // Slightly reduce downward recoil
+        Vector3 recoil = new Vector3(-upAmount, sideAmount, 0f); // Negative X for upwards recoil
+
+        currentRecoil += recoil;
     }
 }

@@ -52,6 +52,6 @@ public class CameraHeadBob : MonoBehaviour
             bobTimer = 0f;
             playerCamera.localPosition = Vector3.Slerp(playerCamera.localPosition, originalCameraLocalPos, Time.deltaTime * 5f);
         }
-    }
 
+    }
 }
