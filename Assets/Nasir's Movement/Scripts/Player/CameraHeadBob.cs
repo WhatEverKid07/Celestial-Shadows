@@ -14,8 +14,8 @@ public class CameraHeadBob : MonoBehaviour
     [SerializeField] private Transform cameraHolder;
     [SerializeField] private Transform playerCamera;
 
-    [SerializeField] [Range(5, 10)] private float bobSpeed;
-    [SerializeField] [Range(.05f, .01f)] private float bobForce;
+    [SerializeField] [Range(1, 10)] private float bobSpeed;
+    [SerializeField] [Range(.05f, .005f)] private float bobForce;
     [SerializeField] [Range(1.2f, 1.7f)] private float bobMulti;
 
     private Vector3 originalCameraLocalPos;

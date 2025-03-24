@@ -15,8 +15,8 @@ public class CameraMovement : MonoBehaviour
     [SerializeField] private InputActionReference axisY;
 
     [Header("Camera")]
-    [SerializeField] private Camera fpsCam;
-    [SerializeField] [Range(60, 100)] private int fov;
+    [SerializeField] internal Camera fpsCam;
+    [SerializeField] [Range(5, 100)] internal float fov;
     [SerializeField] [Range(8, 12)] private float rotationSpeed;
 
 
@@ -93,10 +93,12 @@ public class CameraMovement : MonoBehaviour
         if (characterMove.isRunning || characterMove.isWallRunning && !characterMove.isWallJumping)
         {
             ChangeWalkFOV();
+            Debug.Log("FOV change 1");
         }
         else
         {
             ChangeRunFOV();
+            Debug.Log("FOV change 2");
         }
     }
 
@@ -112,8 +114,10 @@ public class CameraMovement : MonoBehaviour
         float rotationY = mouseY * sensY / 100;
 
         currentRotationX -= rotationY;
+        currentRotationX += currentRecoil.x; // Apply recoil effect
+
         currentRotationX = Mathf.Clamp(currentRotationX, -80f, 80f);
-        currentRotationY = Mathf.Clamp(rotationY, -90, 90);
+        currentRotationY = Mathf.Clamp(rotationY + currentRecoil.y, -90, 90); // Apply horizontal recoil
 
         transform.rotation = Quaternion.Euler(currentRotationX, transform.rotation.eulerAngles.y + rotationX, 0);
         player.transform.rotation = Quaternion.Euler(0, transform.rotation.eulerAngles.y, 0);
@@ -237,6 +241,18 @@ public class CameraMovement : MonoBehaviour
             fpsCam.fieldOfView = walkFOV;
         }
     }
+    /*
+    public void ChangeFOV(float newFOV, float transitionDur)
+    {
+        if (fpsCam.fieldOfView > newFOV)
+        {
+            fpsCam.fieldOfView -= transitionDur;
+        }
+        else
+        {
+            fpsCam.fieldOfView = newFOV;
+        }
+    }*/
 
     private void CheckForWall()
     {
@@ -273,20 +289,17 @@ public class CameraMovement : MonoBehaviour
 
     private void HandleRecoil()
     {
-        // Smoothly reduce recoil over time
         currentRecoil = Vector3.Lerp(currentRecoil, Vector3.zero, recoilRecoverySpeed * Time.deltaTime);
-
-        // Apply recoil as an offset to the current rotation
-        Quaternion recoilRotation = Quaternion.Euler(currentRecoil.x, currentRecoil.y, 0);
-        transform.rotation = recoilRotation * transform.rotation; // Apply recoil after normal rotation
     }
 
     private void AddRecoil()
     {
         float sideAmount = Random.Range(-sideRecoil.y, sideRecoil.y);
-        float upAmount = Random.Range(upRecoil.x / 2, upRecoil.x); // Slightly reduce downward recoil
-        Vector3 recoil = new Vector3(-upAmount, sideAmount, 0f); // Negative X for upwards recoil
+        float upAmount = Random.Range(upRecoil.y / 2, upRecoil.y); // Use upRecoil.y instead of x
 
-        currentRecoil += recoil;
+        currentRotationX -= upAmount; // Negative because up in Unity is decreasing X rotation
+        currentRotationX = Mathf.Clamp(currentRotationX, -80f, 80f); // Keep it within range
+
+        currentRecoil += new Vector3(0f, sideAmount, 0f); // Only side recoil is stored
     }
 }

@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 public class AutoAndSemiAutoGunController : MonoBehaviour
 {
-    [SerializeField] private CameraController camController;
+    [SerializeField] private CameraMovement camController;
     [SerializeField] private GunManagement gunManager;
 
     [Header("Gun Attributes")]

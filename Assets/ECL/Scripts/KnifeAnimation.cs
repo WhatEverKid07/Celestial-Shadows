@@ -20,10 +20,14 @@ public class KnifeAnimation : MonoBehaviour
     private bool animCanPlay = true;
 
     public bool IsRapidPressing => isRapidPressing; // Public getter for the bool
-    void Start()
+
+    private void Awake()
     {
         inspect = controls.FindActionMap("Gun Controls").FindAction("Inspect");
         attack = controls.FindActionMap("Gun Controls").FindAction("Shoot");
+    }
+    void Start()
+    {
         inspect.Enable();
         attack.Enable();
         inspect.performed += OnButtonPressed;
@@ -54,6 +58,12 @@ public class KnifeAnimation : MonoBehaviour
     private void OnDisable()
     {
         inspect.Disable();
+        attack.Disable();
+    }
+    private void OnEnable()
+    {
+        inspect.Enable();
+        attack.Enable();
     }
 
     private void OnButtonPressed(InputAction.CallbackContext context)

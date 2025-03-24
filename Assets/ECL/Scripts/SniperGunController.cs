@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class SniperGunController : MonoBehaviour
 {
-    [SerializeField] private CameraController camController;
+    [SerializeField] private CameraMovement camController;
     [SerializeField] private GunManagement gunManager;
 
     [Header("Gun Attributes")]
@@ -161,19 +161,21 @@ public class SniperGunController : MonoBehaviour
         }
     }
 
-    private IEnumerator SmoothFOVChange(float newFOV)
+    public IEnumerator SmoothFOVChange(float newFOV)
     {
         currentConeAngle = coneAngleWhenSighted;
         float startFOV = fPSCam.fieldOfView;
         float elapsedTime = 0f;
 
+
         while (elapsedTime < transitionDuration)
         {
             elapsedTime += Time.deltaTime;
-            fPSCam.fieldOfView = Mathf.Lerp(startFOV, newFOV, elapsedTime / transitionDuration);
+            camController.fpsCam.fieldOfView = Mathf.Lerp(startFOV, newFOV, elapsedTime / transitionDuration);
             yield return null;
         }
-        fPSCam.fieldOfView = newFOV;
+        camController.fpsCam.fieldOfView = newFOV;
+        camController.fov = newFOV;
     }
 
     void Shoot()
