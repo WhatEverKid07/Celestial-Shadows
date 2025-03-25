@@ -16,7 +16,6 @@ public class CharacterMovement : MonoBehaviour
     private InputAction dash;
     private InputAction showDebugs;
     private InputAction ClearDebugs;
-
     private bool restricted = false;
 
     [Header("Properties")]
@@ -99,7 +98,7 @@ public class CharacterMovement : MonoBehaviour
     private Coroutine holdLedgeCoroutine;
 
     [Header("Dashing")]
-    [SerializeField] private bool enableDash;
+    [SerializeField] internal bool enableDash;
     [SerializeField] [Range(1, 3)] private float dashPower;
     private bool canDash;
     private bool isDashing = false;

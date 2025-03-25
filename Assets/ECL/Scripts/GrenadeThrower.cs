@@ -51,6 +51,7 @@ public class GrenadeThrower : MonoBehaviour
     {
         if (ammoText != null)
             ammoText.gameObject.SetActive(false);
+        throwGrenade.Disable();
     }
 
     void Update()

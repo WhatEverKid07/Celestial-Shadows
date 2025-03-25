@@ -8,6 +8,7 @@ public class SniperGunController : MonoBehaviour
     [SerializeField] private CameraMovement camMovement;
     [SerializeField] private CameraController camController;
     [SerializeField] private GunManagement gunManager;
+    [SerializeField] private CharacterMovement characterMovement;
 
     [Header("Gun Attributes")]
     [SerializeField] private int maxAmmo = 10;
@@ -103,16 +104,21 @@ public class SniperGunController : MonoBehaviour
         ammoText.gameObject.SetActive(true);
         UpdateAmmoText();
         zoomInOrOut.Enable();
+        shoot.Enable();
+        reload.Enable();
     }
     void OnDisable()
     {
         if (ammoText != null)
             ammoText.gameObject.SetActive(false);
         zoomInOrOut.Disable();
+        shoot.Disable();
+        reload.Disable();
     }
 
     void Update()
     {
+        Debug.Log(characterMovement.enableDash);
         if (!gameObject.activeInHierarchy)
             return;
 
@@ -121,7 +127,7 @@ public class SniperGunController : MonoBehaviour
             StartCoroutine(Reload());
         }
 
-        if (currentAmmo == 0)
+        if (currentAmmo == 0 && !isReloading)
         {
             StartCoroutine(Reload());
             return;
@@ -187,7 +193,7 @@ public class SniperGunController : MonoBehaviour
         if (currentAmmo >= 1)
         {
             camController.GunController();
-            currentAmmo--;
+            currentAmmo --;
             UpdateAmmoText();
             muzzleFlash.Play();
             gunAudioSource.PlayOneShot(shootClip);
@@ -231,5 +237,6 @@ public class SniperGunController : MonoBehaviour
     void UpdateAmmoText()
     {
         ammoText.text = currentAmmo.ToString() + " / " + maxAmmo.ToString();
+        Debug.Log("ammo update, sniper" + StackTraceUtility.ExtractStackTrace());
     }
 }

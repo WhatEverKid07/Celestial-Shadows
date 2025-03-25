@@ -169,7 +169,7 @@ public class AutoAndSemiAutoGunController : MonoBehaviour
             StartCoroutine(Reload());
         }
 
-        if (currentAmmo == 0)
+        if (currentAmmo == 0 && !isReloading)
         {
             StartCoroutine(Reload());
             StopRecoil();
@@ -248,7 +248,7 @@ public class AutoAndSemiAutoGunController : MonoBehaviour
                 muzzleFlash.Play();
             gunAudioSource.PlayOneShot(shootClip);
 
-            animator.SetTrigger(nameOfShootTrigger);
+            if (animator != null) { animator.SetTrigger(nameOfShootTrigger); }
             camController.GunController();
             AddRecoil();
             currentAmmo--;
