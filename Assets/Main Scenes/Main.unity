@@ -10935,6 +10935,7 @@ MonoBehaviour:
   camController: {fileID: 1149627384}
   gunManager: {fileID: 655801312}
   characterMovement: {fileID: 95148706}
+  bob: {fileID: 1149627382}
   maxAmmo: 10
   reloadTime: 4
   shotDelay: 0.5
@@ -16908,7 +16909,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &623258874
 Transform:
   m_ObjectHideFlags: 0
@@ -17131,7 +17132,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &655801312
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -49600,10 +49601,6 @@ MonoBehaviour:
   rotationSpeed: 10
   sensX: 15
   sensY: 15
-  upRecoil: {x: 0, y: 3, z: 0}
-  sideRecoil: {x: 0, y: 0, z: 0}
-  recoilCooldown: 0.1
-  recoilRecoverySpeed: 2
 --- !u!1 &1564222019
 GameObject:
   m_ObjectHideFlags: 0
@@ -49652,7 +49649,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1577666444
 Transform:
   m_ObjectHideFlags: 0
@@ -49688,6 +49685,7 @@ MonoBehaviour:
   camMovement: {fileID: 1561448235}
   camController: {fileID: 1149627384}
   gunManager: {fileID: 655801312}
+  bob: {fileID: 0}
   maxAmmo: 30
   shootHowManyBullets: 1
   reloadTime: 1
@@ -55633,6 +55631,10 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8143555180331720374, guid: 0194e7bddc477da47a48c8c62c526d3e, type: 3}
+      propertyPath: bob
+      value: 
+      objectReference: {fileID: 1149627382}
     - target: {fileID: 8143555180331720374, guid: 0194e7bddc477da47a48c8c62c526d3e, type: 3}
       propertyPath: ammoText
       value: 

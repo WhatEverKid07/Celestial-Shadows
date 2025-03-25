@@ -9,6 +9,7 @@ public class AutoAndSemiAutoGunController : MonoBehaviour
     [SerializeField] private CameraMovement camMovement;
     [SerializeField] private CameraController camController;
     [SerializeField] private GunManagement gunManager;
+    [SerializeField] private CameraHeadBob bob;
 
     [Header("Gun Attributes")]
     [SerializeField] private int maxAmmo = 30;
@@ -117,13 +118,17 @@ public class AutoAndSemiAutoGunController : MonoBehaviour
         {
             ChangeFOV(targetZoomFOV);
             gunManager.canSwitch = false;
+            bob.bobForce = 0.0009f;
+            bob.bobSpeed = 2f;
             animatorForShotgun.Play("InSightShotgun");
         }
         else if (zoom.canceled) // Button released
         {
-            Debug.Log("Canceleed");
+            Debug.Log("Cancelled");
             ChangeFOV(originalFOV);
             gunManager.canSwitch = true;
+            bob.bobForce = bob.originalBobForce;
+            bob.bobSpeed = bob.originalBobSpeed;
             animatorForShotgun.Play("InSightShotgunReverse");
         }
     }

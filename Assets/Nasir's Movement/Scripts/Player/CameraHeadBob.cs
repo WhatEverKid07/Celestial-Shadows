@@ -14,9 +14,12 @@ public class CameraHeadBob : MonoBehaviour
     [SerializeField] private Transform cameraHolder;
     [SerializeField] private Transform playerCamera;
 
-    [SerializeField] [Range(1, 10)] private float bobSpeed;
-    [SerializeField] [Range(.05f, .005f)] private float bobForce;
+    [SerializeField] [Range(1, 10)] internal float bobSpeed;
+    [SerializeField] [Range(.05f, .0005f)] internal float bobForce;
     [SerializeField] [Range(1.2f, 1.7f)] private float bobMulti;
+
+    internal float originalBobForce;
+    internal float originalBobSpeed;
 
     private Vector3 originalCameraLocalPos;
     private float bobTimer = 0f;
@@ -24,6 +27,8 @@ public class CameraHeadBob : MonoBehaviour
 
     private void Start()
     {
+        originalBobForce = bobForce;
+        originalBobSpeed = bobSpeed;
         originalCameraLocalPos = playerCamera.localPosition; 
         characterMove = FindFirstObjectByType<CharacterMovement>();
     }

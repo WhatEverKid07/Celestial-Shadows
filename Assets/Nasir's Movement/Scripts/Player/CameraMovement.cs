@@ -44,15 +44,7 @@ public class CameraMovement : MonoBehaviour
     private float currentRotationX = 0f;
     private float currentRotationZ = 0f;
 
-    [Header("Recoil Settings")]
-    [SerializeField] private Vector3 upRecoil;
-    [SerializeField] private Vector3 sideRecoil;
-    [SerializeField] private float recoilCooldown = 0.1f;
-    [SerializeField] private float recoilRecoverySpeed = 2f;
 
-    private Vector3 currentRecoil = Vector3.zero;
-    private float nextRecoilTime = 0f;
-    private float currentRotationY = 0f;
 
     private void Start()
     {
@@ -70,7 +62,6 @@ public class CameraMovement : MonoBehaviour
         mouseY = axisY.action.ReadValue<float>();
 
         CheckForWall();
-        //HandleRecoil();
         Debug.Log(wasForwardWalled);
 
         if (characterMove.isRightWalled && characterMove.isWallRunning && !characterMove.isWallJumping)
@@ -118,10 +109,8 @@ public class CameraMovement : MonoBehaviour
         float rotationY = mouseY * sensY / 100;
 
         currentRotationX -= rotationY;
-        currentRotationX += currentRecoil.x; // Apply recoil effect
 
         currentRotationX = Mathf.Clamp(currentRotationX, -80f, 80f);
-        currentRotationY = Mathf.Clamp(rotationY + currentRecoil.y, -90, 90); // Apply horizontal recoil
 
         transform.rotation = Quaternion.Euler(currentRotationX, transform.rotation.eulerAngles.y + rotationX, 0);
         player.transform.rotation = Quaternion.Euler(0, transform.rotation.eulerAngles.y, 0);
@@ -278,30 +267,5 @@ public class CameraMovement : MonoBehaviour
             Debug.DrawRay(backHit.point, backHit.normal * 5, Color.black);
             wasBackWalled = true;
         }
-    }
-
-    public void GunController()
-    {
-        if (Time.time >= nextRecoilTime)
-        {
-            AddRecoil();
-            nextRecoilTime = Time.time + recoilCooldown;
-        }
-    }
-
-    private void HandleRecoil()
-    {
-        currentRecoil = Vector3.Lerp(currentRecoil, Vector3.zero, recoilRecoverySpeed * Time.deltaTime);
-    }
-
-    private void AddRecoil()
-    {
-        float sideAmount = Random.Range(-sideRecoil.y, sideRecoil.y);
-        float upAmount = Random.Range(upRecoil.y / 2, upRecoil.y); // Use upRecoil.y instead of x
-
-        currentRotationX -= upAmount; // Negative because up in Unity is decreasing X rotation
-        currentRotationX = Mathf.Clamp(currentRotationX, -80f, 80f); // Keep it within range
-
-        currentRecoil += new Vector3(0f, sideAmount, 0f); // Only side recoil is stored
     }
 }

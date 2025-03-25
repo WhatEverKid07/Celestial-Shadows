@@ -5,6 +5,7 @@ using System;
 using System.Reflection;
 using UnityEngine.EventSystems;
 using UnityEngine.UIElements;
+using UnityEngine.InputSystem.LowLevel;
 
 public class CharacterMovement : MonoBehaviour
 {
@@ -28,8 +29,10 @@ public class CharacterMovement : MonoBehaviour
     public bool flipCam { get; private set; }
 
     [Header("Walking & Running")]
-    [SerializeField] private float walkSpeed;
+    [SerializeField] internal float walkSpeed;
     [SerializeField] private float runSpeed;
+
+    internal bool canRun = true;
 
     public Vector3 moveDir { get; private set; }
     public bool isRunning { get; private set; }
@@ -98,7 +101,7 @@ public class CharacterMovement : MonoBehaviour
     private Coroutine holdLedgeCoroutine;
 
     [Header("Dashing")]
-    [SerializeField] internal bool enableDash;
+    [SerializeField] internal bool enableDash = true;
     [SerializeField] [Range(1, 3)] private float dashPower;
     private bool canDash;
     private bool isDashing = false;
@@ -116,6 +119,7 @@ public class CharacterMovement : MonoBehaviour
 
     private void Start()
     {
+
         groundChecker = GameObject.Find("GroundChecker");
         ground = LayerMask.GetMask("Ground");
         wall = LayerMask.GetMask("Wall");
@@ -294,7 +298,7 @@ public class CharacterMovement : MonoBehaviour
 
         rb.useGravity = !OnSlope();
 
-        if (run.ReadValue<float>() > 0)
+        if (run.ReadValue<float>() > 0 && canRun)
         {
             rb.velocity = new Vector3(move.x * runSpeed, rb.velocity.y, move.z * runSpeed);
             isRunning = true;
@@ -490,17 +494,16 @@ public class CharacterMovement : MonoBehaviour
     //DASH FUNCTION
     private void Dash()
     {
-        if (enableDash)
+        if (!enableDash) return;
+
+        if (canDash && !isDashing && !isWallRunning)
         {
-            if (canDash && !isDashing && !isWallRunning)
-            {
-                isDashing = true;
+            isDashing = true;
 
-                dashCoroutine = StartCoroutine(PerformDash());
+            dashCoroutine = StartCoroutine(PerformDash());
 
-                canDash = false;
-                setDashTime = DashTime;
-            }
+            canDash = false;
+            setDashTime = DashTime;
         }
     }
 

@@ -9,6 +9,7 @@ public class SniperGunController : MonoBehaviour
     [SerializeField] private CameraController camController;
     [SerializeField] private GunManagement gunManager;
     [SerializeField] private CharacterMovement characterMovement;
+    [SerializeField] private CameraHeadBob bob;
 
     [Header("Gun Attributes")]
     [SerializeField] private int maxAmmo = 10;
@@ -42,7 +43,7 @@ public class SniperGunController : MonoBehaviour
     [SerializeField] private Camera fPSCam;
     [SerializeField] private ParticleSystem muzzleFlash;
 
-    
+
     [Space(20)]
     [Header("UI")]
     [SerializeField] private Text ammoText;
@@ -78,11 +79,39 @@ public class SniperGunController : MonoBehaviour
         reload.Enable();
         zoomInOrOut.Enable();
 
-        zoomInOrOut.performed += ctx => ChangeFOV(targetZoomFOV);
-        zoomInOrOut.canceled += ctx => ChangeFOV(originalFOV);
-        zoomInOrOut.performed += ctx => gunManager.canSwitch = false;
-        zoomInOrOut.canceled += ctx => gunManager.canSwitch = true;
+        //zoomInOrOut.performed += ctx => ChangeFOV(targetZoomFOV);
+        //zoomInOrOut.canceled += ctx => ChangeFOV(originalFOV);
+        //zoomInOrOut.performed += ctx => gunManager.canSwitch = false;
+        //zoomInOrOut.canceled += ctx => gunManager.canSwitch = true;
+        zoomInOrOut.performed += Sighted;
+        zoomInOrOut.canceled += Sighted;
         zoomInOrOut.canceled += ctx => currentConeAngle = coneAngle;
+    }
+    public void Sighted(InputAction.CallbackContext zoom)
+    {
+
+        if (zoom.performed)
+        {
+            characterMovement.canRun = false;
+            characterMovement.enableDash = false;
+            characterMovement.walkSpeed /= 3;
+            ChangeFOV(targetZoomFOV);
+            gunManager.canSwitch = false;
+            bob.bobForce = 0.0009f;
+            bob.bobSpeed = 2f;
+            //animatorForShotgun.Play("InSightShotgun");
+        }
+        else if (zoom.canceled)
+        {
+            characterMovement.canRun = true;
+            characterMovement.enableDash = true;
+            characterMovement.walkSpeed *= 3;
+            ChangeFOV(originalFOV);
+            gunManager.canSwitch = true;
+            bob.bobForce = bob.originalBobForce;
+            bob.bobSpeed = bob.originalBobSpeed;
+            //animatorForShotgun.Play("InSightShotgunReverse");
+        }
     }
 
     private void Awake()
@@ -118,7 +147,6 @@ public class SniperGunController : MonoBehaviour
 
     void Update()
     {
-        Debug.Log(characterMovement.enableDash);
         if (!gameObject.activeInHierarchy)
             return;
 
@@ -193,7 +221,7 @@ public class SniperGunController : MonoBehaviour
         if (currentAmmo >= 1)
         {
             camController.GunController();
-            currentAmmo --;
+            currentAmmo--;
             UpdateAmmoText();
             muzzleFlash.Play();
             gunAudioSource.PlayOneShot(shootClip);
