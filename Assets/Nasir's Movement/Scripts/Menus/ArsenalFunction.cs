@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class ArsenalFunction : MonoBehaviour
@@ -9,8 +8,10 @@ public class ArsenalFunction : MonoBehaviour
 
     [Header("Guns")]
     [SerializeField] private GameObject[] allGuns;
+    private int currentIndex;
     private GameObject currentGun;
     private GameObject previousGun;
+    private GameObject nextGun;
     [SerializeField] private Transform currentOrientation;
 
     private bool canSwitchUp = false;
@@ -27,23 +28,38 @@ public class ArsenalFunction : MonoBehaviour
 
         if (allGuns.Length > 0)
         {
-            previousGun = currentGun;
+            previousGun = null;
+            currentGun = allGuns[0];
         }
     }
 
     private void Update()
     {
+        currentIndex = System.Array.IndexOf(allGuns, currentGun);
+
+        Debug.Log("Is switching: " + isSwitching);
+        Debug.Log("Can switch up: " + canSwitchUp);
+        Debug.Log("Can switch down: " + canSwitchDown);
+
+        Debug.Log("The current index is: " +  currentIndex);
         Debug.Log("Previous gun: " + previousGun);
         Debug.Log("Current gun: " + currentGun);
+        Debug.Log("Next gun: " + nextGun);
 
+        if (isSwitching)
+        {
+            return;
+        }
 
         if (canSwitchUp && !isSwitching)
         {
+            canSwitchUp = false;
             CanSwitchGunUp();
         }
 
         if (canSwitchDown && !isSwitching)
         {
+            canSwitchDown = false;
             CanSwitchGunDown();
         }
 
@@ -51,7 +67,7 @@ public class ArsenalFunction : MonoBehaviour
 
     public void ScrollMenuUp()
     {
-        if (currentGun != allGuns[1])
+        if (currentIndex < allGuns.Length - 1) 
         {
             canSwitchUp = true;
         }
@@ -59,7 +75,7 @@ public class ArsenalFunction : MonoBehaviour
 
     public void ScrollMenuDown()
     {
-        if (currentGun != allGuns[0])
+        if (currentIndex > -1)
         {
             canSwitchDown = true;
         }
@@ -67,43 +83,43 @@ public class ArsenalFunction : MonoBehaviour
 
     private void CanSwitchGunUp()
     {
-        int currentIndex = System.Array.IndexOf(allGuns, currentGun);
-
-        Debug.Log("Current index: " + currentIndex);
-        Debug.Log("Previous gun: " + previousGun);
-        Debug.Log("Current gun: " + currentGun);
+        //Debug.Log("Current index: " + currentIndex);
+        //Debug.Log("Previous gun: " + previousGun);
+        //Debug.Log("Current gun: " + currentGun);
+        Debug.Log("Next gun: " + nextGun);
 
         if (currentIndex < allGuns.Length - 1)
         {
+            previousGun = currentGun;
             currentGun = allGuns[currentIndex + 1];
-            previousGun = currentIndex > 0 ? allGuns[currentIndex - 1] : currentGun;
+            nextGun = currentIndex + 2 < allGuns.Length ? allGuns[currentIndex + 2] : null;
+
+
+            isSwitching = true;
+            switchUpCoroutine = StartCoroutine(SwitchGunUp());
         }
-
-        isSwitching = true;
-        switchUpCoroutine = StartCoroutine(SwitchGunUp());
-
-        canSwitchUp = false;
-
     }
 
     private void CanSwitchGunDown()
     {
-        int currentIndex = System.Array.IndexOf(allGuns, currentGun);
-
-        Debug.Log("Current index: " + currentIndex);
-        Debug.Log("Previous gun: " + previousGun);
-        Debug.Log("Current gun: " + currentGun);
+        //Debug.Log("Current index: " + currentIndex);
+        //Debug.Log("Previous gun: " + previousGun);
+        //Debug.Log("Current gun: " + currentGun);
+        Debug.Log("Next gun: " + nextGun);
 
         if (currentIndex > 0)
         {
+            previousGun = currentGun;
             currentGun = allGuns[currentIndex - 1];
-            previousGun = currentIndex > 1 ? allGuns[currentIndex - 2] : allGuns[0];
+            nextGun = currentIndex - 2 >= 0 ? allGuns[currentIndex - 2] : null;
+
+            isSwitching = true;
+            switchDownCoroutine = StartCoroutine(SwitchGunDown());
         }
-
-        isSwitching = true;
-        switchDownCoroutine = StartCoroutine(SwitchGunDown());
-
-        canSwitchDown = false;
+        else
+        {
+            previousGun = allGuns[0];
+        }
 
     }
     private IEnumerator SwitchGunUp()
@@ -111,12 +127,16 @@ public class ArsenalFunction : MonoBehaviour
         float rotationTime = 1f;
         float elapsedTime = 0f;
 
+        Vector3 moveLeft = new(currentOrientation.position.x + 15f, currentOrientation.position.y, currentOrientation.position.z);
+
         while (elapsedTime < rotationTime)
         {
-
-            Vector3 moveLeft = new(currentOrientation.position.x + 15f, currentOrientation.position.y, currentOrientation.position.z);
             currentGun.transform.position = Vector3.Lerp(currentGun.transform.position, currentOrientation.position, switchSpeed * Time.deltaTime);
             previousGun.transform.position = Vector3.Lerp(previousGun.transform.position, moveLeft, switchSpeed * Time.deltaTime);
+            if (nextGun != null)
+            {
+                nextGun.transform.position = Vector3.Lerp(nextGun.transform.position, moveLeft, switchSpeed * Time.deltaTime);
+            }
 
             elapsedTime += Time.deltaTime;
 
@@ -132,12 +152,21 @@ public class ArsenalFunction : MonoBehaviour
         float rotationTime = 1f;
         float elapsedTime = 0f;
 
+        Vector3 moveRight = new(currentOrientation.position.x - 15f, currentOrientation.position.y, currentOrientation.position.z);
+
         while (elapsedTime < rotationTime)
         {
+            currentGun.transform.position = Vector3.Lerp(currentGun.transform.position, currentOrientation.position, switchSpeed * Time.deltaTime);
 
-            Vector3 moveRight = new(currentOrientation.position.x - 15f, currentOrientation.position.y, currentOrientation.position.z);
-            previousGun.transform.position = Vector3.Lerp(previousGun.transform.position, currentOrientation.position, switchSpeed * Time.deltaTime);
-            currentGun.transform.position = Vector3.Lerp(currentGun.transform.position, moveRight, switchSpeed * Time.deltaTime);
+            if(previousGun != null)
+            {
+                previousGun.transform.position = Vector3.Lerp(previousGun.transform.position, moveRight, switchSpeed * Time.deltaTime);
+            }
+
+            if (nextGun != null)
+            {
+                nextGun.transform.position = Vector3.Lerp(nextGun.transform.position, moveRight, switchSpeed * Time.deltaTime);
+            }
 
             elapsedTime += Time.deltaTime;
 
