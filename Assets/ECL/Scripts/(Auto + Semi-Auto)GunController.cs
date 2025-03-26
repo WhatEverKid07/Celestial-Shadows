@@ -52,6 +52,7 @@ public class AutoAndSemiAutoGunController : MonoBehaviour
     [SerializeField] private Animator animatorForShotgun;
     [SerializeField] private string nameOfShootTrigger;
     [SerializeField] private string nameOfSightBool;
+    [SerializeField] private string nameOfTriggerBool;
 
 
     [Space(20)]
@@ -89,6 +90,7 @@ public class AutoAndSemiAutoGunController : MonoBehaviour
     private Coroutine fovCoroutine;
     private float originalFOV;
     private float currentConeAngle;
+    private bool canShootAnimation = true;
 
     private Vector3 currentRecoil = Vector3.zero;
     private Quaternion accumulatedRecoilRotation = Quaternion.identity;
@@ -115,28 +117,48 @@ public class AutoAndSemiAutoGunController : MonoBehaviour
     }
     public void Sighted(InputAction.CallbackContext zoom)
     {
+        int layerIndex = 0;
+
         if (zoom.performed) // Button pressed
         {
             characterMovement.canRun = false;
             characterMovement.enableDash = false;
             characterMovement.walkSpeed /= 3;
+            camMovement.fov = targetZoomFOV;
             ChangeFOV(targetZoomFOV);
             gunManager.canSwitch = false;
             bob.bobForce = 0.0009f;
             bob.bobSpeed = 2f;
-            animatorForShotgun.Play("InSightShotgun");
+            if(animatorForShotgun != null)
+            {
+                animatorForShotgun.Play("InSightShotgun");
+            }
+            //animator.Play("InSightAR");
+            if (animator.HasState(layerIndex, Animator.StringToHash("InSightAR")))
+            {
+                animator.Play("InSightAR");
+            }
         }
         else if (zoom.canceled) // Button released
         {
             characterMovement.canRun = true;
             characterMovement.enableDash = true;
             characterMovement.walkSpeed *= 3;
+            camMovement.fov = originalFOV;
             Debug.Log("Cancelled");
             ChangeFOV(originalFOV);
             gunManager.canSwitch = true;
             bob.bobForce = bob.originalBobForce;
             bob.bobSpeed = bob.originalBobSpeed;
-            animatorForShotgun.Play("InSightShotgunReverse");
+            if (animatorForShotgun != null)
+            {
+                animatorForShotgun.Play("InSightShotgunReverse");
+            }
+            //animator.Play("InSightAR Reverse");
+            if (animator.HasState(layerIndex, Animator.StringToHash("InSightAR Reverse")))
+            {
+                animator.Play("InSightAR Reverse");
+            }
         }
     }
 
@@ -193,6 +215,12 @@ public class AutoAndSemiAutoGunController : MonoBehaviour
         {
             nextTimeToFire = Time.time + 1f / fireRate;
             Shoot(shootHowManyBullets);
+            if(nameOfTriggerBool != "" && canShootAnimation) 
+            {
+                canShootAnimation = false;
+                animator.SetTrigger("StartShooting"); 
+                animator.SetBool("Shooting", true);
+            }
         }
 
         shoot.performed += ctx =>
@@ -203,7 +231,12 @@ public class AutoAndSemiAutoGunController : MonoBehaviour
                 canShoot = false;
             }
         };
-        shoot.canceled += ctx => { StopRecoil(); };
+        shoot.canceled += ctx => { 
+            StopRecoil(); 
+
+            if (nameOfTriggerBool != "") 
+            { animator.SetBool("Shooting", false); canShootAnimation = true; }
+        };
         if (useSight)
             GunSight();
 
@@ -260,7 +293,7 @@ public class AutoAndSemiAutoGunController : MonoBehaviour
                 muzzleFlash.Play();
             gunAudioSource.PlayOneShot(shootClip);
 
-            if (animator != null) { animator.SetTrigger(nameOfShootTrigger); }
+            if (animator != null && nameOfShootTrigger != "") { animator.SetTrigger(nameOfShootTrigger); }
             camController.GunController();
             AddRecoil();
             currentAmmo--;
@@ -268,7 +301,7 @@ public class AutoAndSemiAutoGunController : MonoBehaviour
             // Spawn and shoot the bullet
             for (var i = 0; i < numberOfBullets; i++)
             {
-                Debug.Log("shoot");
+                //Debug.Log("shoot");
                 GameObject projectile = Instantiate(projectilePrefab, bulletSpawn.transform.position, bulletSpawn.transform.rotation);
                 Rigidbody rb = projectile.GetComponent<Rigidbody>();
                 Vector3 bulletDirection = GetConeSpreadDirection(bulletSpawn.transform.forward, currentConeAngle);

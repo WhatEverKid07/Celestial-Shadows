@@ -79,9 +79,9 @@ public class SniperGunController : MonoBehaviour
         reload.Enable();
         zoomInOrOut.Enable();
 
-        //zoomInOrOut.performed += ctx => ChangeFOV(targetZoomFOV);
-        //zoomInOrOut.canceled += ctx => ChangeFOV(originalFOV);
-        //zoomInOrOut.performed += ctx => gunManager.canSwitch = false;
+           //zoomInOrOut.performed += ctx => ChangeFOV(targetZoomFOV);
+          //zoomInOrOut.canceled += ctx => ChangeFOV(originalFOV);
+         //zoomInOrOut.performed += ctx => gunManager.canSwitch = false;
         //zoomInOrOut.canceled += ctx => gunManager.canSwitch = true;
         zoomInOrOut.performed += Sighted;
         zoomInOrOut.canceled += Sighted;

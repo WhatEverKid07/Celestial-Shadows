@@ -91,7 +91,7 @@ public class CameraMovement : MonoBehaviour
         }
         else
         {
-            ChangeRunFOV();
+            //ChangeRunFOV();
             Debug.Log("FOV change 2");
             ChangeFOV(fov, 0.1f);
         }
