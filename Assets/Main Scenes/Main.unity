@@ -16909,7 +16909,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &623258874
 Transform:
   m_ObjectHideFlags: 0
@@ -17026,7 +17026,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &649774599
 RectTransform:
   m_ObjectHideFlags: 0
@@ -49686,6 +49686,7 @@ MonoBehaviour:
   camController: {fileID: 1149627384}
   gunManager: {fileID: 655801312}
   bob: {fileID: 0}
+  characterMovement: {fileID: 0}
   maxAmmo: 30
   shootHowManyBullets: 1
   reloadTime: 1
@@ -54870,7 +54871,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1649847735
 Transform:
   m_ObjectHideFlags: 0
@@ -55631,6 +55632,46 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6850040371045126247, guid: 0194e7bddc477da47a48c8c62c526d3e, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7428557978702540108, guid: 0194e7bddc477da47a48c8c62c526d3e, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.96220195
+      objectReference: {fileID: 0}
+    - target: {fileID: 7428557978702540108, guid: 0194e7bddc477da47a48c8c62c526d3e, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.96220255
+      objectReference: {fileID: 0}
+    - target: {fileID: 7428557978702540108, guid: 0194e7bddc477da47a48c8c62c526d3e, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0.96220195
+      objectReference: {fileID: 0}
+    - target: {fileID: 7428557978702540108, guid: 0194e7bddc477da47a48c8c62c526d3e, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0.020308454
+      objectReference: {fileID: 0}
+    - target: {fileID: 7428557978702540108, guid: 0194e7bddc477da47a48c8c62c526d3e, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.016792998
+      objectReference: {fileID: 0}
+    - target: {fileID: 7428557978702540108, guid: 0194e7bddc477da47a48c8c62c526d3e, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -0.041587632
+      objectReference: {fileID: 0}
+    - target: {fileID: 7428557978702540108, guid: 0194e7bddc477da47a48c8c62c526d3e, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: -0.13052545
+      objectReference: {fileID: 0}
+    - target: {fileID: 7428557978702540108, guid: 0194e7bddc477da47a48c8c62c526d3e, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0.99144495
+      objectReference: {fileID: 0}
+    - target: {fileID: 7428557978702540108, guid: 0194e7bddc477da47a48c8c62c526d3e, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: -195
+      objectReference: {fileID: 0}
     - target: {fileID: 8143555180331720374, guid: 0194e7bddc477da47a48c8c62c526d3e, type: 3}
       propertyPath: bob
       value: 
@@ -55659,6 +55700,10 @@ PrefabInstance:
       propertyPath: gunAudioSource
       value: 
       objectReference: {fileID: 1792891839}
+    - target: {fileID: 8143555180331720374, guid: 0194e7bddc477da47a48c8c62c526d3e, type: 3}
+      propertyPath: characterMovement
+      value: 
+      objectReference: {fileID: 95148706}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -56585,6 +56630,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6848513967037698454, guid: 311263a73da92fd4dafd378fda29e169, type: 3}
+      propertyPath: bob
+      value: 
+      objectReference: {fileID: 1149627382}
+    - target: {fileID: 6848513967037698454, guid: 311263a73da92fd4dafd378fda29e169, type: 3}
       propertyPath: ammoText
       value: 
       objectReference: {fileID: 540404446}
@@ -56608,6 +56657,10 @@ PrefabInstance:
       propertyPath: gunAudioSource
       value: 
       objectReference: {fileID: 1792891839}
+    - target: {fileID: 6848513967037698454, guid: 311263a73da92fd4dafd378fda29e169, type: 3}
+      propertyPath: characterMovement
+      value: 
+      objectReference: {fileID: 95148706}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -56930,7 +56983,7 @@ Transform:
   m_GameObject: {fileID: 2128121311}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.0123, y: 0, z: 0.0042}
+  m_LocalPosition: {x: 0.0123, y: 0, z: 0.0093}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:

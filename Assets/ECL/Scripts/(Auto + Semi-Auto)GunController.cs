@@ -10,6 +10,7 @@ public class AutoAndSemiAutoGunController : MonoBehaviour
     [SerializeField] private CameraController camController;
     [SerializeField] private GunManagement gunManager;
     [SerializeField] private CameraHeadBob bob;
+    [SerializeField] private CharacterMovement characterMovement;
 
     [Header("Gun Attributes")]
     [SerializeField] private int maxAmmo = 30;
@@ -116,6 +117,9 @@ public class AutoAndSemiAutoGunController : MonoBehaviour
     {
         if (zoom.performed) // Button pressed
         {
+            characterMovement.canRun = false;
+            characterMovement.enableDash = false;
+            characterMovement.walkSpeed /= 3;
             ChangeFOV(targetZoomFOV);
             gunManager.canSwitch = false;
             bob.bobForce = 0.0009f;
@@ -124,6 +128,9 @@ public class AutoAndSemiAutoGunController : MonoBehaviour
         }
         else if (zoom.canceled) // Button released
         {
+            characterMovement.canRun = true;
+            characterMovement.enableDash = true;
+            characterMovement.walkSpeed *= 3;
             Debug.Log("Cancelled");
             ChangeFOV(originalFOV);
             gunManager.canSwitch = true;
