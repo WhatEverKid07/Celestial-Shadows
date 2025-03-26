@@ -6,8 +6,11 @@ using UnityEngine.UI;
 
 public class AutoAndSemiAutoGunController : MonoBehaviour
 {
+    [SerializeField] private CameraMovement camMovement;
     [SerializeField] private CameraController camController;
     [SerializeField] private GunManagement gunManager;
+    [SerializeField] private CameraHeadBob bob;
+    [SerializeField] private CharacterMovement characterMovement;
 
     [Header("Gun Attributes")]
     [SerializeField] private int maxAmmo = 30;
@@ -114,15 +117,25 @@ public class AutoAndSemiAutoGunController : MonoBehaviour
     {
         if (zoom.performed) // Button pressed
         {
+            characterMovement.canRun = false;
+            characterMovement.enableDash = false;
+            characterMovement.walkSpeed /= 3;
             ChangeFOV(targetZoomFOV);
             gunManager.canSwitch = false;
+            bob.bobForce = 0.0009f;
+            bob.bobSpeed = 2f;
             animatorForShotgun.Play("InSightShotgun");
         }
         else if (zoom.canceled) // Button released
         {
-            Debug.Log("Canceleed");
+            characterMovement.canRun = true;
+            characterMovement.enableDash = true;
+            characterMovement.walkSpeed *= 3;
+            Debug.Log("Cancelled");
             ChangeFOV(originalFOV);
             gunManager.canSwitch = true;
+            bob.bobForce = bob.originalBobForce;
+            bob.bobSpeed = bob.originalBobSpeed;
             animatorForShotgun.Play("InSightShotgunReverse");
         }
     }
@@ -142,12 +155,18 @@ public class AutoAndSemiAutoGunController : MonoBehaviour
 
     void OnEnable()
     {
+        shoot.Enable();
+        reload.Enable();
+        zoomInOrOut.Enable();
         isReloading = false;
         ammoText.gameObject.SetActive(true);
         UpdateAmmoText();
     }
     private void OnDisable()
     {
+        shoot.Disable();
+        reload.Disable();
+        zoomInOrOut.Disable();
         if (ammoText != null)
             ammoText.gameObject.SetActive(false);
     }
@@ -162,7 +181,7 @@ public class AutoAndSemiAutoGunController : MonoBehaviour
             StartCoroutine(Reload());
         }
 
-        if (currentAmmo == 0)
+        if (currentAmmo == 0 && !isReloading)
         {
             StartCoroutine(Reload());
             StopRecoil();
@@ -241,7 +260,7 @@ public class AutoAndSemiAutoGunController : MonoBehaviour
                 muzzleFlash.Play();
             gunAudioSource.PlayOneShot(shootClip);
 
-            animator.SetTrigger(nameOfShootTrigger);
+            if (animator != null) { animator.SetTrigger(nameOfShootTrigger); }
             camController.GunController();
             AddRecoil();
             currentAmmo--;

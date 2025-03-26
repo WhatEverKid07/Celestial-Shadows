@@ -202,7 +202,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 716462045425129493}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.022730585, y: -0.00006867201, z: 0.00007934605, w: -0.9997417}
+  m_LocalRotation: {x: -0.0000000054800275, y: 0.000069845555, z: -0.00007845922, w: 1}
   m_LocalPosition: {x: -0.00020008715, y: 0.0067999843, z: 0.021600012}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -665,7 +665,9 @@ MonoBehaviour:
   fireRate: 15
   bulletSpeed: 70
   animator: {fileID: 5826692415955787263}
+  animatorForShotgun: {fileID: 0}
   nameOfShootTrigger: Shoot
+  nameOfSightBool: 
   playerCam: {fileID: 0}
   muzzleFlash: {fileID: 0}
   ammoText: {fileID: 0}
@@ -677,6 +679,7 @@ MonoBehaviour:
   transitionDuration: 0.2
   rotationX: 0
   rotationY: 0
+  rotationZ: 0
 --- !u!95 &5826692415955787263
 Animator:
   serializedVersion: 5

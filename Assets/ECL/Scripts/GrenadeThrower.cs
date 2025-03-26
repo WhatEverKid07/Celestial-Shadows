@@ -1,4 +1,5 @@
 using Unity.PlasticSCM.Editor.WebApi;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
@@ -29,9 +30,12 @@ public class GrenadeThrower : MonoBehaviour
     private float grenadeAnimPause = 1.2f;
     private bool thrown = false;
 
-    private void Start()
+    private void Awake()
     {
         throwGrenade = controls.FindActionMap("Gun Controls").FindAction("Shoot");
+    }
+    private void Start()
+    {
         throwGrenade.Enable();
 
         currentThrowDelay = throwDelay;
@@ -41,11 +45,13 @@ public class GrenadeThrower : MonoBehaviour
     {
         ammoText.gameObject.SetActive(true);
         UpdateAmmoText();
+        throwGrenade.Enable();
     }
     private void OnDisable()
     {
         if (ammoText != null)
             ammoText.gameObject.SetActive(false);
+        throwGrenade.Disable();
     }
 
     void Update()

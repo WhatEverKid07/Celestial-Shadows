@@ -1,5 +1,4 @@
 
-using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -16,8 +15,10 @@ public class CameraMovement : MonoBehaviour
     [SerializeField] private InputActionReference axisY;
 
     [Header("Camera")]
-    [SerializeField] private Camera fpsCam;
-    [SerializeField] [Range(90, 100)] private int fov;
+    [SerializeField] internal Camera fpsCam;
+    [SerializeField] [Range(5, 100)] internal float fov;
+    [SerializeField] [Range(5, 100)] private float runFOV;
+    //[SerializeField] [Range(5, 100)] private float walkFOV;
     [SerializeField] [Range(8, 12)] private float rotationSpeed;
 
 
@@ -42,6 +43,8 @@ public class CameraMovement : MonoBehaviour
 
     private float currentRotationX = 0f;
     private float currentRotationZ = 0f;
+
+
 
     private void Start()
     {
@@ -82,11 +85,15 @@ public class CameraMovement : MonoBehaviour
 
         if (characterMove.isRunning || characterMove.isWallRunning && !characterMove.isWallJumping)
         {
-            ChangeWalkFOV();
+            //ChangeWalkFOV();
+            Debug.Log("FOV change 1");
+            ChangeFOV(runFOV, 0.1f);
         }
         else
         {
             ChangeRunFOV();
+            Debug.Log("FOV change 2");
+            ChangeFOV(fov, 0.1f);
         }
     }
 
@@ -102,6 +109,7 @@ public class CameraMovement : MonoBehaviour
         float rotationY = mouseY * sensY / 100;
 
         currentRotationX -= rotationY;
+
         currentRotationX = Mathf.Clamp(currentRotationX, -80f, 80f);
 
         transform.rotation = Quaternion.Euler(currentRotationX, transform.rotation.eulerAngles.y + rotationX, 0);
@@ -197,7 +205,17 @@ public class CameraMovement : MonoBehaviour
 
         transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(currentRotationX, targetY, currentRotationZ), Time.deltaTime * rotationSpeed);
     }
-
+    public void ChangeFOV(float newFOV, float transitionSpeed)
+    {
+        if (fpsCam.fieldOfView < newFOV)
+        {
+            fpsCam.fieldOfView += transitionSpeed;
+        }
+        else
+        {
+            fpsCam.fieldOfView = newFOV;
+        }
+    }
 
     private void ChangeWalkFOV()
     {

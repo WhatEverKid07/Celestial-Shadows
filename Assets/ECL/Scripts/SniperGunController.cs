@@ -5,8 +5,11 @@ using UnityEngine.UI;
 
 public class SniperGunController : MonoBehaviour
 {
+    [SerializeField] private CameraMovement camMovement;
     [SerializeField] private CameraController camController;
     [SerializeField] private GunManagement gunManager;
+    [SerializeField] private CharacterMovement characterMovement;
+    [SerializeField] private CameraHeadBob bob;
 
     [Header("Gun Attributes")]
     [SerializeField] private int maxAmmo = 10;
@@ -22,7 +25,7 @@ public class SniperGunController : MonoBehaviour
 
 
     [Space(20)]
-    [Header("Shooting Attributes")]
+    [Header("Shooting Attriblutes")]
     [SerializeField] private GameObject bulletSpawn;
     [SerializeField] private GameObject projectilePrefab;
     [SerializeField] private float bulletSpeed = 20f;
@@ -40,7 +43,7 @@ public class SniperGunController : MonoBehaviour
     [SerializeField] private Camera fPSCam;
     [SerializeField] private ParticleSystem muzzleFlash;
 
-    
+
     [Space(20)]
     [Header("UI")]
     [SerializeField] private Text ammoText;
@@ -76,11 +79,39 @@ public class SniperGunController : MonoBehaviour
         reload.Enable();
         zoomInOrOut.Enable();
 
-        zoomInOrOut.performed += ctx => ChangeFOV(targetZoomFOV);
-        zoomInOrOut.canceled += ctx => ChangeFOV(originalFOV);
-        zoomInOrOut.performed += ctx => gunManager.canSwitch = false;
-        zoomInOrOut.canceled += ctx => gunManager.canSwitch = true;
+        //zoomInOrOut.performed += ctx => ChangeFOV(targetZoomFOV);
+        //zoomInOrOut.canceled += ctx => ChangeFOV(originalFOV);
+        //zoomInOrOut.performed += ctx => gunManager.canSwitch = false;
+        //zoomInOrOut.canceled += ctx => gunManager.canSwitch = true;
+        zoomInOrOut.performed += Sighted;
+        zoomInOrOut.canceled += Sighted;
         zoomInOrOut.canceled += ctx => currentConeAngle = coneAngle;
+    }
+    public void Sighted(InputAction.CallbackContext zoom)
+    {
+
+        if (zoom.performed)
+        {
+            characterMovement.canRun = false;
+            characterMovement.enableDash = false;
+            characterMovement.walkSpeed /= 3;
+            ChangeFOV(targetZoomFOV);
+            gunManager.canSwitch = false;
+            bob.bobForce = 0.0009f;
+            bob.bobSpeed = 2f;
+            //animatorForShotgun.Play("InSightShotgun");
+        }
+        else if (zoom.canceled)
+        {
+            characterMovement.canRun = true;
+            characterMovement.enableDash = true;
+            characterMovement.walkSpeed *= 3;
+            ChangeFOV(originalFOV);
+            gunManager.canSwitch = true;
+            bob.bobForce = bob.originalBobForce;
+            bob.bobSpeed = bob.originalBobSpeed;
+            //animatorForShotgun.Play("InSightShotgunReverse");
+        }
     }
 
     private void Awake()
@@ -102,12 +133,16 @@ public class SniperGunController : MonoBehaviour
         ammoText.gameObject.SetActive(true);
         UpdateAmmoText();
         zoomInOrOut.Enable();
+        shoot.Enable();
+        reload.Enable();
     }
     void OnDisable()
     {
         if (ammoText != null)
             ammoText.gameObject.SetActive(false);
         zoomInOrOut.Disable();
+        shoot.Disable();
+        reload.Disable();
     }
 
     void Update()
@@ -120,7 +155,7 @@ public class SniperGunController : MonoBehaviour
             StartCoroutine(Reload());
         }
 
-        if (currentAmmo == 0)
+        if (currentAmmo == 0 && !isReloading)
         {
             StartCoroutine(Reload());
             return;
@@ -161,19 +196,22 @@ public class SniperGunController : MonoBehaviour
         }
     }
 
-    private IEnumerator SmoothFOVChange(float newFOV)
+    public IEnumerator SmoothFOVChange(float newFOV)
     {
         currentConeAngle = coneAngleWhenSighted;
         float startFOV = fPSCam.fieldOfView;
         float elapsedTime = 0f;
 
+
         while (elapsedTime < transitionDuration)
         {
             elapsedTime += Time.deltaTime;
-            fPSCam.fieldOfView = Mathf.Lerp(startFOV, newFOV, elapsedTime / transitionDuration);
+            camMovement.fpsCam.fieldOfView = Mathf.Lerp(startFOV, newFOV, elapsedTime / transitionDuration);
+            //camController.ChangeFOV(newFOV, transitionDuration);
             yield return null;
         }
-        fPSCam.fieldOfView = newFOV;
+        camMovement.fpsCam.fieldOfView = newFOV;
+        camMovement.fov = newFOV;
     }
 
     void Shoot()
@@ -227,5 +265,6 @@ public class SniperGunController : MonoBehaviour
     void UpdateAmmoText()
     {
         ammoText.text = currentAmmo.ToString() + " / " + maxAmmo.ToString();
+        Debug.Log("ammo update, sniper" + StackTraceUtility.ExtractStackTrace());
     }
 }
