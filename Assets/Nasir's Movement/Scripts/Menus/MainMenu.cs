@@ -180,6 +180,12 @@ public class MainMenu : MonoBehaviour
             canRotate = true;
             menus.Remove(currentMenu);
         }
+
+        if (currentMenu == characterMenu)
+        {
+            goToStory = false;
+            goToEndless = false;
+        }
     }
 
     public void EnterSettings()

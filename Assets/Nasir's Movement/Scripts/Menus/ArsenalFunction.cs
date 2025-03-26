@@ -13,7 +13,14 @@ public class ArsenalFunction : MonoBehaviour
     private GameObject previousGun;
     private GameObject nextGun;
     private GameObject selectedGun;
+
     [SerializeField] private Transform currentOrientation;
+    [SerializeField] private Transform previousOrientation;
+    [SerializeField] private Transform nextOrientation;
+
+    private GameObject pistol;
+    private GameObject shotgun;
+    private GameObject ar;
 
     private bool canSwitchUp = false;
     private bool canSwitchDown = false;
@@ -31,6 +38,7 @@ public class ArsenalFunction : MonoBehaviour
         {
             previousGun = null;
             currentGun = allGuns[0];
+            nextGun = allGuns[1];
         }
     }
 
@@ -48,7 +56,8 @@ public class ArsenalFunction : MonoBehaviour
         //Debug.Log("Next gun: " + nextGun);
         //Debug.Log("Selected gun: " + selectedGun);
 
-        Debug.Log("GoToStory: " + mainMenuScript.goToStory);
+        //Debug.Log("GoToStory: " + mainMenuScript.goToStory);
+        //Debug.Log("GoToEndless: " + mainMenuScript.goToEndless);
 
         if (isSwitching)
         {
@@ -61,7 +70,7 @@ public class ArsenalFunction : MonoBehaviour
             CanSwitchGunUp();
         }
 
-        if (canSwitchDown && !isSwitching)
+        if ((canSwitchDown && !isSwitching) || mainMenuScript.currentMenu != mainMenuScript.arsenalMenu)
         {
             canSwitchDown = false;
             CanSwitchGunDown();
@@ -88,6 +97,21 @@ public class ArsenalFunction : MonoBehaviour
     public void SelectWeapon()
     {
         selectedGun = currentGun;
+        if (selectedGun == allGuns[0])
+        {
+            pistol = new GameObject("Pistol");
+            DontDestroyOnLoad(pistol);
+        }
+        else if (selectedGun == allGuns[1])
+        {
+            shotgun = new GameObject("Shotgun");
+            DontDestroyOnLoad(shotgun);
+        }
+        else
+        {
+            ar = new GameObject("AR");
+            DontDestroyOnLoad(ar);
+        }
 
         if (mainMenuScript.goToStory)
         {
@@ -101,11 +125,6 @@ public class ArsenalFunction : MonoBehaviour
 
     private void CanSwitchGunUp()
     {
-        //Debug.Log("Current index: " + currentIndex);
-        //Debug.Log("Previous gun: " + previousGun);
-        //Debug.Log("Current gun: " + currentGun);
-        Debug.Log("Next gun: " + nextGun);
-
         if (currentIndex < allGuns.Length - 1)
         {
             previousGun = currentGun;
@@ -120,11 +139,6 @@ public class ArsenalFunction : MonoBehaviour
 
     private void CanSwitchGunDown()
     {
-        //Debug.Log("Current index: " + currentIndex);
-        //Debug.Log("Previous gun: " + previousGun);
-        //Debug.Log("Current gun: " + currentGun);
-        Debug.Log("Next gun: " + nextGun);
-
         if (currentIndex > 0)
         {
             previousGun = currentGun;
@@ -142,20 +156,25 @@ public class ArsenalFunction : MonoBehaviour
     }
     private IEnumerator SwitchGunUp()
     {
+        Vector3 moveOffset = new(15f, 0f, 0f);
         float rotationTime = 1f;
         float elapsedTime = 0f;
-
-        Vector3 currentLeft = new(currentOrientation.position.x + 15f, 0, currentOrientation.position.z);
-        Vector3 nextLeft = new(currentOrientation.position.x - 15f, 0, currentOrientation.position.z);
-
 
         while (elapsedTime < rotationTime)
         {
             currentGun.transform.position = Vector3.Lerp(currentGun.transform.position, currentOrientation.position, switchSpeed * Time.deltaTime);
-            previousGun.transform.position = Vector3.Lerp(previousGun.transform.position, currentLeft, switchSpeed * Time.deltaTime);
+            previousGun.transform.position = Vector3.Lerp(previousGun.transform.position, previousOrientation.position, switchSpeed * Time.deltaTime);
             if (nextGun != null)
             {
-                nextGun.transform.position = Vector3.Lerp(nextGun.transform.position, nextLeft, switchSpeed * Time.deltaTime);
+                nextGun.transform.position = Vector3.Lerp(nextGun.transform.position, nextOrientation.position, switchSpeed * Time.deltaTime);
+            }
+
+            foreach (GameObject gun in allGuns)
+            {
+                if (gun != nextGun && gun != currentGun && gun != previousGun)
+                {
+                    gun.transform.position = Vector3.Lerp(gun.transform.position, gun.transform.position + moveOffset, (switchSpeed * Time.deltaTime));
+                }
             }
 
             elapsedTime += Time.deltaTime;
@@ -169,30 +188,73 @@ public class ArsenalFunction : MonoBehaviour
 
     private IEnumerator SwitchGunDown()
     {
-        float rotationTime = 1f;
-        float elapsedTime = 0f;
+        Vector3 moveOffset = new(-15f, 0f, 0f);
 
-        Vector3 currentRight = new(currentOrientation.position.x - 15f, 0, currentOrientation.position.z);
-        Vector3 nextRight = new(currentOrientation.position.x + 15f, 0, currentOrientation.position.z);
-
-        while (elapsedTime < rotationTime)
+        if (mainMenuScript.currentMenu == mainMenuScript.arsenalMenu)
         {
-            currentGun.transform.position = Vector3.Lerp(currentGun.transform.position, currentOrientation.position, switchSpeed * Time.deltaTime);
+            float rotationTime = 1f;
+            float elapsedTime = 0f;
 
-            if(previousGun != null)
+            while (elapsedTime < rotationTime)
             {
-                previousGun.transform.position = Vector3.Lerp(previousGun.transform.position, currentRight, switchSpeed * Time.deltaTime);
-            }
+                currentGun.transform.position = Vector3.Lerp(currentGun.transform.position, currentOrientation.position, switchSpeed * Time.deltaTime);
 
-            if (nextGun != null)
+                if (previousGun != null)
+                {
+                    previousGun.transform.position = Vector3.Lerp(previousGun.transform.position, nextOrientation.position, switchSpeed * Time.deltaTime);
+                }
+
+                if (nextGun != null)
+                {
+                    nextGun.transform.position = Vector3.Lerp(nextGun.transform.position, previousOrientation.position, switchSpeed * Time.deltaTime);
+                }
+
+                foreach (GameObject gun in allGuns)
+                {
+                    if (gun != nextGun && gun != currentGun && gun != previousGun)
+                    {
+                        gun.transform.position = Vector3.Lerp(gun.transform.position, gun.transform.position + moveOffset, switchSpeed * Time.deltaTime);
+                    }
+                }
+
+                elapsedTime += Time.deltaTime;
+
+
+                yield return null;
+            }
+        }
+        else
+        {
+            float rotationTime = .5f;
+            float elapsedTime = 0f;
+
+            while (elapsedTime < rotationTime)
             {
-                nextGun.transform.position = Vector3.Lerp(nextGun.transform.position, nextRight, switchSpeed * Time.deltaTime);
+                currentGun.transform.position = Vector3.Lerp(currentGun.transform.position, currentOrientation.position, (switchSpeed * Time.deltaTime) * 2);
+
+                if (previousGun != null)
+                {
+                    previousGun.transform.position = Vector3.Lerp(previousGun.transform.position, nextOrientation.position, (switchSpeed * Time.deltaTime) * 3);
+                }
+
+                if (nextGun != null)
+                {
+                    nextGun.transform.position = Vector3.Lerp(nextGun.transform.position, previousOrientation.position, (switchSpeed * Time.deltaTime) * 3);
+                }
+
+                foreach(GameObject gun in allGuns)
+                {
+                    if (gun != nextGun && gun != currentGun && gun != previousGun)
+                    {
+                        gun.transform.position = Vector3.Lerp(gun.transform.position, moveOffset, (switchSpeed * Time.deltaTime) * 3);
+                    }
+                }
+
+                elapsedTime += Time.deltaTime;
+
+
+                yield return null;
             }
-
-            elapsedTime += Time.deltaTime;
-
-
-            yield return null;
         }
 
         isSwitching = false;
