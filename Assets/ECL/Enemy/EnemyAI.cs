@@ -24,6 +24,7 @@ public class EnemyAI : MonoBehaviour
     private Vector3 lastPos;
     private float threshold = 1f;
     private bool isAtTarget = false;
+    private Rigidbody rb;
     void Start()
     {
         enemyAttack = GetComponentInChildren<EnemyAIAttack>();
@@ -33,6 +34,7 @@ public class EnemyAI : MonoBehaviour
         InvokeRepeating("MoveToTarget", 0, 0.3f);
         StartCoroutine(CheckPlayerVisibility());
         currentTarget = target;
+        rb = GetComponent<Rigidbody>();
     }
     void Update()
     {
@@ -62,6 +64,7 @@ public class EnemyAI : MonoBehaviour
             if (hit.transform == player)
             {
                 agent.isStopped = false;
+                //rb.isKinematic = false;
                 return true;
             }
         }
@@ -90,12 +93,14 @@ public class EnemyAI : MonoBehaviour
     IEnumerator ChangeCurrentTarget(Transform changeToo)
     {
         agent.isStopped = true;
+        //rb.isKinematic = true;
         currentTarget = changeToo;
         hasReachedTarget = false;
         yield return new WaitForSeconds(1f);
         if (!hasReachedTarget)
         {
             agent.isStopped = false;
+            //rb.isKinematic = false;
             //Debug.Log("Attack False 1");
             enemyAttack.isAttacking = false;
         }
@@ -114,6 +119,7 @@ public class EnemyAI : MonoBehaviour
         {
             //Debug.Log("UpdateIfHasReachedTarget: Target Reached");
             agent.isStopped = true;
+            //rb.isKinematic = true;
             OnReachedTarget();
         }
         else if (hasReachedTarget && isAtTarget && remainingDistance >= agent.stoppingDistance * 1.05f)
@@ -122,6 +128,7 @@ public class EnemyAI : MonoBehaviour
             isAtTarget = false;
             hasReachedTarget = false;
             agent.isStopped = false;
+            //rb.isKinematic = false;
         }
     }
 
@@ -154,6 +161,7 @@ public class EnemyAI : MonoBehaviour
             return;
         isAtTarget = false;
         agent.isStopped = false;
+        //rb.isKinematic = false;
         agent.SetDestination(currentTarget.position);
         //Debug.Log("Moving to: " + currentTarget.name);
     }
@@ -163,6 +171,7 @@ public class EnemyAI : MonoBehaviour
         hasReachedTarget = true;
         isAtTarget = true;
         agent.isStopped = true;
+        //rb.isKinematic = true;
         //Debug.Log("Target Reached!");
         //Debug.Log("Attack True");
         enemyAttack.isAttacking = true;

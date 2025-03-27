@@ -54,6 +54,7 @@ public class AutoAndSemiAutoGunController : MonoBehaviour
     [SerializeField] private string nameOfSightAnim;
     [SerializeField] private string nameOfSightAnimReverse;
     [SerializeField] private string nameOfTriggerBool;
+    [SerializeField] private string nameOfReloadAnim;
 
 
     [Space(20)]
@@ -288,7 +289,7 @@ public class AutoAndSemiAutoGunController : MonoBehaviour
     {
         // This is important to make semi auto work
         Invoke("CanShootReset", semiAutoShotDelay);
-        if (currentAmmo >= 1)
+        if (currentAmmo >= 1 && !isReloading)
         {
             if (muzzleFlash != null)
                 muzzleFlash.Play();
@@ -317,6 +318,7 @@ public class AutoAndSemiAutoGunController : MonoBehaviour
         isReloading = true;
         // gunAudioSource.PlayOneShot(reloadClip);
         // gun reload animation
+        if(nameOfReloadAnim != "") { secondAnimator.Play(nameOfReloadAnim); }
         yield return new WaitForSeconds(reloadTime);
         currentAmmo = maxAmmo;
         isReloading = false;
