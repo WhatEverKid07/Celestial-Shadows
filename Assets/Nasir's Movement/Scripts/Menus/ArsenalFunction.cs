@@ -156,7 +156,6 @@ public class ArsenalFunction : MonoBehaviour
     }
     private IEnumerator SwitchGunUp()
     {
-        Vector3 moveOffset = new(15f, 0f, 0f);
         float rotationTime = 1f;
         float elapsedTime = 0f;
 
@@ -173,7 +172,9 @@ public class ArsenalFunction : MonoBehaviour
             {
                 if (gun != nextGun && gun != currentGun && gun != previousGun)
                 {
-                    gun.transform.position = Vector3.Lerp(gun.transform.position, gun.transform.position + moveOffset, (switchSpeed * Time.deltaTime));
+                    Debug.Log("The gun name is: " + gun.name);
+                    Vector3 moveOffset = new(20f, 0f, gun.transform.position.z);
+                    gun.transform.position = Vector3.Lerp(gun.transform.position, moveOffset, switchSpeed * Time.deltaTime);
                 }
             }
 
@@ -188,8 +189,6 @@ public class ArsenalFunction : MonoBehaviour
 
     private IEnumerator SwitchGunDown()
     {
-        Vector3 moveOffset = new(-15f, 0f, 0f);
-
         if (mainMenuScript.currentMenu == mainMenuScript.arsenalMenu)
         {
             float rotationTime = 1f;
@@ -213,7 +212,9 @@ public class ArsenalFunction : MonoBehaviour
                 {
                     if (gun != nextGun && gun != currentGun && gun != previousGun)
                     {
-                        gun.transform.position = Vector3.Lerp(gun.transform.position, gun.transform.position + moveOffset, switchSpeed * Time.deltaTime);
+                        Vector3 moveOffset = new(gun.transform.position.x - 15f, 0f, 0f);
+                        moveOffset.z = gun.transform.position.z;
+                        gun.transform.position = Vector3.Lerp(gun.transform.position, moveOffset, switchSpeed * Time.deltaTime);
                     }
                 }
 
@@ -246,6 +247,8 @@ public class ArsenalFunction : MonoBehaviour
                 {
                     if (gun != nextGun && gun != currentGun && gun != previousGun)
                     {
+                        Vector3 moveOffset = new(gun.transform.position.x - 15f, 0f, 0f);
+                        moveOffset.z = gun.transform.position.z;
                         gun.transform.position = Vector3.Lerp(gun.transform.position, moveOffset, (switchSpeed * Time.deltaTime) * 3);
                     }
                 }
