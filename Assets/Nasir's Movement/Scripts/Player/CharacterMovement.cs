@@ -30,7 +30,7 @@ public class CharacterMovement : MonoBehaviour
 
     [Header("Walking & Running")]
     [SerializeField] internal float walkSpeed;
-    [SerializeField] private float runSpeed;
+    [SerializeField] internal float runSpeed;
 
     internal bool canRun = true;
 
@@ -106,7 +106,7 @@ public class CharacterMovement : MonoBehaviour
     private bool canDash;
     private bool isDashing = false;
 
-    [SerializeField] [Range(.5f, 2)] private float DashTime;
+    [SerializeField] [Range(.5f, 2)] internal float dashTime;
     private float setDashTime;
 
     private Vector3 dashMomentum = Vector3.zero;
@@ -503,7 +503,7 @@ public class CharacterMovement : MonoBehaviour
             dashCoroutine = StartCoroutine(PerformDash());
 
             canDash = false;
-            setDashTime = DashTime;
+            setDashTime = dashTime;
         }
     }
 
