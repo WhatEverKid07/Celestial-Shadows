@@ -387,7 +387,7 @@ MonoBehaviour:
   grenadeForce: 200
   upwardsGrenadeForce: 400
   explosionEffect: {fileID: 100006, guid: 7c442b9b6852b8a4f93306f3d154d471, type: 3}
-  maxDamage: 500
+  maxDamage: 100
 --- !u!1 &3572020383058869240
 GameObject:
   m_ObjectHideFlags: 0

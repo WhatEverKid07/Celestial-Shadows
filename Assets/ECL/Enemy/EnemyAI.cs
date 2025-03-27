@@ -17,7 +17,7 @@ public class EnemyAI : MonoBehaviour
     [SerializeField] private float fieldOfViewAngle = 120f;
     [SerializeField] private LayerMask obstructionLayer;
 
-    private Transform currentTarget;
+    public Transform currentTarget;
     private NavMeshAgent agent;
     private bool playerVisible = false;
     private bool hasReachedTarget = false;

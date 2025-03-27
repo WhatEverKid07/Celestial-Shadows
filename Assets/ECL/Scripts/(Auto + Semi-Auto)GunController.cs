@@ -49,9 +49,10 @@ public class AutoAndSemiAutoGunController : MonoBehaviour
     [Space(20)]
     [Header("Animation")]
     [SerializeField] private Animator animator;
-    [SerializeField] private Animator animatorForShotgun;
+    [SerializeField] private Animator secondAnimator;
     [SerializeField] private string nameOfShootTrigger;
-    [SerializeField] private string nameOfSightBool;
+    [SerializeField] private string nameOfSightAnim;
+    [SerializeField] private string nameOfSightAnimReverse;
     [SerializeField] private string nameOfTriggerBool;
 
 
@@ -117,7 +118,7 @@ public class AutoAndSemiAutoGunController : MonoBehaviour
     }
     public void Sighted(InputAction.CallbackContext zoom)
     {
-        int layerIndex = 0;
+        //int layerIndex = 0;
 
         if (zoom.performed) // Button pressed
         {
@@ -129,15 +130,15 @@ public class AutoAndSemiAutoGunController : MonoBehaviour
             gunManager.canSwitch = false;
             bob.bobForce = 0.0009f;
             bob.bobSpeed = 2f;
-            if(animatorForShotgun != null)
+            if(secondAnimator != null)
             {
-                animatorForShotgun.Play("InSightShotgun");
+                secondAnimator.Play(nameOfSightAnim);
             }
             //animator.Play("InSightAR");
-            if (animator.HasState(layerIndex, Animator.StringToHash("InSightAR")))
+            /*if (animator.HasState(layerIndex, Animator.StringToHash("InSightAR")))
             {
                 animator.Play("InSightAR");
-            }
+            }*/
         }
         else if (zoom.canceled) // Button released
         {
@@ -150,15 +151,15 @@ public class AutoAndSemiAutoGunController : MonoBehaviour
             gunManager.canSwitch = true;
             bob.bobForce = bob.originalBobForce;
             bob.bobSpeed = bob.originalBobSpeed;
-            if (animatorForShotgun != null)
+            if (secondAnimator != null)
             {
-                animatorForShotgun.Play("InSightShotgunReverse");
+                secondAnimator.Play(nameOfSightAnimReverse);
             }
             //animator.Play("InSightAR Reverse");
-            if (animator.HasState(layerIndex, Animator.StringToHash("InSightAR Reverse")))
+            /*if (animator.HasState(layerIndex, Animator.StringToHash("InSightAR Reverse")))
             {
                 animator.Play("InSightAR Reverse");
-            }
+            }*/
         }
     }
 
