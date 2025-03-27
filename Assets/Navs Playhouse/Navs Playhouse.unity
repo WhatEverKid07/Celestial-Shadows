@@ -563,6 +563,79 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 71500359273393840b471342b9ba7bb4, type: 3}
+--- !u!1001 &612453166
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: -8679921383154817045, guid: a40d2e3e8cd304047889de5aae4a9a93, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 980.7068
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: a40d2e3e8cd304047889de5aae4a9a93, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 980.7068
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: a40d2e3e8cd304047889de5aae4a9a93, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 980.7068
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: a40d2e3e8cd304047889de5aae4a9a93, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -35.924202
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: a40d2e3e8cd304047889de5aae4a9a93, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: a40d2e3e8cd304047889de5aae4a9a93, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 216
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: a40d2e3e8cd304047889de5aae4a9a93, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: a40d2e3e8cd304047889de5aae4a9a93, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: a40d2e3e8cd304047889de5aae4a9a93, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: a40d2e3e8cd304047889de5aae4a9a93, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: a40d2e3e8cd304047889de5aae4a9a93, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: a40d2e3e8cd304047889de5aae4a9a93, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: a40d2e3e8cd304047889de5aae4a9a93, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: a40d2e3e8cd304047889de5aae4a9a93, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 43ed1ffd96b9fbb4695a541498de0f78, type: 2}
+    - target: {fileID: 919132149155446097, guid: a40d2e3e8cd304047889de5aae4a9a93, type: 3}
+      propertyPath: m_Name
+      value: Target
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: a40d2e3e8cd304047889de5aae4a9a93, type: 3}
 --- !u!1001 &842974864
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -623,6 +696,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: 05a744b678e48e64db499b14fc21504c, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: d53025ccef32c6b43984e263bb7d1f4a, type: 2}
+    - target: {fileID: -7511558181221131132, guid: 05a744b678e48e64db499b14fc21504c, type: 3}
+      propertyPath: m_Materials.Array.data[1]
+      value: 
+      objectReference: {fileID: 2100000, guid: 2a518880a91534642862306b75b9d6a0, type: 2}
     - target: {fileID: 919132149155446097, guid: 05a744b678e48e64db499b14fc21504c, type: 3}
       propertyPath: m_Name
       value: Shadow Vile
@@ -1748,3 +1829,4 @@ SceneRoots:
   - {fileID: 1255875155}
   - {fileID: 1541611832}
   - {fileID: 70413110}
+  - {fileID: 612453166}
