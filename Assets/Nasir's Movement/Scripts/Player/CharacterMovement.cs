@@ -144,7 +144,7 @@ public class CharacterMovement : MonoBehaviour
         jump.performed += ctx => WallJump();
 
         showDebugs.canceled += ctx => enableDebug = true;
-        ClearDebugs.performed += ctx => ClearDebugLog();
+        //ClearDebugs.performed += ctx => ClearDebugLog();
     }
 
     private void Update()
@@ -729,7 +729,7 @@ public class CharacterMovement : MonoBehaviour
         Debug.DrawRay(transform.position, Vector3.down * 2f, Color.cyan);
     }
 
-    private void ClearDebugLog()
+    /*private void ClearDebugLog()
     {
         enableDebug = false;
 
@@ -737,5 +737,5 @@ public class CharacterMovement : MonoBehaviour
         var type = assembly.GetType("UnityEditor.LogEntries");
         var method = type.GetMethod("Clear");
         method.Invoke(new object(), null);
-    }
+    }*/
 }

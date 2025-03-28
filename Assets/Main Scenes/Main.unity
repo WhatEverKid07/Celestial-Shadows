@@ -5608,7 +5608,7 @@ MonoBehaviour:
   coyoteTime: 0.2
   enableDash: 1
   dashPower: 3
-  DashTime: 0.5
+  dashTime: 0
   ignore:
     serializedVersion: 2
     m_Bits: 0
@@ -55634,7 +55634,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1718604470
 Transform:
   m_ObjectHideFlags: 0
@@ -56231,7 +56231,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6075469227038925212, guid: 0194e7bddc477da47a48c8c62c526d3e, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6850040371045126247, guid: 0194e7bddc477da47a48c8c62c526d3e, type: 3}
       propertyPath: m_IsActive

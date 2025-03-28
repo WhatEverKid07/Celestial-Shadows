@@ -6,6 +6,6 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Nasir's Movement/MovementTest.unity
-    guid: b52de676a2f81544ca5962fefbbc2853
+    path: Assets/Main Scenes/Main.unity
+    guid: aa6b80f577b47ac4f8136145678f6420
   m_configObjects: {}
