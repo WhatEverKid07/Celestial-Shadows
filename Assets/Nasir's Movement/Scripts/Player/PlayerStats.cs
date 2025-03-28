@@ -6,6 +6,7 @@ public class PlayerStats : MonoBehaviour
 {
     [Header("PlayerScripts")]
     [SerializeField] private CharacterMovement characterMoveScript;
+    [SerializeField] private WatchFunction watchFunctionScript;
 
     [Header("Stats")]
     //Syringe
@@ -54,6 +55,7 @@ public class PlayerStats : MonoBehaviour
 
     private void Start()
     {
+        watchFunctionScript = FindAnyObjectByType<WatchFunction>();
         walkSpeed = characterMoveScript.walkSpeed;
         runSpeed = characterMoveScript.runSpeed;
         dashCooldown = characterMoveScript.dashTime;
@@ -62,7 +64,7 @@ public class PlayerStats : MonoBehaviour
     {
         UpdateStatText();
 
-        if (watches.Count > 0)
+        if (watches.Count > 0 && watchFunctionScript.canUpdateWatchStat)
         {
             UpdateDashStat();
         }

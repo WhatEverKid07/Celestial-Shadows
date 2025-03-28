@@ -7,17 +7,18 @@ public class WatchFunction : MonoBehaviour
     [Header("Scripts")]
     [SerializeField] private PlayerStats playerStatsScript;
 
-    private bool canUpdateWatchStat;
+    internal bool canUpdateWatchStat;
     private void Start()
     {
         playerStatsScript.watches.Add(gameObject);
         canUpdateWatchStat = true;
 
-        Invoke(nameof(NoMoreUpdates), .1f);
+        Invoke(nameof(NoMoreUpdates), .01f);
     }
 
     private void NoMoreUpdates()
     {
         canUpdateWatchStat = false;
+        Destroy(this);
     }
 }
