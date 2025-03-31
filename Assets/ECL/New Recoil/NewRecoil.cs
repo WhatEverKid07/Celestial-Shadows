@@ -14,18 +14,26 @@ public class RecoilOnClick : MonoBehaviour
     [Header("How long is entire recoil sequence?")]
     public float TimeInterval = 0.25f;
 
+    [Header("How long is recovery sequence?")]
+    public float RecoveryTime = 0.25f;
+
     [Header("Which object is having its .localRotation driven.")]
     public Transform RecoilPivot;
 
-    public float recoiling;
+    private float recoiling;
+    private float recovering;
+    private Quaternion originalRotation;
+
+    void Start()
+    {
+        originalRotation = RecoilPivot.localRotation;
+    }
 
     void DriveRecoil(float fraction)
     {
         float up = RecoilUp.Evaluate(fraction);
         float right = RecoilRight.Evaluate(fraction);
 
-        // special number to FORCE you to have zero output when fraction is zero,
-        // to keep you from making borked curves and wondering WTF.
         if (fraction == 0)
         {
             up = 0;
@@ -40,7 +48,7 @@ public class RecoilOnClick : MonoBehaviour
 
     void Update()
     {
-        if (recoiling == 0)
+        if (recoiling == 0 && recovering == 0)
         {
             if (Input.GetKeyDown(KeyCode.Mouse0))
             {
@@ -51,15 +59,28 @@ public class RecoilOnClick : MonoBehaviour
         if (recoiling > 0)
         {
             float fraction = recoiling / TimeInterval;
-
             recoiling += Time.deltaTime;
             if (recoiling > TimeInterval)
             {
                 recoiling = 0;
-                fraction = 0;            // return to time = 0
+                fraction = 1;
+                recovering = Time.deltaTime; // Start recovery phase
             }
 
             DriveRecoil(fraction);
+        }
+        else if (recovering > 0)
+        {
+            float fraction = recovering / RecoveryTime;
+            recovering += Time.deltaTime;
+            if (recovering > RecoveryTime)
+            {
+                recovering = 0;
+                fraction = 1;
+            }
+
+            // Smoothly return to original rotation
+            RecoilPivot.localRotation = Quaternion.Lerp(RecoilPivot.localRotation, originalRotation, fraction);
         }
     }
 }

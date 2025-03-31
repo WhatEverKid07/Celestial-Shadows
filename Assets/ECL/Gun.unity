@@ -6774,7 +6774,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 991aaa922f9e05149ad93c18b35d6834, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  recoilForce: 0
+  recoilForce: 20
   RecoilUp:
     serializedVersion: 2
     m_Curve:
@@ -6823,9 +6823,9 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  TimeInterval: 0.25
+  TimeInterval: 0.15
+  RecoveryTime: 0.2
   RecoilPivot: {fileID: 5243526232364124461}
-  recoiling: 0
 --- !u!1 &5243860895400597908
 GameObject:
   m_ObjectHideFlags: 0
