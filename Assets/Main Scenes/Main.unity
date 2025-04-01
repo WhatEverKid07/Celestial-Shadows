@@ -82532,7 +82532,7 @@ MonoBehaviour:
   reloadTime: 4
   coneAngle: 12
   semiAutoShotDelay: 0.2
-  recoilForce: 40
+  recoilForce: 60
   RecoilUp:
     serializedVersion: 2
     m_Curve:
@@ -82558,7 +82558,7 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   TimeInterval: 0.25
-  RecoveryTime: 0.25
+  RecoveryTime: 0.5
   RecoilPivot: {fileID: 469407504545795852}
   bulletSpawn: {fileID: 1383062834853598749}
   projectilePrefab: {fileID: 8389032752471983072, guid: 671ba556310162e4686e41fb34948976, type: 3}
