@@ -17,6 +17,8 @@ public class NewShotgunScript : MonoBehaviour
     [SerializeField] private float reloadTime = 1f;
     [SerializeField] private float coneAngle;
     [SerializeField] private float semiAutoShotDelay = 0.2f;
+    [SerializeField] private float targetSightZoomFOV = 40f;
+    [SerializeField] private float zoomTransitionDuration = 1f;
 
     private bool isReloading = false;
     private bool canShoot = true;
@@ -53,6 +55,8 @@ public class NewShotgunScript : MonoBehaviour
     [SerializeField] private Animator secondAnimator;
     [SerializeField] private string nameOfReloadAnim;
     [SerializeField] private string nameOfShootTrigger;
+    [SerializeField] private string nameOfSightAnim;
+    [SerializeField] private string nameOfSightAnimReverse;
 
     [Space(20)]
     [Header("Effects")]
@@ -76,15 +80,16 @@ public class NewShotgunScript : MonoBehaviour
     private InputAction reload;
     private InputAction zoomInOrOut;
     private float currentConeAngle;
-    private bool canShootAnimation = true;
-
-    private Vector3 currentRecoil = Vector3.zero;
-    private Quaternion accumulatedRecoilRotation = Quaternion.identity;
+    private float originalFOV;
+    private Coroutine fovCoroutine;
+    public bool isSighted = false;
 
     private void Awake()
     {
         shoot = gunControls.FindActionMap("Gun Controls").FindAction("Shoot");
         reload = gunControls.FindActionMap("Gun Controls").FindAction("Reload");
+        zoomInOrOut = gunControls.FindActionMap("Gun Controls").FindAction("Zoom in/out");
+        originalFOV = playerCam ? playerCam.fieldOfView : Camera.main.fieldOfView;
 
         if (playerCam == null)
         {
@@ -106,6 +111,9 @@ public class NewShotgunScript : MonoBehaviour
     {
         shoot.Enable();
         reload.Enable();
+        zoomInOrOut.Enable();
+        zoomInOrOut.performed += StartSighting;
+        zoomInOrOut.canceled += StopSighting;
         isReloading = false;
         ammoText.gameObject.SetActive(true);
         UpdateAmmoText();
@@ -114,6 +122,9 @@ public class NewShotgunScript : MonoBehaviour
     {
         shoot.Disable();
         reload.Disable();
+        zoomInOrOut.Disable();
+        zoomInOrOut.performed -= StartSighting;
+        zoomInOrOut.canceled -= StopSighting;
         if (ammoText != null)
             ammoText.gameObject.SetActive(false);
     }
@@ -122,11 +133,11 @@ public class NewShotgunScript : MonoBehaviour
         if (!gameObject.activeInHierarchy)
             return;
 
-        if (reload.ReadValue<float>() > 0)
+        if (reload.ReadValue<float>() > 0 && !isSighted)
         {
             StartCoroutine(Reload());
         }
-        if (currentAmmo == 0 && !isReloading)
+        if (currentAmmo == 0 && !isReloading && !isSighted)
         {
             StartCoroutine(Reload());
         }
@@ -168,6 +179,7 @@ public class NewShotgunScript : MonoBehaviour
             }
         };
     }
+
     void Shoot()
     {
         // This is important to make semi auto work
@@ -205,14 +217,15 @@ public class NewShotgunScript : MonoBehaviour
     }
     IEnumerator Reload()
     {
+        yield return new WaitForSeconds(0.5f);
         isReloading = true;
         // gunAudioSource.PlayOneShot(reloadClip);
         // gun reload animation
         secondAnimator.Play(nameOfReloadAnim);
-        yield return new WaitForSeconds(reloadTime);
         currentAmmo = maxAmmo;
-        isReloading = false;
+        yield return new WaitForSeconds(reloadTime);
         UpdateAmmoText();
+        isReloading = false;
     }
     private Vector3 GetConeSpreadDirection(Vector3 forwardDirection, float maxAngle)
     {
@@ -228,6 +241,62 @@ public class NewShotgunScript : MonoBehaviour
         Quaternion rotation = Quaternion.LookRotation(forwardDirection);
         return (rotation * randomSpread).normalized;
     }
+
+    public void StartSighting(InputAction.CallbackContext zoom)
+    {
+        if (isReloading)
+            return;
+        isSighted = true;
+        characterMovement.canRun = false;
+        characterMovement.enableDash = false;
+        characterMovement.walkSpeed /= 3;
+        camMovement.fov = targetSightZoomFOV;
+        ChangeFOV(targetSightZoomFOV);
+        gunManager.canSwitch = false;
+        bob.bobForce = 0.0009f;
+        bob.bobSpeed = 2f;
+        if (secondAnimator != null)
+        {
+            secondAnimator.Play(nameOfSightAnim);
+        }
+    }
+    public void StopSighting(InputAction.CallbackContext zoom)
+    {
+        if (isReloading || !isSighted)
+            return;
+        isSighted = false;
+        characterMovement.canRun = true;
+        characterMovement.enableDash = true;
+        characterMovement.walkSpeed *= 3;
+        camMovement.fov = originalFOV;
+        ChangeFOV(originalFOV);
+        gunManager.canSwitch = true;
+        bob.bobForce = bob.originalBobForce;
+        bob.bobSpeed = bob.originalBobSpeed;
+        if (secondAnimator != null)
+        {
+            secondAnimator.Play(nameOfSightAnimReverse);
+        }
+    }
+    private void ChangeFOV(float newFOV)
+    {
+        if (fovCoroutine != null)
+            StopCoroutine(fovCoroutine);
+        fovCoroutine = StartCoroutine(SmoothFOVChange(newFOV));
+    }
+    private IEnumerator SmoothFOVChange(float newFOV)
+    {
+        float startFOV = playerCam.fieldOfView;
+        float elapsedTime = 0f;
+        while (elapsedTime < zoomTransitionDuration)
+        {
+            elapsedTime += Time.deltaTime;
+            playerCam.fieldOfView = Mathf.Lerp(startFOV, newFOV, elapsedTime / zoomTransitionDuration);
+            yield return null;
+        }
+        playerCam.fieldOfView = newFOV;
+    }
+
     void CanShootReset() { canShoot = true; }
     void UpdateAmmoText() { ammoText.text = currentAmmo.ToString() + " / " + maxAmmo.ToString(); }
 }
