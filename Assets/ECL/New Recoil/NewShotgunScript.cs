@@ -22,11 +22,6 @@ public class NewShotgunScript : MonoBehaviour
     private bool canShoot = true;
     private int currentAmmo;
 
-    private Vector3 accumulatedRecoil;
-    private Quaternion initialRotation;
-    private float recoilVelocityX, recoilVelocityY;
-    private Vector3 currentUpRecoil;
-    private Vector3 currentSideRecoil;
 
     [Space(20)]
     [Header("Recoil")]
@@ -213,7 +208,7 @@ public class NewShotgunScript : MonoBehaviour
         isReloading = true;
         // gunAudioSource.PlayOneShot(reloadClip);
         // gun reload animation
-        //if (nameOfReloadAnim != "") { secondAnimator.Play(nameOfReloadAnim); }
+        secondAnimator.Play(nameOfReloadAnim);
         yield return new WaitForSeconds(reloadTime);
         currentAmmo = maxAmmo;
         isReloading = false;

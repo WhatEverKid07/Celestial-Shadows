@@ -24223,7 +24223,7 @@ MonoBehaviour:
   cameraHolder: {fileID: 1561448234}
   playerCamera: {fileID: 1149627383}
   bobSpeed: 4
-  bobForce: 0.005
+  bobForce: 0.0005
   bobMulti: 1.2
 --- !u!4 &1149627383
 Transform:
@@ -59588,10 +59588,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 659698819389773902}
-  - component: {fileID: 8302426259440235882}
   - component: {fileID: 8302426259440235883}
+  - component: {fileID: 8302426259440235882}
   m_Layer: 0
-  m_Name: Sawed-Off-90
+  m_Name: Sawed-off-90
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -65358,7 +65358,7 @@ Transform:
   m_GameObject: {fileID: 1856159803647214194}
   serializedVersion: 2
   m_LocalRotation: {x: 0.7071066, y: -0.707107, z: -0.000000029802322, w: 0}
-  m_LocalPosition: {x: -0.05241991, y: -0.020079955, z: 0.07499991}
+  m_LocalPosition: {x: -0.24, y: -0.14, z: 0.051}
   m_LocalScale: {x: 3.0473342, y: 3.0473335, z: 3.0473335}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -82529,7 +82529,7 @@ MonoBehaviour:
   bob: {fileID: 1149627382}
   characterMovement: {fileID: 95148706}
   maxAmmo: 2
-  reloadTime: 4
+  reloadTime: 3.83
   coneAngle: 12
   semiAutoShotDelay: 0.2
   recoilForce: 60
@@ -82565,8 +82565,8 @@ MonoBehaviour:
   fireRate: 15
   bulletSpeed: 40
   animator: {fileID: 8302426259440235882}
-  secondAnimator: {fileID: 0}
-  nameOfReloadAnim: 
+  secondAnimator: {fileID: 8055139797850079107}
+  nameOfReloadAnim: ShotgunReload
   nameOfShootTrigger: Shoot
   playerCam: {fileID: 1149627380}
   ammoText: {fileID: 1947019102}
