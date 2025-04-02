@@ -46,7 +46,7 @@ public class CharacterMovement : MonoBehaviour
 
 
     [Header("Wall Running")]
-    [SerializeField] [Range(300, 500)] private float wallRunForce;
+    [SerializeField] [Range(300, 500)] internal float wallRunForce;
     [SerializeField] [Range(1.2f, 1.5f)] private float wallRunForceMulti;
     [SerializeField] [Range(1, 3)] private float wallRunTime;
     private float setWallRunTime;
@@ -102,7 +102,7 @@ public class CharacterMovement : MonoBehaviour
 
     [Header("Dashing")]
     [SerializeField] internal bool enableDash = true;
-    [SerializeField] [Range(1, 3)] private float dashPower;
+    [SerializeField] [Range(1, 3)] internal float dashPower;
     private bool canDash;
     private bool isDashing = false;
 

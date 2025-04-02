@@ -1,29 +1,27 @@
 using UnityEngine;
 
-public class WatchFunction : MonoBehaviour
+public class CrocsFunction : MonoBehaviour
 {
     [Header("Scripts")]
     [SerializeField] private PlayerStats playerStatsScript;
 
-    [Header("Watch")]
-    private GameObject clock;
-    private GameObject chain;
-    private GameObject time;
+    [Header("Croc")]
+    private GameObject croc1;
+    private GameObject croc2;
 
     private float rotationSpeed = 30f;
-    private float bobbingAmplitude = 0.1f;  
-    private float bobbingFrequency = 1f;   
+    private float bobbingAmplitude = 0.1f;
+    private float bobbingFrequency = 1f;
     private float originalYPosition;
 
-    internal bool canUpdateWatchStat;
+    internal bool canUpdateCrocStat;
 
     private void Start()
     {
         playerStatsScript = FindAnyObjectByType<PlayerStats>();
 
-        clock = GameObject.Find("clock");
-        chain = GameObject.Find("chain");
-        time = GameObject.Find("time");
+        croc1 = GameObject.Find("Croc1");
+        croc2 = GameObject.Find("Croc2");
 
         originalYPosition = transform.position.y;
     }
@@ -32,20 +30,21 @@ public class WatchFunction : MonoBehaviour
     {
         transform.Rotate(Vector3.up, rotationSpeed * Time.deltaTime);
 
-        float newY = originalYPosition + (Mathf.Sin(Time.time * bobbingFrequency) * bobbingAmplitude);
+        float newY = originalYPosition + (Mathf.Cos(Time.time * bobbingFrequency) * bobbingAmplitude);
         transform.position = new Vector3(transform.position.x, newY, transform.position.z);
+
+        Debug.Log(transform.position.y);
     }
 
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject == GameObject.Find("PlayerPhys"))
         {
-            playerStatsScript.watches.Add(gameObject);
-            canUpdateWatchStat = true;
+            playerStatsScript.crocs.Add(gameObject);
+            canUpdateCrocStat = true;
 
-            clock?.SetActive(false);
-            chain?.SetActive(false);
-            time?.SetActive(false);
+            croc1?.SetActive(false);
+            croc2?.SetActive(false);
 
             //Invoke(nameof(NoMoreUpdates), .0001f);
         }
@@ -53,7 +52,7 @@ public class WatchFunction : MonoBehaviour
 
     private void NoMoreUpdates()
     {
-        canUpdateWatchStat = false;
+        canUpdateCrocStat = false;
         Destroy(this);
     }
 }
