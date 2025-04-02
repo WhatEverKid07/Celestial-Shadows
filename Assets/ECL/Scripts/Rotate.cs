@@ -16,7 +16,6 @@ public class Rotate : MonoBehaviour
         if (canSpin)
         {
             gameObject.transform.Rotate(universalSpeed * speedX * Time.deltaTime, universalSpeed * speedY * Time.deltaTime, universalSpeed * speedZ * Time.deltaTime);
-            Debug.Log("Spinning");
         }
     }
 }

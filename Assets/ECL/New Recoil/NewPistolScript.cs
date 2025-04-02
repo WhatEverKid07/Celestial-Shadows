@@ -56,6 +56,7 @@ public class NewPistolScript : MonoBehaviour
     [Header("Animation")]
     [SerializeField] private Animator animator;
     [SerializeField] private string nameOfShootTrigger;
+    [SerializeField] private string nameOfReloadTrigger;
 
     [Space(20)]
     [Header("Effects")]
@@ -211,6 +212,7 @@ public class NewPistolScript : MonoBehaviour
         isReloading = true;
         // gunAudioSource.PlayOneShot(reloadClip);
         // gun reload animation
+        if (animator != null && nameOfReloadTrigger != "") { animator.SetTrigger(nameOfReloadTrigger); }
         yield return new WaitForSeconds(reloadTime);
         currentAmmo = maxAmmo;
         isReloading = false;

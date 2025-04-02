@@ -916,58 +916,6 @@ Transform:
   - {fileID: 251553593}
   m_Father: {fileID: 1037501037}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &701888656
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 919132149577292013}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: da2ac12809156bc4f9afc6ff3c393194, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  camMovement: {fileID: 0}
-  camController: {fileID: 1061397736}
-  gunManager: {fileID: 1852618748}
-  bob: {fileID: 0}
-  characterMovement: {fileID: 0}
-  maxAmmo: 30
-  shootHowManyBullets: 1
-  reloadTime: 1
-  automatic: 1
-  upRecoil: {x: 0.7, y: 0, z: 0}
-  sideRecoil: {x: 0, y: 1, z: 0}
-  recoilSmoothTime: 500
-  recoilResetSpeed: 5
-  recoilIncreaseMultiplier: 1.2
-  semiAutoShotDelay: 0.3
-  coneAngle: 1
-  useSight: 0
-  bulletSpawn: {fileID: 26827960}
-  projectilePrefab: {fileID: 62845616038060607, guid: e17c8dcf082fe794192f1e1e88065e15, type: 3}
-  fireRate: 10
-  bulletSpeed: 70
-  animator: {fileID: 0}
-  secondAnimator: {fileID: 0}
-  nameOfShootTrigger: 
-  nameOfSightAnim: 
-  nameOfSightAnimReverse: 
-  nameOfTriggerBool: 
-  nameOfReloadAnim: 
-  playerCam: {fileID: 1061397732}
-  muzzleFlash: {fileID: 8678384888514912178}
-  ammoText: {fileID: 1485698973}
-  gunAudioSource: {fileID: 1284785367}
-  shootClip: {fileID: 8300000, guid: 524d2ffc2d49a8d48ba43f6ec43b779a, type: 3}
-  reloadClip: {fileID: 0}
-  gunControls: {fileID: -944628639613478452, guid: 9269ee16b3aa1f0448f0710a2c982dcc, type: 3}
-  targetZoomFOV: 40
-  transitionDuration: 1
-  rotationX: 0
-  rotationY: 0
-  rotationZ: 0
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0
@@ -1347,6 +1295,38 @@ Transform:
   - {fileID: 1915477032}
   m_Father: {fileID: 2084525962}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &997754216
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 997754217}
+  m_Layer: 0
+  m_Name: AR
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &997754217
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 997754216}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.0489, y: -0.0262, z: 0.0634}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 543450653310206551}
+  m_Father: {fileID: 1061397734}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1037501036
 GameObject:
   m_ObjectHideFlags: 0
@@ -1470,7 +1450,7 @@ Transform:
   m_LocalScale: {x: 4, y: 4, z: 4}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 543450653310206551}
+  - {fileID: 997754217}
   - {fileID: 8154291078226471150}
   - {fileID: 2043171946}
   - {fileID: 4227112714691719764}
@@ -3751,8 +3731,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 919132149577292013}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.6883546, y: 0, z: 0, w: 0.72537434}
-  m_LocalPosition: {x: 0.0496, y: -0.023, z: 0.0823}
+  m_LocalRotation: {x: -0.6883546, y: -0, z: -0, w: 0.72537434}
+  m_LocalPosition: {x: 0.0007000044, y: 0.0031999983, z: 0.018899947}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -3761,7 +3741,7 @@ Transform:
   - {fileID: 26827961}
   - {fileID: 8678384888533261042}
   - {fileID: 319609858}
-  m_Father: {fileID: 1061397734}
+  m_Father: {fileID: 997754217}
   m_LocalEulerAnglesHint: {x: -87, y: 0, z: 0}
 --- !u!137 &549095913738107680
 SkinnedMeshRenderer:
@@ -4104,14 +4084,76 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 543450653310206551}
-  - component: {fileID: 701888656}
+  - component: {fileID: 919132149577292014}
   m_Layer: 0
   m_Name: Machinegun
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
+--- !u!114 &919132149577292014
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 919132149577292013}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f8a3daa9b614d8746b2f43a7c5adb31d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  camMovement: {fileID: 0}
+  camController: {fileID: 1061397736}
+  gunManager: {fileID: 1852618748}
+  bob: {fileID: 0}
+  characterMovement: {fileID: 0}
+  maxAmmo: 30
+  reloadTime: 1
+  coneAngle: 0
+  semiAutoShotDelay: 0.2
+  recoilForce: 20
+  RecoilUp:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 1
+      outSlope: 1
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 1
+      outSlope: 1
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  TimeInterval: 0.25
+  RecoveryTime: 0.25
+  RecoilPivot: {fileID: 997754217}
+  bulletSpawn: {fileID: 26827960}
+  projectilePrefab: {fileID: 62845616038060607, guid: e17c8dcf082fe794192f1e1e88065e15, type: 3}
+  fireRate: 10
+  bulletSpeed: 20
+  animator: {fileID: 0}
+  nameOfShootTrigger: 
+  nameOfReloadTrigger: 
+  playerCam: {fileID: 1061397732}
+  ammoText: {fileID: 1485698973}
+  gunAudioSource: {fileID: 1284785367}
+  shootClip: {fileID: 8300000, guid: 524d2ffc2d49a8d48ba43f6ec43b779a, type: 3}
+  reloadClip: {fileID: 8300000, guid: 524d2ffc2d49a8d48ba43f6ec43b779a, type: 3}
+  gunControls: {fileID: -944628639613478452, guid: 9269ee16b3aa1f0448f0710a2c982dcc, type: 3}
 --- !u!1 &942950409748480568
 GameObject:
   m_ObjectHideFlags: 0
@@ -12912,6 +12954,7 @@ MonoBehaviour:
   bulletSpeed: 50
   animator: {fileID: 1956394457124048030}
   nameOfShootTrigger: Shoot
+  nameOfReloadTrigger: 
   playerCam: {fileID: 1061397732}
   ammoText: {fileID: 2030224535}
   gunAudioSource: {fileID: 1284785367}
@@ -43029,7 +43072,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &8672579178824070959
 GameObject:
   m_ObjectHideFlags: 0
