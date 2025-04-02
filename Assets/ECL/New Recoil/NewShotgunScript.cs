@@ -65,6 +65,7 @@ public class NewShotgunScript : MonoBehaviour
     [Space(20)]
     [Header("UI")]
     [SerializeField] private Text ammoText;
+    [SerializeField] private GameObject crosshair;
 
     [Space(20)]
     [Header("Audio")]
@@ -82,7 +83,7 @@ public class NewShotgunScript : MonoBehaviour
     private float currentConeAngle;
     private float originalFOV;
     private Coroutine fovCoroutine;
-    public bool isSighted = false;
+    private bool isSighted = false;
 
     private void Awake()
     {
@@ -217,8 +218,8 @@ public class NewShotgunScript : MonoBehaviour
     }
     IEnumerator Reload()
     {
-        yield return new WaitForSeconds(0.5f);
         isReloading = true;
+        yield return new WaitForSeconds(0.5f);
         // gunAudioSource.PlayOneShot(reloadClip);
         // gun reload animation
         secondAnimator.Play(nameOfReloadAnim);
@@ -247,6 +248,7 @@ public class NewShotgunScript : MonoBehaviour
         if (isReloading)
             return;
         isSighted = true;
+        crosshair.SetActive(false);
         characterMovement.canRun = false;
         characterMovement.enableDash = false;
         characterMovement.walkSpeed /= 3;
@@ -265,6 +267,7 @@ public class NewShotgunScript : MonoBehaviour
         if (isReloading || !isSighted)
             return;
         isSighted = false;
+        crosshair.SetActive(true);
         characterMovement.canRun = true;
         characterMovement.enableDash = true;
         characterMovement.walkSpeed *= 3;

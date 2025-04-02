@@ -4113,7 +4113,9 @@ MonoBehaviour:
   reloadTime: 1
   coneAngle: 0
   semiAutoShotDelay: 0.2
-  recoilForce: 20
+  targetSightZoomFOV: 40
+  zoomTransitionDuration: 1
+  recoilForce: 2
   RecoilUp:
     serializedVersion: 2
     m_Curve:
@@ -4138,16 +4140,22 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  TimeInterval: 0.25
-  RecoveryTime: 0.25
+  TimeInterval: 0.5
+  RecoveryTime: 2
   RecoilPivot: {fileID: 997754217}
+  recoilAmount: 0
+  maxRecoil: 15
+  fraction: 0
   bulletSpawn: {fileID: 26827960}
   projectilePrefab: {fileID: 62845616038060607, guid: e17c8dcf082fe794192f1e1e88065e15, type: 3}
   fireRate: 10
   bulletSpeed: 20
   animator: {fileID: 0}
+  secondAnimator: {fileID: 0}
+  nameOfReloadAnim: 
   nameOfShootTrigger: 
-  nameOfReloadTrigger: 
+  nameOfSightAnim: 
+  nameOfSightAnimReverse: 
   playerCam: {fileID: 1061397732}
   ammoText: {fileID: 1485698973}
   gunAudioSource: {fileID: 1284785367}

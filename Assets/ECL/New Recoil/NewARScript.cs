@@ -16,33 +16,27 @@ public class NewARScript : MonoBehaviour
     [SerializeField] private int maxAmmo = 30;
     [SerializeField] private float reloadTime = 1f;
     [SerializeField] private float coneAngle;
-    [SerializeField] private float semiAutoShotDelay = 0.2f;
+    [SerializeField] private float targetSightZoomFOV = 40f;
+    [SerializeField] private float zoomTransitionDuration = 1f;
 
     private bool isReloading = false;
     private bool canShoot = true;
     private int currentAmmo;
 
-    private Vector3 accumulatedRecoil;
-    private Quaternion initialRotation;
-    private float recoilVelocityX, recoilVelocityY;
-    private Vector3 currentUpRecoil;
-    private Vector3 currentSideRecoil;
 
     [Space(20)]
     [Header("Recoil")]
     [SerializeField] private float recoilForce;
     [SerializeField] private AnimationCurve RecoilUp;
-    [Tooltip("How long is entire recoil sequence?")]
-    [SerializeField] private float TimeInterval = 0.25f;
     [Tooltip("How long is recovery sequence?")]
     [SerializeField] private float RecoveryTime = 0.25f;
     [Tooltip("Which object is having its .localRotation driven.")]
     [SerializeField] private Transform RecoilPivot;
+    [SerializeField] private float maxRecoil = 15f;
 
-    private float recoiling;
-    private float recovering;
-    private Quaternion originalRotation;
-    private Quaternion targetRotation;
+    public float fraction;
+    private bool isFiring = false;
+    private float recoilAmount = 0f;
 
     [Space(20)]
     [Header("Shooting Attributes")]
@@ -56,8 +50,12 @@ public class NewARScript : MonoBehaviour
     [Space(20)]
     [Header("Animation")]
     [SerializeField] private Animator animator;
-    [SerializeField] private string nameOfShootTrigger;
-    [SerializeField] private string nameOfReloadTrigger;
+    [SerializeField] private Animator secondAnimator;
+    [SerializeField] private string nameOfReloadAnim;
+    [SerializeField] private string nameOfSightAnim;
+    [SerializeField] private string nameOfSightAnimReverse;
+    [SerializeField] private string nameOfTriggerBool;
+    [SerializeField] private string nameOfTriggerTrigger;
 
     [Space(20)]
     [Header("Effects")]
@@ -66,6 +64,7 @@ public class NewARScript : MonoBehaviour
     [Space(20)]
     [Header("UI")]
     [SerializeField] private Text ammoText;
+    [SerializeField] private GameObject crosshair;
 
     [Space(20)]
     [Header("Audio")]
@@ -81,34 +80,39 @@ public class NewARScript : MonoBehaviour
     private InputAction reload;
     private InputAction zoomInOrOut;
     private float currentConeAngle;
+    private float originalFOV;
+    private Coroutine fovCoroutine;
+    private bool isSighted = false;
     private bool canShootAnimation = true;
-
-    private Vector3 currentRecoil = Vector3.zero;
-    private Quaternion accumulatedRecoilRotation = Quaternion.identity;
 
     private void Awake()
     {
         shoot = gunControls.FindActionMap("Gun Controls").FindAction("Shoot");
         reload = gunControls.FindActionMap("Gun Controls").FindAction("Reload");
+        zoomInOrOut = gunControls.FindActionMap("Gun Controls").FindAction("Zoom in/out");
+        originalFOV = playerCam ? playerCam.fieldOfView : Camera.main.fieldOfView;
 
-        if (playerCam == null) { playerCam = Camera.main; }
+        if (playerCam == null)
+        {
+            playerCam = Camera.main;
+        }
     }
     void Start()
     {
-        originalRotation = RecoilPivot.localRotation;
-        targetRotation = originalRotation;
         currentConeAngle = coneAngle;
-
         currentAmmo = maxAmmo;
         UpdateAmmoText();
-
         shoot.Enable();
         reload.Enable();
+        crosshair.SetActive(true);
     }
     void OnEnable()
     {
         shoot.Enable();
         reload.Enable();
+        zoomInOrOut.Enable();
+        zoomInOrOut.performed += StartSighting;
+        zoomInOrOut.canceled += StopSighting;
         isReloading = false;
         ammoText.gameObject.SetActive(true);
         UpdateAmmoText();
@@ -117,6 +121,9 @@ public class NewARScript : MonoBehaviour
     {
         shoot.Disable();
         reload.Disable();
+        zoomInOrOut.Disable();
+        zoomInOrOut.performed -= StartSighting;
+        zoomInOrOut.canceled -= StopSighting;
         if (ammoText != null)
             ammoText.gameObject.SetActive(false);
     }
@@ -124,76 +131,113 @@ public class NewARScript : MonoBehaviour
     {
         if (!gameObject.activeInHierarchy) return;
 
-        if (reload.ReadValue<float>() > 0) StartCoroutine(Reload());
-        if (currentAmmo == 0 && !isReloading) StartCoroutine(Reload());
+        if (reload.ReadValue<float>() > 0 && !isSighted) StartCoroutine(Reload());
+        if (currentAmmo == 0 && !isReloading && !isSighted) StartCoroutine(Reload());
+        if (!isFiring && recoilAmount > 0)
+        {
+            recoilAmount = Mathf.MoveTowards(recoilAmount, 0, RecoveryTime * Time.deltaTime);
+            ApplyRecoil();
+        }
 
         if (isReloading) return;
-
         if (shoot.ReadValue<float>() > 0 && Time.time >= nextTimeToFire)
         {
-            nextTimeToFire = Time.time + (1f / fireRate);
+            nextTimeToFire = Time.time + 1f / fireRate;
             Shoot();
+            if (nameOfTriggerBool != "" && canShootAnimation)
+            {
+                canShootAnimation = false;
+                animator.SetTrigger(nameOfTriggerTrigger);
+                animator.SetBool(nameOfTriggerBool, true);
+            }
         }
-        HandleRecoil();
+        else {isFiring = false;}
+
+        shoot.canceled += ctx => {
+            if (nameOfTriggerBool != "")
+            { animator.SetBool(nameOfTriggerBool, false); canShootAnimation = true; }
+        };
+    }
+    public void StartSighting(InputAction.CallbackContext zoom)
+    {
+        if (isReloading)
+            return;
+        isSighted = true;
+        crosshair.SetActive(false);
+        characterMovement.canRun = false;
+        characterMovement.enableDash = false;
+        characterMovement.walkSpeed /= 3;
+        camMovement.fov = targetSightZoomFOV;
+        ChangeFOV(targetSightZoomFOV);
+        gunManager.canSwitch = false;
+        bob.bobForce = 0.0009f;
+        bob.bobSpeed = 2f;
+        if (secondAnimator != null)
+        {
+            secondAnimator.Play(nameOfSightAnim);
+        }
+    }
+    public void StopSighting(InputAction.CallbackContext zoom)
+    {
+        if (isReloading || !isSighted)
+            return;
+        isSighted = false;
+        crosshair.SetActive(true);
+        characterMovement.canRun = true;
+        characterMovement.enableDash = true;
+        characterMovement.walkSpeed *= 3;
+        camMovement.fov = originalFOV;
+        ChangeFOV(originalFOV);
+        gunManager.canSwitch = true;
+        bob.bobForce = bob.originalBobForce;
+        bob.bobSpeed = bob.originalBobSpeed;
+        if (secondAnimator != null)
+        {
+            secondAnimator.Play(nameOfSightAnimReverse);
+        }
     }
     void Shoot()
     {
-        if (currentAmmo <= 0) return;
-        currentAmmo--;
-        UpdateAmmoText();
-        gunAudioSource.PlayOneShot(shootClip);
-        if (animator) animator.SetTrigger(nameOfShootTrigger);
+        if (currentAmmo > 0 && !isReloading)
+        {
+            gunAudioSource.PlayOneShot(shootClip);
+            camController.GunController();
+            currentAmmo--;
+            UpdateAmmoText();
 
-        // Fire Bullet
-        GameObject projectile = Instantiate(projectilePrefab, bulletSpawn.transform.position, bulletSpawn.transform.rotation);
-        Rigidbody rb = projectile.GetComponent<Rigidbody>();
-        rb.velocity = bulletSpawn.transform.forward * bulletSpeed;
+            isFiring = true;
 
-        // Apply Recoil
-        accumulatedRecoil += Vector3.up * recoilForce;
-        recoiling = 0f;
+            recoilAmount = Mathf.Min(recoilAmount + recoilForce, maxRecoil);
+            ApplyRecoil();
+
+            GameObject projectile = Instantiate(projectilePrefab, bulletSpawn.transform.position, bulletSpawn.transform.rotation);
+            Rigidbody rb = projectile.GetComponent<Rigidbody>();
+            rb.velocity = GetConeSpreadDirection(bulletSpawn.transform.forward, currentConeAngle) * bulletSpeed;
+        }
     }
-    void HandleRecoil()
+    void ApplyRecoil()
     {
-        if (recoiling < TimeInterval)
-        {
-            recoiling += Time.deltaTime;
-            float fraction = recoiling / TimeInterval;
-            float up = -RecoilUp.Evaluate(fraction) * recoilForce;
-            targetRotation = Quaternion.Euler(up, 0, 0) * originalRotation;
-        }
-        else if (recovering < RecoveryTime)
-        {
-            recovering += Time.deltaTime;
-            float fraction = recovering / RecoveryTime;
-            targetRotation = Quaternion.Lerp(targetRotation, originalRotation, fraction);
-        }
-        else
-        {
-            recovering = 0f;
-            accumulatedRecoil = Vector3.zero;
-            targetRotation = originalRotation;
-        }
-
-        RecoilPivot.localRotation = Quaternion.Lerp(RecoilPivot.localRotation, targetRotation, Time.deltaTime * 10f);
+        float up = -recoilAmount;
+        RecoilPivot.localRotation = Quaternion.Euler(up, 0, 0);
     }
     IEnumerator Reload()
     {
         isReloading = true;
+        isFiring = false;
+        yield return new WaitForSeconds(0.5f);
         // gunAudioSource.PlayOneShot(reloadClip);
         // gun reload animation
-        if (animator != null && nameOfReloadTrigger != "") { animator.SetTrigger(nameOfReloadTrigger); }
-        yield return new WaitForSeconds(reloadTime);
+        //if (nameOfReloadAnim != "") { secondAnimator.Play(nameOfReloadAnim); }
         currentAmmo = maxAmmo;
-        isReloading = false;
+        yield return new WaitForSeconds(reloadTime);
         UpdateAmmoText();
+        isReloading = false;
     }
     private Vector3 GetConeSpreadDirection(Vector3 forwardDirection, float maxAngle)
     {
         float maxAngleRad = maxAngle * Mathf.Deg2Rad;
         float randomAngle = Random.Range(0, 2 * Mathf.PI);
         float randomRadius = Mathf.Sin(maxAngleRad) * Random.Range(0f, 1f);
-
         Vector3 randomSpread = new Vector3(
             randomRadius * Mathf.Cos(randomAngle),
             randomRadius * Mathf.Sin(randomAngle),
@@ -202,6 +246,23 @@ public class NewARScript : MonoBehaviour
         Quaternion rotation = Quaternion.LookRotation(forwardDirection);
         return (rotation * randomSpread).normalized;
     }
-    void CanShootReset() { canShoot = true; }
+    private void ChangeFOV(float newFOV)
+    {
+        if (fovCoroutine != null)
+            StopCoroutine(fovCoroutine);
+        fovCoroutine = StartCoroutine(SmoothFOVChange(newFOV));
+    }
+    private IEnumerator SmoothFOVChange(float newFOV)
+    {
+        float startFOV = playerCam.fieldOfView;
+        float elapsedTime = 0f;
+        while (elapsedTime < zoomTransitionDuration)
+        {
+            elapsedTime += Time.deltaTime;
+            playerCam.fieldOfView = Mathf.Lerp(startFOV, newFOV, elapsedTime / zoomTransitionDuration);
+            yield return null;
+        }
+        playerCam.fieldOfView = newFOV;
+    }
     void UpdateAmmoText() { ammoText.text = currentAmmo.ToString() + " / " + maxAmmo.ToString(); }
 }
