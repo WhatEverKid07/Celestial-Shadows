@@ -5,13 +5,18 @@ using UnityEngine;
 public class Rotate : MonoBehaviour
 {
     [SerializeField] float universalSpeed;
+    [SerializeField] bool canSpin = true;
     [Space(25)]
     [SerializeField] float speedX;
     [SerializeField] float speedY;
     [SerializeField] float speedZ;
   
-    void Update()
+    private void Update()
     {
-        transform.Rotate(universalSpeed * speedX * Time.deltaTime, universalSpeed * speedY * Time.deltaTime, universalSpeed * speedZ * Time.deltaTime);
+        if (canSpin)
+        {
+            gameObject.transform.Rotate(universalSpeed * speedX * Time.deltaTime, universalSpeed * speedY * Time.deltaTime, universalSpeed * speedZ * Time.deltaTime);
+            Debug.Log("Spinning");
+        }
     }
 }
