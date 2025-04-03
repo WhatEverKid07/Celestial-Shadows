@@ -64,7 +64,7 @@ public class NewARScript : MonoBehaviour
     [Space(20)]
     [Header("UI")]
     [SerializeField] private Text ammoText;
-    [SerializeField] private GameObject crosshair;
+    //[SerializeField] private GameObject crosshair;
 
     [Space(20)]
     [Header("Audio")]
@@ -80,6 +80,7 @@ public class NewARScript : MonoBehaviour
     private InputAction reload;
     private InputAction zoomInOrOut;
     private float currentConeAngle;
+    private float currentRecoilForce;
     private float originalFOV;
     private Coroutine fovCoroutine;
     private bool isSighted = false;
@@ -100,11 +101,12 @@ public class NewARScript : MonoBehaviour
     void Start()
     {
         currentConeAngle = coneAngle;
+        currentRecoilForce = recoilForce;
         currentAmmo = maxAmmo;
         UpdateAmmoText();
         shoot.Enable();
         reload.Enable();
-        crosshair.SetActive(true);
+        //crosshair.SetActive(true);
     }
     void OnEnable()
     {
@@ -163,11 +165,13 @@ public class NewARScript : MonoBehaviour
         if (isReloading)
             return;
         isSighted = true;
-        crosshair.SetActive(false);
+        //crosshair.SetActive(false);
         characterMovement.canRun = false;
         characterMovement.enableDash = false;
         characterMovement.walkSpeed /= 3;
         camMovement.fov = targetSightZoomFOV;
+        currentConeAngle = 0.5f;
+        currentRecoilForce /= 1.5f; 
         ChangeFOV(targetSightZoomFOV);
         gunManager.canSwitch = false;
         bob.bobForce = 0.0009f;
@@ -182,11 +186,13 @@ public class NewARScript : MonoBehaviour
         if (isReloading || !isSighted)
             return;
         isSighted = false;
-        crosshair.SetActive(true);
+        //crosshair.SetActive(true);
         characterMovement.canRun = true;
         characterMovement.enableDash = true;
         characterMovement.walkSpeed *= 3;
         camMovement.fov = originalFOV;
+        currentConeAngle = coneAngle;
+        currentRecoilForce = recoilForce;
         ChangeFOV(originalFOV);
         gunManager.canSwitch = true;
         bob.bobForce = bob.originalBobForce;
@@ -207,7 +213,7 @@ public class NewARScript : MonoBehaviour
 
             isFiring = true;
 
-            recoilAmount = Mathf.Min(recoilAmount + recoilForce, maxRecoil);
+            recoilAmount = Mathf.Min(recoilAmount + currentRecoilForce, maxRecoil);
             ApplyRecoil();
 
             GameObject projectile = Instantiate(projectilePrefab, bulletSpawn.transform.position, bulletSpawn.transform.rotation);
