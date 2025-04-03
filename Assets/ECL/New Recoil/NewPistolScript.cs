@@ -22,12 +22,6 @@ public class NewPistolScript : MonoBehaviour
     private bool canShoot = true;
     private int currentAmmo;
 
-    private Vector3 accumulatedRecoil;
-    private Quaternion initialRotation;
-    private float recoilVelocityX, recoilVelocityY;
-    private Vector3 currentUpRecoil;
-    private Vector3 currentSideRecoil;
-
     [Space(20)]
     [Header("Recoil")]
     [SerializeField] private float recoilForce;

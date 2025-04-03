@@ -81,6 +81,7 @@ public class NewShotgunScript : MonoBehaviour
     private InputAction reload;
     private InputAction zoomInOrOut;
     private float currentConeAngle;
+    private float currentRecoilForce;
     private float originalFOV;
     private Coroutine fovCoroutine;
     private bool isSighted = false;
@@ -101,7 +102,7 @@ public class NewShotgunScript : MonoBehaviour
     {
         originalRotation = RecoilPivot.localRotation;
         currentConeAngle = coneAngle;
-
+        currentRecoilForce = recoilForce;
         currentAmmo = maxAmmo;
         UpdateAmmoText();
 
@@ -212,7 +213,7 @@ public class NewShotgunScript : MonoBehaviour
         {
             up = 0;
         }
-        up *= recoilForce;
+        up *= currentRecoilForce;
         up = -up;
         RecoilPivot.localRotation = Quaternion.Euler(up, 0, 0);
     }
@@ -253,6 +254,7 @@ public class NewShotgunScript : MonoBehaviour
         characterMovement.enableDash = false;
         characterMovement.walkSpeed /= 3;
         camMovement.fov = targetSightZoomFOV;
+        currentRecoilForce /= 2f;
         ChangeFOV(targetSightZoomFOV);
         gunManager.canSwitch = false;
         bob.bobForce = 0.0009f;
@@ -266,12 +268,12 @@ public class NewShotgunScript : MonoBehaviour
     {
         if (isReloading || !isSighted)
             return;
-        isSighted = false;
         //crosshair.SetActive(true);
         characterMovement.canRun = true;
         characterMovement.enableDash = true;
         characterMovement.walkSpeed *= 3;
         camMovement.fov = originalFOV;
+        currentRecoilForce = recoilForce;
         ChangeFOV(originalFOV);
         gunManager.canSwitch = true;
         bob.bobForce = bob.originalBobForce;
@@ -280,6 +282,12 @@ public class NewShotgunScript : MonoBehaviour
         {
             secondAnimator.Play(nameOfSightAnimReverse);
         }
+        StartCoroutine(SightedBool());
+    }
+    private IEnumerator SightedBool()
+    {
+        yield return new WaitForSeconds(0.3f);
+        isSighted = false;
     }
     private void ChangeFOV(float newFOV)
     {

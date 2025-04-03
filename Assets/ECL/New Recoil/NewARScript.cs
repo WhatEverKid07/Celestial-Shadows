@@ -185,7 +185,6 @@ public class NewARScript : MonoBehaviour
     {
         if (isReloading || !isSighted)
             return;
-        isSighted = false;
         //crosshair.SetActive(true);
         characterMovement.canRun = true;
         characterMovement.enableDash = true;
@@ -201,6 +200,12 @@ public class NewARScript : MonoBehaviour
         {
             secondAnimator.Play(nameOfSightAnimReverse);
         }
+        StartCoroutine(SightedBool());
+    }
+    private IEnumerator SightedBool()
+    {
+        yield return new WaitForSeconds(0.5f);
+        isSighted = false;
     }
     void Shoot()
     {
