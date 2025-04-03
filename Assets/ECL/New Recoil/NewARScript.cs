@@ -133,7 +133,7 @@ public class NewARScript : MonoBehaviour
     {
         if (!gameObject.activeInHierarchy) return;
 
-        if (reload.ReadValue<float>() > 0 && !isSighted) StartCoroutine(Reload());
+        if (reload.ReadValue<float>() > 0 && !isSighted && currentAmmo < maxAmmo) StartCoroutine(Reload());
         if (currentAmmo == 0 && !isReloading && !isSighted) StartCoroutine(Reload());
         if (!isFiring && recoilAmount > 0)
         {
@@ -230,10 +230,9 @@ public class NewARScript : MonoBehaviour
     {
         isReloading = true;
         isFiring = false;
-        yield return new WaitForSeconds(0.5f);
+        if (nameOfReloadAnim != "") { secondAnimator.Play(nameOfReloadAnim); }
         // gunAudioSource.PlayOneShot(reloadClip);
         // gun reload animation
-        //if (nameOfReloadAnim != "") { secondAnimator.Play(nameOfReloadAnim); }
         currentAmmo = maxAmmo;
         yield return new WaitForSeconds(reloadTime);
         UpdateAmmoText();

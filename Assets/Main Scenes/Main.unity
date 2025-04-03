@@ -17282,7 +17282,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &655801312
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -17296,11 +17296,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   weapons:
-  - {fileID: 1718604469}
-  - {fileID: 289504639}
+  - {fileID: 6974583060083992302}
   - {fileID: 2128121311}
   - {fileID: 760253751776739250}
-  - {fileID: 0}
+  - {fileID: 7426438251937030088}
   - {fileID: 623258873}
   gunControls: {fileID: -944628639613478452, guid: 9269ee16b3aa1f0448f0710a2c982dcc, type: 3}
 --- !u!4 &655801313
@@ -56743,6 +56742,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bb5e4e1431789fe4796b22239ad01b79, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  gunManager: {fileID: 655801312}
   animator: {fileID: 1998094102}
   controls: {fileID: -944628639613478452, guid: 9269ee16b3aa1f0448f0710a2c982dcc, type: 3}
   attackAnims:
@@ -98584,7 +98584,7 @@ MonoBehaviour:
   bob: {fileID: 1149627382}
   characterMovement: {fileID: 95148706}
   maxAmmo: 30
-  reloadTime: 2
+  reloadTime: 4.4
   coneAngle: 4
   targetSightZoomFOV: 40
   zoomTransitionDuration: 0.5
@@ -98623,7 +98623,7 @@ MonoBehaviour:
   bulletSpeed: 20
   animator: {fileID: 5989909831122532417}
   secondAnimator: {fileID: 8895490881813402886}
-  nameOfReloadAnim: 
+  nameOfReloadAnim: AR_Reload
   nameOfSightAnim: InSightAR
   nameOfSightAnimReverse: InSightAR Reverse
   nameOfTriggerBool: Shooting
@@ -106096,7 +106096,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &6975653905637289109
 GameObject:
   m_ObjectHideFlags: 0
@@ -106604,7 +106604,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &7428057511053916689
 Transform:
   m_ObjectHideFlags: 0
@@ -112810,7 +112810,6 @@ MonoBehaviour:
   nameOfSightAnimReverse: InSightShotgunReverse
   playerCam: {fileID: 1149627380}
   ammoText: {fileID: 1947019102}
-  crosshair: {fileID: 0}
   gunAudioSource: {fileID: 1792891839}
   shootClip: {fileID: 8300000, guid: 524d2ffc2d49a8d48ba43f6ec43b779a, type: 3}
   reloadClip: {fileID: 8300000, guid: 524d2ffc2d49a8d48ba43f6ec43b779a, type: 3}

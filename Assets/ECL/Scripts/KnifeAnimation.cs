@@ -6,6 +6,8 @@ using UnityEngine.InputSystem;
 
 public class KnifeAnimation : MonoBehaviour
 {
+    [SerializeField] private GunManagement gunManager;
+
     [SerializeField] private Animator animator;
     [SerializeField] private InputActionAsset controls;
     [SerializeField] private AnimationClip[] attackAnims;
@@ -63,9 +65,11 @@ public class KnifeAnimation : MonoBehaviour
         float waitTime = attackAnims[randomIndex].length;
         animator.Play(selectedAnimation);
         isAttacking = true;
+        gunManager.canSwitch = false;
         yield return new WaitForSeconds(waitTime);
         animCanPlay = true;
         isAttacking = false;
+        gunManager.canSwitch = true;
     }
     private void OnButtonPressed(InputAction.CallbackContext context)
     {
@@ -102,6 +106,7 @@ public class KnifeAnimation : MonoBehaviour
     private void StartOfInspectAnim()
     {
         isInspecting = !isInspecting;
+        gunManager.canSwitch = !gunManager.canSwitch;
         animCanPlay = !animCanPlay;
         //Debug.LogWarning(isInspecting);
     }
