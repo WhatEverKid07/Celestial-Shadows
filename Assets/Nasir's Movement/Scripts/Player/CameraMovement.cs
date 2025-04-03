@@ -86,13 +86,13 @@ public class CameraMovement : MonoBehaviour
         if (characterMove.isRunning || characterMove.isWallRunning && !characterMove.isWallJumping)
         {
             //ChangeWalkFOV();
-            Debug.Log("FOV change 1");
+            //Debug.Log("FOV change 1");
             ChangeFOV(runFOV, 0.1f);
         }
         else
         {
             //ChangeRunFOV();
-            Debug.Log("FOV change 2");
+            //Debug.Log("FOV change 2");
             ChangeFOV(fov, 0.1f);
         }
     }

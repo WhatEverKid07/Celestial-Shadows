@@ -33,7 +33,6 @@ public class CrocsFunction : MonoBehaviour
         float newY = originalYPosition + (Mathf.Cos(Time.time * bobbingFrequency) * bobbingAmplitude);
         transform.position = new Vector3(transform.position.x, newY, transform.position.z);
 
-        Debug.Log(transform.position.y);
     }
 
     private void OnTriggerEnter(Collider other)
@@ -46,7 +45,7 @@ public class CrocsFunction : MonoBehaviour
             croc1?.SetActive(false);
             croc2?.SetActive(false);
 
-            //Invoke(nameof(NoMoreUpdates), .0001f);
+            Invoke(nameof(NoMoreUpdates), .0001f);
         }
     }
 

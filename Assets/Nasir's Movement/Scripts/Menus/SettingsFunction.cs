@@ -4,7 +4,7 @@ using UnityEngine.UI;
 public class SettingsFunction : MonoBehaviour
 {
     [Header("Scripts")]
-    [SerializeField] private MainMenu mainMenuScript;
+    private MainMenu mainMenuScript;
 
     [Header("Settings")]
     private GameObject generalMenu;
@@ -19,52 +19,57 @@ public class SettingsFunction : MonoBehaviour
     private GameObject creditsMenu;
     private Image creditsBG;
 
-    /*
     private void Start()
     {
         mainMenuScript = FindAnyObjectByType<MainMenu>();
 
-        generalMenuBG = GameObject.Find("GeneralBG");
-        inGameMenuBG = GameObject.Find("In-GameBG");
-        graphicsMenuBG = GameObject.Find("GraphicsBG");
-        creditsBG = GameObject.Find("CreditsBG");
+        generalMenu = GameObject.Find("GeneralBG");
+        inGameMenu = GameObject.Find("In-GameBG");
+        graphicsMenu = GameObject.Find("GraphicsBG");
+        creditsMenu = GameObject.Find("CreditsBG");
 
-        generalMenuBG.SetActive(true);
-        inGameMenuBG.SetActive(false);
-        graphicsMenuBG.SetActive(false);
-        creditsBG.SetActive(false);
+        generalMenuBG = generalMenu.GetComponent<Image>();
+        inGameMenuBG = inGameMenu.GetComponent<Image>();
+        graphicsMenuBG = graphicsMenu.GetComponent<Image>();
+        creditsBG = creditsMenu.GetComponent<Image>();
+
+
+        generalMenuBG.enabled = true;
+        inGameMenuBG.enabled = false;
+        graphicsMenuBG.enabled = false;
+        creditsBG.enabled = false;
     }
 
     public void GeneralMenu()
     {
-        generalMenuBG.SetActive(true);
-        inGameMenuBG.SetActive(false);
-        graphicsMenuBG.SetActive(false);
-        creditsBG.SetActive(false);
+        generalMenuBG.enabled = true;
+        inGameMenuBG.enabled = false;
+        graphicsMenuBG.enabled = false;
+        creditsBG.enabled = false;
     }
 
     public void InGameMenu()
     {
-        inGameMenuBG.SetActive(true);
-        generalMenuBG.SetActive(false);
-        graphicsMenuBG.SetActive(false);
-        creditsBG.SetActive(false);
+        inGameMenuBG.enabled = true;
+        generalMenuBG.enabled = false;
+        graphicsMenuBG.enabled = false;
+        creditsBG.enabled = false;
     }
 
     public void GraphicsMenu()
     {
-        graphicsMenuBG.SetActive(true);
-        generalMenuBG.SetActive(false);
-        inGameMenuBG.SetActive(false);
-        creditsBG.SetActive(false);
+        graphicsMenuBG.enabled = true;
+        generalMenuBG.enabled = false;
+        inGameMenuBG.enabled = false;
+        creditsBG.enabled = false;
     }
 
     public void CreditsMenu()
     {
-        creditsBG.SetActive(true);
-        generalMenuBG.SetActive(false);
-        graphicsMenuBG.SetActive(false);
-        creditsBG.SetActive(false);
+        creditsBG.enabled = true;
+        generalMenuBG.enabled = false;
+        graphicsMenuBG.enabled = false;
+        inGameMenuBG.enabled = false;
     }
-    */
+
 }

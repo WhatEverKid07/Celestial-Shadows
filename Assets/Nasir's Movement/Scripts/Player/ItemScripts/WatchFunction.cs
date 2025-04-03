@@ -47,7 +47,7 @@ public class WatchFunction : MonoBehaviour
             chain?.SetActive(false);
             time?.SetActive(false);
 
-            //Invoke(nameof(NoMoreUpdates), .0001f);
+            Invoke(nameof(NoMoreUpdates), .0001f);
         }
     }
 

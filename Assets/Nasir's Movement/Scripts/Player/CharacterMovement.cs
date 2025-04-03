@@ -2,10 +2,6 @@ using UnityEngine.InputSystem;
 using UnityEngine;
 using System.Collections;
 using System;
-using System.Reflection;
-using UnityEngine.EventSystems;
-using UnityEngine.UIElements;
-using UnityEngine.InputSystem.LowLevel;
 
 public class CharacterMovement : MonoBehaviour
 {
@@ -68,7 +64,6 @@ public class CharacterMovement : MonoBehaviour
     [Header("Jumping")]
     [SerializeField] [Range(5, 10)] private float jumpPower;
     private bool isJumping = false;
-    private bool hasLanded;
 
     [SerializeField] [Range(1, 3)] private float fallMulti;
 
@@ -151,6 +146,8 @@ public class CharacterMovement : MonoBehaviour
     {
         //MOVE INPUT
         moveDir = playerCntrls.action.ReadValue<Vector3>();
+
+        Debug.Log("Is jumping: " + isJumping);
 
         //COYOTE TIME
         if (!IsGrounded())
@@ -443,7 +440,6 @@ public class CharacterMovement : MonoBehaviour
             isJumping = true;
             rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
             rb.AddForce(jumpForce, ForceMode.VelocityChange);
-
         }
         else
         {
