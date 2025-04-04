@@ -62,7 +62,7 @@ public class CharacterMovement : MonoBehaviour
     public bool isWallRunning { get; private set; }
 
     [Header("Jumping")]
-    [SerializeField] [Range(5, 10)] private float jumpPower;
+    [SerializeField] private float jumpPower;
     private bool isJumping = false;
 
     [SerializeField] [Range(1, 3)] private float fallMulti;
@@ -97,7 +97,7 @@ public class CharacterMovement : MonoBehaviour
 
     [Header("Dashing")]
     [SerializeField] internal bool enableDash = true;
-    [SerializeField] [Range(1, 3)] internal float dashPower;
+    [SerializeField] internal float dashPower;
     private bool canDash;
     private bool isDashing = false;
 
