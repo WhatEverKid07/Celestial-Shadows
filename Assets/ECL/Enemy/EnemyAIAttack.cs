@@ -17,11 +17,7 @@ public class EnemyAIAttack : MonoBehaviour
 
     [Header("Ranged Attack")]
     [SerializeField] private float coneAngle;
-    [SerializeField] private Vector3 upRecoil;
-    [SerializeField] private Vector3 sideRecoil;
-    [SerializeField] private float recoilSmoothTime = 0.1f;
-    [SerializeField] private float recoilResetSpeed = 5f;
-    [SerializeField] private float recoilIncreaseMultiplier = 1.2f;
+
     [Space(10)]
     //[SerializeField] private int maxAmmo = 30;
     [SerializeField] private float semiAutoShotDelay = 0.2f;
@@ -38,11 +34,8 @@ public class EnemyAIAttack : MonoBehaviour
 
     private bool canShoot = true;
     private float nextTimeToFire = 0f;
-    //private bool isReloading = false;
-    //private int currentAmmo;
-    private Quaternion accumulatedRecoilRotation = Quaternion.identity;
-    private Quaternion initialRotation;
     private float currentConeAngle;
+
 
 
     [Header("Melee Attack")]
@@ -61,7 +54,7 @@ public class EnemyAIAttack : MonoBehaviour
         if (range)
         {
             //currentAmmo = maxAmmo;
-            initialRotation = transform.localRotation;
+            //initialRotation = transform.localRotation;
         }
     }
 
@@ -105,34 +98,5 @@ public class EnemyAIAttack : MonoBehaviour
         return Quaternion.LookRotation(forwardDirection) * randomSpread;
     }
 
-    private void CanShootReset()
-    {
-        canShoot = true;
-    }
-
-    /*
-    private void HandleRecoil()
-    {
-        transform.localRotation = initialRotation * accumulatedRecoilRotation;
-        accumulatedRecoilRotation = Quaternion.Slerp(accumulatedRecoilRotation, Quaternion.identity, recoilResetSpeed * Time.deltaTime);
-    }
-
-    private void AddRecoil()
-    {
-        float upAmount = Random.Range(-upRecoil.x * recoilIncreaseMultiplier, upRecoil.x * recoilIncreaseMultiplier);
-        float sideAmount = Random.Range(-sideRecoil.y * recoilIncreaseMultiplier, sideRecoil.y * recoilIncreaseMultiplier);
-        float tiltAmount = Random.Range(-5f, 5f);
-
-        Quaternion recoilRotation = Quaternion.Euler(upAmount, sideAmount, tiltAmount);
-        accumulatedRecoilRotation *= recoilRotation;
-    }
-
-    private IEnumerator Reload()
-    {
-        isReloading = true;
-        yield return new WaitForSeconds(reloadTime);
-        currentAmmo = maxAmmo;
-        isReloading = false;
-    }
-    */
+    private void CanShootReset(){canShoot = true;}
 }
