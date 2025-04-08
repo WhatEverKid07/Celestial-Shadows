@@ -5,7 +5,6 @@ using Unity.VisualScripting;
 
 public class EnemyAIAttack : MonoBehaviour
 {
-    [SerializeField] private Animator animator;
     [SerializeField] private float pauseBetweenEvents = 1f;
 
     [Header("Attack Mode")]
@@ -13,25 +12,21 @@ public class EnemyAIAttack : MonoBehaviour
     [SerializeField] private bool range = false;
 
     [Tooltip("For Testing")]
-    public bool isAttacking = false; // Public for testing. Make Internal
+    internal bool isAttacking = false; // Public for testing. Make Internal
 
     [Header("Ranged Attack")]
     [SerializeField] private float coneAngle;
 
     [Space(10)]
-    //[SerializeField] private int maxAmmo = 30;
     [SerializeField] private float semiAutoShotDelay = 0.2f;
-    //[SerializeField] private int shootHowManyBullets = 1;
-    //[SerializeField] private float fireRate = 15f;
     [SerializeField] private float bulletSpeed = 20f;
-    //[SerializeField] private float reloadTime = 1f;
     [SerializeField] private float rangeAttackRadius = 10f;
-    [SerializeField] private float rangeAttackDamage = 10f;
     [Space(10)]
     [SerializeField] private GameObject bulletSpawn;
     [SerializeField] private GameObject projectilePrefab;
     [SerializeField] private ParticleSystem muzzleFlash;
-
+    
+    internal Transform player;
     private bool canShoot = true;
     private float nextTimeToFire = 0f;
     private float currentConeAngle;
@@ -53,8 +48,7 @@ public class EnemyAIAttack : MonoBehaviour
     {
         if (range)
         {
-            //currentAmmo = maxAmmo;
-            //initialRotation = transform.localRotation;
+
         }
     }
 
@@ -76,14 +70,22 @@ public class EnemyAIAttack : MonoBehaviour
 
     private void Shoot()
     {
+        FacePlayer();
+        muzzleFlash?.Play();
         Invoke("CanShootReset", semiAutoShotDelay);
         GameObject projectile = Instantiate(projectilePrefab, bulletSpawn.transform.position, bulletSpawn.transform.rotation);
         Rigidbody rb = projectile.GetComponent<Rigidbody>();
         Vector3 bulletDirection = GetConeSpreadDirection(bulletSpawn.transform.forward, currentConeAngle);
         rb.velocity = bulletDirection * bulletSpeed;
-        muzzleFlash?.Play();
     }
+    public void FacePlayer()
+    {
+        Vector3 direction = player.transform.position - bulletSpawn.transform.position;
+        if (direction == Vector3.zero) return;
 
+        Quaternion targetRotation = Quaternion.LookRotation(direction);
+        bulletSpawn.transform.rotation = targetRotation;
+    }
     private Vector3 GetConeSpreadDirection(Vector3 forwardDirection, float maxAngle)
     {
         float maxAngleRad = maxAngle * Mathf.Deg2Rad;
@@ -97,6 +99,5 @@ public class EnemyAIAttack : MonoBehaviour
         );
         return Quaternion.LookRotation(forwardDirection) * randomSpread;
     }
-
     private void CanShootReset(){canShoot = true;}
 }

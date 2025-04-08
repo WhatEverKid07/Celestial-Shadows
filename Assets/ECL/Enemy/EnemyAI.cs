@@ -79,12 +79,12 @@ public class EnemyAI : MonoBehaviour
 
             if (playerVisible && !wasVisible)
             {
-                //Debug.Log("Found player");
+                Debug.Log("Found player");
                 StartCoroutine(ChangeCurrentTarget(player));
             }
             else if (!playerVisible && wasVisible)
             {
-                //Debug.Log("Lost sight of player");
+                Debug.Log("Lost sight of player");
                 StartCoroutine(ChangeCurrentTarget(target));
             }
             yield return new WaitForSeconds(0.8f);
@@ -96,6 +96,7 @@ public class EnemyAI : MonoBehaviour
         //rb.isKinematic = true;
         currentTarget = changeToo;
         hasReachedTarget = false;
+        enemyAttack.player = currentTarget;
         yield return new WaitForSeconds(1f);
         if (!hasReachedTarget)
         {
