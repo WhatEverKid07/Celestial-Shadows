@@ -10,7 +10,10 @@ public class Grenade : MonoBehaviour
     [SerializeField] private float grenadeForce = 700f;
     [SerializeField] private float upwardsGrenadeForce = 700f;
     [SerializeField] private GameObject explosionEffect;
+    [SerializeField] private AudioSource explosionSound;
     [SerializeField] private float maxDamage = 100f;
+
+    [SerializeField] private GameObject[] grenadePieces;
 
     public void StartFuse()
     {
@@ -21,6 +24,8 @@ public class Grenade : MonoBehaviour
         //Debug.Log("Works");
         yield return new WaitForSeconds(fuseLength);
         Explode();
+        yield return new WaitForSeconds(explosionSound.clip.length);
+        Destroy(gameObject);
     }
     private void Explode()
     {
@@ -46,7 +51,10 @@ public class Grenade : MonoBehaviour
         }
 
         Instantiate(explosionEffect, transform.position, transform.rotation);
-        Destroy(gameObject);
+        explosionSound.Play();
+        foreach(GameObject objects in grenadePieces)
+        {
+            objects.SetActive(false);
+        }
     }
-
 }

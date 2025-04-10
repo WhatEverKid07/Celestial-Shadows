@@ -68,9 +68,8 @@ public class NewARScript : MonoBehaviour
 
     [Space(20)]
     [Header("Audio")]
-    [SerializeField] private AudioSource gunAudioSource;
-    [SerializeField] private AudioClip shootClip;
-    [SerializeField] private AudioClip reloadClip;
+    [SerializeField] private AudioSource shootClip;
+    [SerializeField] private AudioSource reloadClip;
 
     [Space(20)]
     [Header("Other")]
@@ -211,7 +210,7 @@ public class NewARScript : MonoBehaviour
     {
         if (currentAmmo > 0 && !isReloading)
         {
-            gunAudioSource.PlayOneShot(shootClip);
+            shootClip.Play();
             camController.GunController();
             currentAmmo--;
             UpdateAmmoText();
@@ -236,7 +235,7 @@ public class NewARScript : MonoBehaviour
         isReloading = true;
         isFiring = false;
         if (nameOfReloadAnim != "") { secondAnimator.Play(nameOfReloadAnim); }
-        // gunAudioSource.PlayOneShot(reloadClip);
+        // reloadClip.Play();
         // gun reload animation
         currentAmmo = maxAmmo;
         yield return new WaitForSeconds(reloadTime);

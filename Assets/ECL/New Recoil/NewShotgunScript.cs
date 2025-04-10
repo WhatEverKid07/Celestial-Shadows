@@ -69,9 +69,8 @@ public class NewShotgunScript : MonoBehaviour
 
     [Space(20)]
     [Header("Audio")]
-    [SerializeField] private AudioSource gunAudioSource;
-    [SerializeField] private AudioClip shootClip;
-    [SerializeField] private AudioClip reloadClip;
+    [SerializeField] private AudioSource shootClip;
+    [SerializeField] private AudioSource reloadClip;
 
     [Space(20)]
     [Header("Other")]
@@ -188,8 +187,7 @@ public class NewShotgunScript : MonoBehaviour
         Invoke("CanShootReset", semiAutoShotDelay);
         if (currentAmmo >= 1 && !isReloading && recoiling == 0 && recovering == 0)
         {
-            gunAudioSource.PlayOneShot(shootClip);
-
+            shootClip.Play();
             if (animator != null && nameOfShootTrigger != "") { animator.SetTrigger(nameOfShootTrigger); }
             camController.GunController();
             currentAmmo--;
@@ -221,7 +219,7 @@ public class NewShotgunScript : MonoBehaviour
     {
         isReloading = true;
         //yield return new WaitForSeconds(0.5f);
-        // gunAudioSource.PlayOneShot(reloadClip);
+        // reloadClip.Play();
         // gun reload animation
         secondAnimator.Play(nameOfReloadAnim);
         currentAmmo = maxAmmo;

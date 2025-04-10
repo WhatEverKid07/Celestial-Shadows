@@ -34,6 +34,7 @@ public class EnemyAI : MonoBehaviour
         InvokeRepeating("MoveToTarget", 0, 0.3f);
         StartCoroutine(CheckPlayerVisibility());
         currentTarget = target;
+        lastPos = player.position;
         rb = GetComponent<Rigidbody>();
     }
     void Update()
@@ -47,29 +48,49 @@ public class EnemyAI : MonoBehaviour
     {
         if (player == null) return false;
 
-        Vector3 directionToPlayer = (player.position - transform.position).normalized;
+        // Target the center of the player's body (adjust Y if needed)
+        Vector3 eyePosition = transform.position + Vector3.up * 1.5f;
+        Vector3 targetPosition = player.position + Vector3.up * 1.0f;
+        Vector3 directionToPlayer = (targetPosition - eyePosition).normalized;
+
         float angleToPlayer = Vector3.Angle(transform.forward, directionToPlayer);
 
-        if (angleToPlayer > fieldOfViewAngle * 0.5f)
+        // Debug angle and direction
+        //Debug.Log($"[AI] Angle to Player: {angleToPlayer}");
+
+        // Add a small buffer to avoid edge flakiness
+        if (angleToPlayer > fieldOfViewAngle * 0.5f + 2f)
         {
+            //Debug.Log("[AI] Player out of FOV");
             return false;
         }
 
-        // Raycast to check visibility
-        Ray ray = new Ray(transform.position + Vector3.up * 1.5f, directionToPlayer);
-        Debug.DrawRay(ray.origin, ray.direction * detectionRange, Color.red);
+        // Visualize raycast
+        Debug.DrawRay(eyePosition, directionToPlayer * detectionRange, Color.red);
 
-        if (Physics.Raycast(ray, out RaycastHit hit, detectionRange))
+        // Check if the ray hits the player
+        if (Physics.Raycast(eyePosition, directionToPlayer, out RaycastHit hit, detectionRange, ~obstructionLayer))
         {
+            //Debug.Log($"[AI] Raycast hit: {hit.transform.name}");
+
             if (hit.transform == player)
             {
                 agent.isStopped = false;
-                //rb.isKinematic = false;
                 return true;
             }
+            else
+            {
+                //Debug.Log("[AI] Player blocked by: " + hit.transform.name);
+            }
         }
+        else
+        {
+            //Debug.Log("[AI] Raycast didn't hit anything");
+        }
+
         return false;
     }
+
     IEnumerator CheckPlayerVisibility()
     {
         while (true)
@@ -116,7 +137,7 @@ public class EnemyAI : MonoBehaviour
     {
         float remainingDistance = agent.remainingDistance;
 
-        if (!hasReachedTarget && !isAtTarget && remainingDistance <= agent.stoppingDistance && !agent.pathPending && agent.velocity.magnitude == 0)
+        if (!hasReachedTarget && !isAtTarget && remainingDistance <= agent.stoppingDistance && !agent.pathPending && agent.hasPath)
         {
             //Debug.Log("UpdateIfHasReachedTarget: Target Reached");
             agent.isStopped = true;

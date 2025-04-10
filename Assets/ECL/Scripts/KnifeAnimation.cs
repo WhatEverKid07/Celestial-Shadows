@@ -11,6 +11,7 @@ public class KnifeAnimation : MonoBehaviour
     [SerializeField] private Animator animator;
     [SerializeField] private InputActionAsset controls;
     [SerializeField] private AnimationClip[] attackAnims;
+    [SerializeField] private AudioSource knifeSlash;
 
     private InputAction inspect;
     private InputAction attack;
@@ -57,20 +58,27 @@ public class KnifeAnimation : MonoBehaviour
     }
     private IEnumerator SelectAttackAnim()
     {
-        if (!animCanPlay || attackAnims.Length == 0 || animator == null && isInspecting) yield break;
+        if (!animCanPlay || isAttacking || attackAnims.Length == 0 || animator == null || isInspecting) yield break;
 
         animCanPlay = false;
-        int randomIndex = Random.Range(0, attackAnims.Length);
-        string selectedAnimation = attackAnims[randomIndex].name;
-        float waitTime = attackAnims[randomIndex].length;
-        animator.Play(selectedAnimation);
         isAttacking = true;
         gunManager.canSwitch = false;
-        yield return new WaitForSeconds(waitTime);
+
+        int randomIndex = Random.Range(0, attackAnims.Length);
+        string selectedAnimation = attackAnims[randomIndex].name;
+        animator.Play(selectedAnimation);
+        knifeSlash.Play();
+        Debug.Log("attack");
+
+        // Let animation event reset states
+    }
+    public void OnAttackAnimationEnd()
+    {
         animCanPlay = true;
         isAttacking = false;
         gunManager.canSwitch = true;
     }
+
     private void OnButtonPressed(InputAction.CallbackContext context)
     {
         if (!isSpinning && !isAttacking)

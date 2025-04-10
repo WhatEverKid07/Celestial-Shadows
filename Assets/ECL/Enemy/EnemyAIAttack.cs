@@ -77,6 +77,7 @@ public class EnemyAIAttack : MonoBehaviour
         Rigidbody rb = projectile.GetComponent<Rigidbody>();
         Vector3 bulletDirection = GetConeSpreadDirection(bulletSpawn.transform.forward, currentConeAngle);
         rb.velocity = bulletDirection * bulletSpeed;
+        //muzzleFlash?.Stop();
     }
     public void FacePlayer()
     {

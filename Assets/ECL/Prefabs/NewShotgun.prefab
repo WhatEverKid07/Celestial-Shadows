@@ -11070,9 +11070,8 @@ MonoBehaviour:
   nameOfSightAnimReverse: InSightShotgunReverse
   playerCam: {fileID: 0}
   ammoText: {fileID: 0}
-  gunAudioSource: {fileID: 0}
   shootClip: {fileID: 8300000, guid: 524d2ffc2d49a8d48ba43f6ec43b779a, type: 3}
-  reloadClip: {fileID: 8300000, guid: 524d2ffc2d49a8d48ba43f6ec43b779a, type: 3}
+  reloadClip: {fileID: 0}
   gunControls: {fileID: -944628639613478452, guid: 9269ee16b3aa1f0448f0710a2c982dcc, type: 3}
 --- !u!95 &2571837730045116796
 Animator:

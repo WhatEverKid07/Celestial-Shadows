@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8185903577886524139}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Glow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -43,7 +43,7 @@ GameObject:
   - component: {fileID: 5981289633725827457}
   - component: {fileID: 4505539290791884803}
   - component: {fileID: 1867232493762689356}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: ShadowEnemyBullet
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -144,7 +144,7 @@ GameObject:
   - component: {fileID: 8245346616834981828}
   - component: {fileID: 8402344165946353826}
   - component: {fileID: 4855854530817046144}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Bullet
   m_TagString: Untagged
   m_Icon: {fileID: 0}
