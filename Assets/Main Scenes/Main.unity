@@ -16407,7 +16407,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &655801312
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -53740,7 +53740,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: 371b16321f39948419007e687683305a, type: 3}
   m_PlayOnAwake: 0
-  m_Volume: 1
+  m_Volume: 0.8
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -56441,7 +56441,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 632840073664098697, guid: 5b0c8f653ee4621479a182615c0485cb, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1321893063365356060, guid: 5b0c8f653ee4621479a182615c0485cb, type: 3}
       propertyPath: m_LocalPosition.x
@@ -57580,7 +57580,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3388305163703433885, guid: 92fc489b1e3c409479c2c1af885db9e7, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
