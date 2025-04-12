@@ -11,7 +11,7 @@ public class KnifeAnimation : MonoBehaviour
     [SerializeField] private Animator animator;
     [SerializeField] private InputActionAsset controls;
     [SerializeField] private AnimationClip[] attackAnims;
-    [SerializeField] private AudioSource knifeSlash;
+    //[SerializeField] private AudioSource knifeSlash;
 
     private InputAction inspect;
     private InputAction attack;
@@ -67,7 +67,7 @@ public class KnifeAnimation : MonoBehaviour
         int randomIndex = Random.Range(0, attackAnims.Length);
         string selectedAnimation = attackAnims[randomIndex].name;
         animator.Play(selectedAnimation);
-        knifeSlash.Play();
+        AudioManager.instance.KnifeSlash();
         Debug.Log("attack");
 
         // Let animation event reset states

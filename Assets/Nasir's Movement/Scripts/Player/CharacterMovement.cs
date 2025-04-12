@@ -34,6 +34,8 @@ public class CharacterMovement : MonoBehaviour
     public bool isRunning { get; private set; }
     public bool isGrounded { get; private set; }
 
+    private bool isWalking = false;
+
     [Header("Slope Movement")]
     [SerializeField] private float maxSlopeAngle;
     private RaycastHit slopeHit;
@@ -150,7 +152,7 @@ public class CharacterMovement : MonoBehaviour
         Debug.Log("Is jumping: " + isJumping);
 
         //COYOTE TIME
-        if (!IsGrounded())
+        /*if (!IsGrounded())
         {
             isGrounded = false;
             if (!isWallRunning)
@@ -166,7 +168,7 @@ public class CharacterMovement : MonoBehaviour
         {
             isGrounded = true;
             setCoyoteTime = coyoteTime;
-        }
+        }*/
 
         if (OnSlope())
         {
@@ -241,7 +243,16 @@ public class CharacterMovement : MonoBehaviour
         {
             ShowDebugs();
         }
-        
+
+        if (isWalking && !isJumping)
+        {
+            AudioManager.instance.PlayerWalking(true);
+        }
+        else
+        {
+            AudioManager.instance.PlayerWalking(false);
+        }
+
     }
     
     private void FixedUpdate()
@@ -277,12 +288,35 @@ public class CharacterMovement : MonoBehaviour
             StopWallRunning();
         }
 
+        bool wasGrounded = isGrounded;
+        isGrounded = IsGrounded();
+
+        if (isGrounded)
+        {
+            setCoyoteTime = coyoteTime;
+            if (!wasGrounded && isJumping)
+            {
+                isJumping = false;
+            }
+        }
+        else
+        {
+            if (!isWallRunning)
+            {
+                setCoyoteTime -= Time.fixedDeltaTime;
+            }
+
+            if (rb.velocity.y > 0f)
+            {
+                setCoyoteTime = 0f;
+            }
+        }
     }
 
     //WALK & RUN FUNCTION
     private void Move()
     {
-        //CAM DIRECTIONS
+        // CAM DIRECTIONS
         Vector3 cameraForward = camDir.forward;
         Vector3 cameraRight = camDir.right;
 
@@ -295,10 +329,14 @@ public class CharacterMovement : MonoBehaviour
 
         rb.useGravity = !OnSlope();
 
-        if (run.ReadValue<float>() > 0 && canRun)
+        bool hasMovementInput = moveDir.magnitude > 0.1f;
+
+        if (run.ReadValue<float>() > 0 && canRun && hasMovementInput)
         {
             rb.velocity = new Vector3(move.x * runSpeed, rb.velocity.y, move.z * runSpeed);
             isRunning = true;
+            isWalking = false;
+
             if (OnSlope())
             {
                 if (!exitingSlope)
@@ -310,12 +348,13 @@ public class CharacterMovement : MonoBehaviour
                     rb.AddForce(Vector3.down * 10f, ForceMode.Force);
                 }
             }
-   
         }
-        else
+        else if (hasMovementInput)
         {
             rb.velocity = new Vector3(move.x * walkSpeed, rb.velocity.y, move.z * walkSpeed);
             isRunning = false;
+            isWalking = true;
+
             if (OnSlope())
             {
                 if (!exitingSlope)
@@ -327,6 +366,11 @@ public class CharacterMovement : MonoBehaviour
                     rb.AddForce(Vector3.down * 10f, ForceMode.Force);
                 }
             }
+        }
+        else
+        {
+            isWalking = false;
+            isRunning = false;
         }
     }
 
@@ -433,21 +477,16 @@ public class CharacterMovement : MonoBehaviour
     //JUMP FUNCTION
     private void Jump()
     {
-        Vector3 jumpForce = Vector3.up * jumpPower;
-
         if (setCoyoteTime > 0f && !isJumping)
         {
             isJumping = true;
             rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
-            rb.AddForce(jumpForce, ForceMode.VelocityChange);
+            rb.AddForce(Vector3.up * jumpPower, ForceMode.VelocityChange);
+            exitingSlope = true;
         }
-        else
-        {
-            isJumping = false;
-        }
-
-        exitingSlope = true;
     }
+
+
 
     private void WallJump()
     {
@@ -567,7 +606,7 @@ public class CharacterMovement : MonoBehaviour
     //GROUNDED BOOL
     private bool IsGrounded()
     {
-        return Physics.CheckSphere(groundChecker.transform.position, .2f, ground);
+        return Physics.CheckSphere(groundChecker.transform.position, 0.2f, ground);
     }
 
     private void CheckForWall()

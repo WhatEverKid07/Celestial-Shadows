@@ -64,12 +64,11 @@ public class NewARScript : MonoBehaviour
     [Space(20)]
     [Header("UI")]
     [SerializeField] private Text ammoText;
-    //[SerializeField] private GameObject crosshair;
 
-    [Space(20)]
+    /*[Space(20)]
     [Header("Audio")]
     [SerializeField] private AudioSource shootClip;
-    [SerializeField] private AudioSource reloadClip;
+    [SerializeField] private AudioSource reloadClip;*/
 
     [Space(20)]
     [Header("Other")]
@@ -105,7 +104,6 @@ public class NewARScript : MonoBehaviour
         UpdateAmmoText();
         shoot.Enable();
         reload.Enable();
-        //crosshair.SetActive(true);
     }
     void OnEnable()
     {
@@ -132,8 +130,16 @@ public class NewARScript : MonoBehaviour
     {
         if (!gameObject.activeInHierarchy) return;
 
-        if (reload.ReadValue<float>() > 0 && !isSighted && currentAmmo < maxAmmo) StartCoroutine(Reload());
-        if (currentAmmo == 0 && !isReloading && !isSighted) StartCoroutine(Reload());
+        if (reload.ReadValue<float>() > 0 && !isSighted && currentAmmo < maxAmmo) 
+        {
+            gunManager.canSwitch = false;
+            StartCoroutine(Reload());
+        }
+        if (currentAmmo == 0 && !isReloading && !isSighted)
+        {
+            gunManager.canSwitch = false;
+            StartCoroutine(Reload());
+        }
         if (!isFiring && recoilAmount > 0)
         {
             recoilAmount = Mathf.MoveTowards(recoilAmount, 0, RecoveryTime * Time.deltaTime);
@@ -164,7 +170,6 @@ public class NewARScript : MonoBehaviour
         if (isReloading)
             return;
         isSighted = true;
-        //crosshair.SetActive(false);
         characterMovement.canRun = false;
         characterMovement.enableDash = false;
         characterMovement.walkSpeed /= 3;
@@ -184,7 +189,6 @@ public class NewARScript : MonoBehaviour
     {
         if (isReloading || !isSighted)
             return;
-        //crosshair.SetActive(true);
         characterMovement.canRun = true;
         characterMovement.enableDash = true;
         characterMovement.walkSpeed *= 3;
@@ -210,7 +214,7 @@ public class NewARScript : MonoBehaviour
     {
         if (currentAmmo > 0 && !isReloading)
         {
-            shootClip.Play();
+            AudioManager.instance.AssaultRifleShoot();
             camController.GunController();
             currentAmmo--;
             UpdateAmmoText();
@@ -241,6 +245,7 @@ public class NewARScript : MonoBehaviour
         yield return new WaitForSeconds(reloadTime);
         UpdateAmmoText();
         isReloading = false;
+        gunManager.canSwitch = true;
     }
     private Vector3 GetConeSpreadDirection(Vector3 forwardDirection, float maxAngle)
     {

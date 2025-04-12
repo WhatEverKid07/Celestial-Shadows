@@ -1,3 +1,4 @@
+using System.Collections;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -5,6 +6,7 @@ using UnityEngine.UI;
 
 public class GrenadeThrower : MonoBehaviour
 {
+    [SerializeField] private GunManagement gunManager;
     [SerializeField] private Animator animator;
     [Space(20)]
     [Header("Grenade Attributes")]
@@ -79,14 +81,35 @@ public class GrenadeThrower : MonoBehaviour
                 Debug.Log("2");
                 if (!thrown)
                 {
+                    gunManager.canSwitch = false;
                     thrown = true;
                     animator.Play("WholeGrenadeAnimation");
                     Invoke("ThrowGrenade", grenadeAnimPause);
                     currentThrowDelay = throwDelay;
+                    StartCoroutine(CanSwitchReset());
                 }
             }
         };
 
+    }
+    private IEnumerator CanSwitchReset()
+    {
+        float waitTime = GetAnimationLength("WholeGrenadeAnimation");
+        yield return new WaitForSeconds(waitTime);
+        gunManager.canSwitch = true;
+    }
+
+    // Helper method to get the animation clip length by name
+    private float GetAnimationLength(string clipName)
+    {
+        foreach (var clip in animator.runtimeAnimatorController.animationClips)
+        {
+            if (clip.name == clipName)
+            {
+                return clip.length;
+            }
+        }
+        return 0f;
     }
 
     void ThrowGrenade()

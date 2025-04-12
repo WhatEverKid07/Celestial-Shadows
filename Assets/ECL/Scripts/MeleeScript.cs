@@ -21,6 +21,7 @@ public class MeleeScript : MonoBehaviour
         if (targetScript != null)
         {
             targetScript.TakeDamage(damageAmount);
+            AudioManager.instance.KnifeHit();
         }
     }
 }

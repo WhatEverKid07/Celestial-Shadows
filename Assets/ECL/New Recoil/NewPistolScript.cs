@@ -14,7 +14,7 @@ public class NewPistolScript : MonoBehaviour
 
     [Header("Gun Attributes")]
     [SerializeField] private int maxAmmo = 30;
-    [SerializeField] private float reloadTime = 1f;
+    [SerializeField] private float reloadTime;
     [SerializeField] private float coneAngle;
     [SerializeField] private float semiAutoShotDelay = 0.2f;
 
@@ -60,10 +60,10 @@ public class NewPistolScript : MonoBehaviour
     [Header("UI")]
     [SerializeField] private Text ammoText;
 
-    [Space(20)]
+    /*[Space(20)]
     [Header("Audio")]
     [SerializeField] private AudioSource shootClip;
-    [SerializeField] private AudioSource reloadClip;
+    [SerializeField] private AudioSource reloadClip;*/
 
     [Space(20)]
     [Header("Other")]
@@ -121,10 +121,12 @@ public class NewPistolScript : MonoBehaviour
 
         if (reload.ReadValue<float>() > 0)
         {
+            gunManager.canSwitch = false;
             StartCoroutine(Reload());
         }
         if (currentAmmo == 0 && !isReloading)
         {
+            gunManager.canSwitch = false;
             StartCoroutine(Reload());
         }
         if (recoiling > 0)
@@ -171,7 +173,7 @@ public class NewPistolScript : MonoBehaviour
         Invoke("CanShootReset", semiAutoShotDelay);
         if (currentAmmo >= 1 && !isReloading && recoiling == 0 && recovering == 0)
         {
-            shootClip.Play();
+            AudioManager.instance.PistolShoot();
             if (animator != null && nameOfShootTrigger != "") { animator.SetTrigger(nameOfShootTrigger); }
             camController.GunController();
             currentAmmo--;
@@ -207,8 +209,10 @@ public class NewPistolScript : MonoBehaviour
         if (animator != null && nameOfReloadTrigger != "") { animator.SetTrigger(nameOfReloadTrigger); }
         yield return new WaitForSeconds(reloadTime);
         currentAmmo = maxAmmo;
-        isReloading = false;
         UpdateAmmoText();
+        isReloading = false;
+        yield return new WaitForSeconds(0.4f);
+        gunManager.canSwitch = true;
     }
     private Vector3 GetConeSpreadDirection(Vector3 forwardDirection, float maxAngle)
     {

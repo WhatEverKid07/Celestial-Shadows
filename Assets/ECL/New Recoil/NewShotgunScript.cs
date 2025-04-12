@@ -67,10 +67,10 @@ public class NewShotgunScript : MonoBehaviour
     [SerializeField] private Text ammoText;
     //[SerializeField] private GameObject crosshair;
 
-    [Space(20)]
+    /*[Space(20)]
     [Header("Audio")]
     [SerializeField] private AudioSource shootClip;
-    [SerializeField] private AudioSource reloadClip;
+    [SerializeField] private AudioSource reloadClip;*/
 
     [Space(20)]
     [Header("Other")]
@@ -136,10 +136,12 @@ public class NewShotgunScript : MonoBehaviour
 
         if (reload.ReadValue<float>() > 0 && !isSighted && currentAmmo < maxAmmo)
         {
+            gunManager.canSwitch = false;
             StartCoroutine(Reload());
         }
         if (currentAmmo == 0 && !isReloading && !isSighted)
         {
+            gunManager.canSwitch = false;
             StartCoroutine(Reload());
         }
         if (recoiling > 0)
@@ -187,7 +189,7 @@ public class NewShotgunScript : MonoBehaviour
         Invoke("CanShootReset", semiAutoShotDelay);
         if (currentAmmo >= 1 && !isReloading && recoiling == 0 && recovering == 0)
         {
-            shootClip.Play();
+            AudioManager.instance.ShotgunShoot();
             if (animator != null && nameOfShootTrigger != "") { animator.SetTrigger(nameOfShootTrigger); }
             camController.GunController();
             currentAmmo--;
@@ -226,6 +228,7 @@ public class NewShotgunScript : MonoBehaviour
         yield return new WaitForSeconds(reloadTime);
         UpdateAmmoText();
         isReloading = false;
+        gunManager.canSwitch = true;
     }
     private Vector3 GetConeSpreadDirection(Vector3 forwardDirection, float maxAngle)
     {

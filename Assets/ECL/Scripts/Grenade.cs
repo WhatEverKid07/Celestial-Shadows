@@ -51,7 +51,7 @@ public class Grenade : MonoBehaviour
         }
 
         Instantiate(explosionEffect, transform.position, transform.rotation);
-        explosionSound.Play();
+        AudioManager.instance.GrenadeExplode();
         foreach(GameObject objects in grenadePieces)
         {
             objects.SetActive(false);

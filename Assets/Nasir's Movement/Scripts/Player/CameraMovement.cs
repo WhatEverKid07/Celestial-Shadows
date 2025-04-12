@@ -62,7 +62,7 @@ public class CameraMovement : MonoBehaviour
         mouseY = axisY.action.ReadValue<float>();
 
         CheckForWall();
-        Debug.Log(wasForwardWalled);
+        //Debug.Log(wasForwardWalled);
 
         if (characterMove.isRightWalled && characterMove.isWallRunning && !characterMove.isWallJumping)
         {
