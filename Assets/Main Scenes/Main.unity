@@ -6492,7 +6492,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &655801312
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6606,7 +6606,7 @@ AudioSource:
   m_GameObject: {fileID: 738163014}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
+  OutputAudioMixerGroup: {fileID: 7845423502989904398, guid: 6fe6c90ca9a0e0b4ab52a79a7f860e65, type: 2}
   m_audioClip: {fileID: 0}
   m_PlayOnAwake: 0
   m_Volume: 1
@@ -6709,12 +6709,15 @@ MonoBehaviour:
   playerAudioSource: {fileID: 738163019}
   musicAudioSource: {fileID: 738163018}
   aRShoot: {fileID: 8300000, guid: 371b16321f39948419007e687683305a, type: 3}
+  aRReload: {fileID: 8300000, guid: 9438cfd93879e774d93a036f1ff54eaa, type: 3}
   pistolShoot: {fileID: 8300000, guid: 80218179084b59340ada106e96269edd, type: 3}
   shotgunShoot: {fileID: 8300000, guid: a9214f7832ee88849bdb3e6c92212f1b, type: 3}
   knifeSlash: {fileID: 8300000, guid: e70b9ff748dc71b43989131f8cd10fbc, type: 3}
   knifeHit: {fileID: 8300000, guid: 0bdb2f0b7aedad846a1b7d71b524b4c6, type: 3}
   grenadeExplode: {fileID: 8300000, guid: 84b6d62ea3e306b42b431f5d3e41f86f, type: 3}
+  grenadePinPull: {fileID: 8300000, guid: 54e197a3d4754ac4da82093f10b54ae9, type: 3}
   walking: {fileID: 8300000, guid: 646e0b57de8a7f749a6fae412ca46315, type: 3}
+  running: {fileID: 8300000, guid: cb8dcd87b58843443b0fd77cbbff8bdf, type: 3}
 --- !u!82 &738163018
 AudioSource:
   m_ObjectHideFlags: 0
@@ -6724,7 +6727,7 @@ AudioSource:
   m_GameObject: {fileID: 738163014}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
+  OutputAudioMixerGroup: {fileID: -2277200508519448084, guid: 6fe6c90ca9a0e0b4ab52a79a7f860e65, type: 2}
   m_audioClip: {fileID: 0}
   m_PlayOnAwake: 1
   m_Volume: 1
@@ -6820,7 +6823,7 @@ AudioSource:
   m_GameObject: {fileID: 738163014}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
+  OutputAudioMixerGroup: {fileID: 7566471093800903493, guid: 6fe6c90ca9a0e0b4ab52a79a7f860e65, type: 2}
   m_audioClip: {fileID: 0}
   m_PlayOnAwake: 0
   m_Volume: 1
@@ -34209,7 +34212,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8721347628316479464, guid: a1b2b88e23e82d749b228cc279fbe9a7, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -34606,7 +34609,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3388305163703433885, guid: 92fc489b1e3c409479c2c1af885db9e7, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

@@ -6627,6 +6627,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1872656983013246019}
   - component: {fileID: 3477859608927009956}
+  - component: {fileID: 4782380046343818222}
   m_Layer: 0
   m_Name: NewAssault Rifle
   m_TagString: Untagged
@@ -6672,6 +6673,18 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &4782380046343818222
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3388305163703433885}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 37148884504dfb740ae716a2c67be554, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &3415476910373849132
 GameObject:
   m_ObjectHideFlags: 0
@@ -7103,8 +7116,6 @@ MonoBehaviour:
   nameOfTriggerTrigger: StartShooting
   playerCam: {fileID: 0}
   ammoText: {fileID: 0}
-  shootClip: {fileID: 8300000, guid: 524d2ffc2d49a8d48ba43f6ec43b779a, type: 3}
-  reloadClip: {fileID: 0}
   gunControls: {fileID: -944628639613478452, guid: 9269ee16b3aa1f0448f0710a2c982dcc, type: 3}
 --- !u!95 &7814439799684384637
 Animator:

@@ -12,14 +12,17 @@ public class AudioManager : MonoBehaviour
 
     [Header("Weapons")]
     [SerializeField] private AudioClip aRShoot;
+    [SerializeField] private AudioClip aRReload;
     [SerializeField] private AudioClip pistolShoot;
     [SerializeField] private AudioClip shotgunShoot;
     [SerializeField] private AudioClip knifeSlash;
     [SerializeField] private AudioClip knifeHit;
     [SerializeField] private AudioClip grenadeExplode;
+    [SerializeField] private AudioClip grenadePinPull;
 
     [Header("Player")]
     [SerializeField] private AudioClip walking;
+    [SerializeField] private AudioClip running;
 
 
     private void Awake()
@@ -29,13 +32,10 @@ public class AudioManager : MonoBehaviour
         else
         { Destroy(gameObject); }
     }
-    void Start()
-    {
-        
-    }
-
     public void AssaultRifleShoot()
     { weaponsAudioSource.clip = aRShoot; weaponsAudioSource.Play();}
+    public void AssaultRifleReload()
+    { weaponsAudioSource.clip = aRReload; weaponsAudioSource.Play(); }
     public void PistolShoot()
     { weaponsAudioSource.clip = pistolShoot; weaponsAudioSource.Play(); }
     public void ShotgunShoot()
@@ -46,12 +46,33 @@ public class AudioManager : MonoBehaviour
     { weaponsAudioSource.clip = knifeHit; weaponsAudioSource.Play(); }
     public void GrenadeExplode()
     { weaponsAudioSource.clip = grenadeExplode; weaponsAudioSource.Play(); }
+    public void GrenadePinPull()
+    { weaponsAudioSource.clip = grenadePinPull; weaponsAudioSource.Play(); }
 
     public void PlayerWalking(bool isMoving)
     {
         playerAudioSource.clip = walking;
 
         if (isMoving)
+        {
+            if (!playerAudioSource.isPlaying)
+            {
+                playerAudioSource.Play();
+            }
+        }
+        else
+        {
+            if (playerAudioSource.isPlaying)
+            {
+                playerAudioSource.Stop();
+            }
+        }
+    }
+    public void PlayerRunning(bool isRunning)
+    {
+        playerAudioSource.clip = running;
+
+        if (isRunning)
         {
             if (!playerAudioSource.isPlaying)
             {

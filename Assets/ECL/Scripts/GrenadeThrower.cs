@@ -133,4 +133,9 @@ public class GrenadeThrower : MonoBehaviour
     {
         ammoText.text = grenadeAmount.ToString() + " Grenades Remaining";
     }
+
+    public void PullPinSFX()
+    {
+        AudioManager.instance.GrenadePinPull();
+    }
 }

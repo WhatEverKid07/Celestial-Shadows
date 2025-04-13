@@ -248,11 +248,15 @@ public class CharacterMovement : MonoBehaviour
         {
             AudioManager.instance.PlayerWalking(true);
         }
+        else if (isRunning && !isJumping)
+        {
+            AudioManager.instance.PlayerRunning(true);
+        }
         else
         {
+            AudioManager.instance.PlayerRunning(false);
             AudioManager.instance.PlayerWalking(false);
         }
-
     }
     
     private void FixedUpdate()
