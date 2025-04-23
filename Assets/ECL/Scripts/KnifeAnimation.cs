@@ -68,6 +68,9 @@ public class KnifeAnimation : MonoBehaviour
         string selectedAnimation = attackAnims[randomIndex].name;
         animator.Play(selectedAnimation);
         AudioManager.instance.KnifeSlash();
+        Debug.Log(selectedAnimation.Length);
+        yield return new WaitForSeconds(selectedAnimation.Length);
+        //OnAttackAnimationEnd();
         Debug.Log("attack");
 
         // Let animation event reset states

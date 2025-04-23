@@ -296,8 +296,7 @@ MonoBehaviour:
   controls: {fileID: -944628639613478452, guid: 9269ee16b3aa1f0448f0710a2c982dcc, type: 3}
   attackAnims:
   - {fileID: 7400000, guid: b3b2fbe18d9061241adb652d94cbac91, type: 2}
-  - {fileID: 7400000, guid: cbf0fe9d85d761548982db8d3baa2ab0, type: 2}
-  knifeSlash: {fileID: 0}
+  - {fileID: 7400000, guid: 5fac67008059a7744b7b8342083c5eab, type: 2}
 --- !u!1 &1996266974959442144
 GameObject:
   m_ObjectHideFlags: 0
