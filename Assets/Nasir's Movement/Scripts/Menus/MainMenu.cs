@@ -261,7 +261,6 @@ public class MainMenu : MonoBehaviour
             }
         }
 
-
         isRotating = false;
 
     }

@@ -6,11 +6,22 @@ public class PlayerStats : MonoBehaviour
 {
     [Header("PlayerScripts")]
     [SerializeField] private CharacterMovement characterMoveScript;
+    [SerializeField] private AutoAndSemiAutoGunController asaGunScript;
+    [SerializeField] private NewPistolScript pistolScript;
+    [SerializeField] private NewShotgunScript shotgunScript;
     [SerializeField] private WatchFunction watchFunctionScript;
     [SerializeField] private CrocsFunction crocsFunctionScript;
 
     [Header("Stats")]
     //Syringe
+    private GameObject currentGun;
+    [SerializeField] private GameObject ar;
+    [SerializeField] private GameObject pistol;
+    [SerializeField] private GameObject shotgun;
+    [SerializeField] private GameObject knife;
+    [SerializeField] private GameObject grenade;
+    [SerializeField] private GameObject sniper;
+
     private float attackSpeed;
     private float minAttackSpeed;
 
@@ -71,6 +82,10 @@ public class PlayerStats : MonoBehaviour
 
     private void Start()
     {
+        asaGunScript = FindAnyObjectByType<AutoAndSemiAutoGunController>();
+        pistolScript = FindAnyObjectByType<NewPistolScript>();
+        shotgunScript = FindAnyObjectByType<NewShotgunScript>();
+
         crocsFunctionScript = FindAnyObjectByType<CrocsFunction>();
         watchFunctionScript = FindAnyObjectByType<WatchFunction>();
 
@@ -83,6 +98,9 @@ public class PlayerStats : MonoBehaviour
     }
     private void Update()
     {
+        UpdateCurrentGun();
+        UpdateAttackSpeed();
+
         UpdateStatText();
 
         if (crocs.Count > 0 && crocsFunctionScript.canUpdateCrocStat)
@@ -94,6 +112,29 @@ public class PlayerStats : MonoBehaviour
         {
             UpdateDashStat();
         }
+    }
+
+    private void UpdateCurrentGun()
+    {
+        if (GameObject.Find("Assault Rifle"))
+        {
+            currentGun = ar;
+            attackSpeed = asaGunScript.fireRate;
+        }
+        else if (GameObject.Find("Pistol"))
+        {
+            currentGun = pistol;
+            attackSpeed = pistolScript.fireRate;
+        }
+        else 
+        {
+            currentGun = shotgun;
+            attackSpeed = shotgunScript.fireRate;
+        }
+    }
+
+    private void UpdateAttackSpeed()
+    {
     }
 
     private void UpdateSpeedStat()
