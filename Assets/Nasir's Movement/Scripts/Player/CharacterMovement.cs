@@ -116,7 +116,6 @@ public class CharacterMovement : MonoBehaviour
 
     private void Start()
     {
-
         groundChecker = GameObject.Find("GroundChecker");
         ground = LayerMask.GetMask("Ground");
         wall = LayerMask.GetMask("Wall");
@@ -149,7 +148,7 @@ public class CharacterMovement : MonoBehaviour
         //MOVE INPUT
         moveDir = playerCntrls.action.ReadValue<Vector3>();
 
-        Debug.Log("Is jumping: " + isJumping);
+        //Debug.Log("Is jumping: " + isJumping);
 
         //COYOTE TIME
         /*if (!IsGrounded())

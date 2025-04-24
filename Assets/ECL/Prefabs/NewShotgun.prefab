@@ -5110,6 +5110,7 @@ SkinnedMeshRenderer:
   m_RendererPriority: 0
   m_Materials:
   - {fileID: -4751157459752183577, guid: 8cc1548c8b6f18c439bdf3a6dc77276d, type: 3}
+  - {fileID: 2100000, guid: 1d4b2442e3e40c748a4541111e7c55d1, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -5226,6 +5227,7 @@ SkinnedMeshRenderer:
   m_RendererPriority: 0
   m_Materials:
   - {fileID: 9001761073535921666, guid: beb591f3ef4b0b046b605b1b175e87d3, type: 3}
+  - {fileID: 2100000, guid: 1d4b2442e3e40c748a4541111e7c55d1, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -5345,6 +5347,7 @@ MeshRenderer:
   m_RendererPriority: 0
   m_Materials:
   - {fileID: 2100000, guid: 4524ba78a06384a45a43c4f71e883981, type: 2}
+  - {fileID: 2100000, guid: 1d4b2442e3e40c748a4541111e7c55d1, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -5524,6 +5527,7 @@ MeshRenderer:
   m_RendererPriority: 0
   m_Materials:
   - {fileID: 2100000, guid: 4524ba78a06384a45a43c4f71e883981, type: 2}
+  - {fileID: 2100000, guid: 1d4b2442e3e40c748a4541111e7c55d1, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -11070,8 +11074,6 @@ MonoBehaviour:
   nameOfSightAnimReverse: InSightShotgunReverse
   playerCam: {fileID: 0}
   ammoText: {fileID: 0}
-  shootClip: {fileID: 8300000, guid: 524d2ffc2d49a8d48ba43f6ec43b779a, type: 3}
-  reloadClip: {fileID: 0}
   gunControls: {fileID: -944628639613478452, guid: 9269ee16b3aa1f0448f0710a2c982dcc, type: 3}
 --- !u!95 &2571837730045116796
 Animator:
