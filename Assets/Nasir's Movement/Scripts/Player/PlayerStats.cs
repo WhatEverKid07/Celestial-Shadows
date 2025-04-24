@@ -6,11 +6,12 @@ public class PlayerStats : MonoBehaviour
 {
     [Header("PlayerScripts")]
     [SerializeField] private CharacterMovement characterMoveScript;
-    [SerializeField] private AutoAndSemiAutoGunController asaGunScript;
+    [SerializeField] private NewARScript arScript;
     [SerializeField] private NewPistolScript pistolScript;
     [SerializeField] private NewShotgunScript shotgunScript;
     [SerializeField] private WatchFunction watchFunctionScript;
     [SerializeField] private CrocsFunction crocsFunctionScript;
+    [SerializeField] private SyringeFunction syringeFunctionScript;
 
     [Header("Stats")]
     //Syringe
@@ -23,6 +24,12 @@ public class PlayerStats : MonoBehaviour
     [SerializeField] private GameObject sniper;
 
     private float attackSpeed;
+    private float arAttack;
+    private float pistolAttack;
+    private float shotgunAttack;
+    private float knifeAttack;
+    private float grenadeAttack;
+    private float sniperAttack;
     private float minAttackSpeed;
 
     //Crocs
@@ -75,19 +82,22 @@ public class PlayerStats : MonoBehaviour
     [Header("ItemLists")]
     [SerializeField] internal List<GameObject> watches;
     [SerializeField] internal List<GameObject> crocs;
+    [SerializeField] internal List<GameObject> syringe;
 
     [Header("ItemValue")]
     [SerializeField] private float watchValue;
     [SerializeField] private float crocValue;
+    [SerializeField] private float syringeValue;
 
     private void Start()
     {
-        asaGunScript = FindAnyObjectByType<AutoAndSemiAutoGunController>();
+        arScript = FindAnyObjectByType<NewARScript>();
         pistolScript = FindAnyObjectByType<NewPistolScript>();
         shotgunScript = FindAnyObjectByType<NewShotgunScript>();
 
         crocsFunctionScript = FindAnyObjectByType<CrocsFunction>();
         watchFunctionScript = FindAnyObjectByType<WatchFunction>();
+        syringeFunctionScript = FindAnyObjectByType<SyringeFunction>();
 
         walkSpeed = characterMoveScript.walkSpeed;
         runSpeed = characterMoveScript.runSpeed;
@@ -95,6 +105,10 @@ public class PlayerStats : MonoBehaviour
         dashPower = characterMoveScript.dashPower;
 
         dashCooldown = characterMoveScript.dashTime;
+
+        arAttack = arScript.fireRate;
+        pistolAttack = pistolScript.fireRate;
+        shotgunAttack = shotgunScript.fireRate;
     }
     private void Update()
     {
@@ -116,25 +130,48 @@ public class PlayerStats : MonoBehaviour
 
     private void UpdateCurrentGun()
     {
-        if (GameObject.Find("Assault Rifle"))
+        if (GameObject.Find("NewAssault Rifle"))
         {
             currentGun = ar;
-            attackSpeed = asaGunScript.fireRate;
+            attackSpeed = arAttack;
         }
-        else if (GameObject.Find("Pistol"))
+        else if (GameObject.Find("NewPistol"))
         {
             currentGun = pistol;
-            attackSpeed = pistolScript.fireRate;
+            attackSpeed = pistolAttack;
         }
-        else 
+        else if (GameObject.Find("NewShotgun"))
         {
             currentGun = shotgun;
-            attackSpeed = shotgunScript.fireRate;
+            attackSpeed = shotgunAttack;
+        }
+        else
+        {
+            return;
         }
     }
 
     private void UpdateAttackSpeed()
     {
+        float attackIncrease = syringeValue * syringe.Count;
+
+        if (arAttack <= minAttackSpeed)
+        {
+            float newArAttack = arAttack - attackIncrease;
+            arAttack = newArAttack;
+        }
+
+        if (pistolAttack <= minAttackSpeed)
+        {
+            float newPistolAttack = pistolAttack - attackIncrease;
+            pistolAttack = newPistolAttack;
+        }
+
+        if (shotgunAttack <= minAttackSpeed)
+        {
+            float newShotgunAttack = shotgunAttack - attackIncrease;
+            shotgunAttack = newShotgunAttack;
+        }
     }
 
     private void UpdateSpeedStat()
