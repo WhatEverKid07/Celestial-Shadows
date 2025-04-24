@@ -41,7 +41,7 @@ public class NewPistolScript : MonoBehaviour
     [Header("Shooting Attributes")]
     [SerializeField] private GameObject bulletSpawn;
     [SerializeField] private GameObject projectilePrefab;
-    [SerializeField] private float fireRate = 15f;
+    [SerializeField] internal float fireRate = 15f;
     [SerializeField] private float bulletSpeed = 20f;
 
     private float nextTimeToFire = 0f;
