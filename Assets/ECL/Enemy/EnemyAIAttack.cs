@@ -36,6 +36,9 @@ public class EnemyAIAttack : MonoBehaviour
     [Header("Melee Attack")]
     [SerializeField] private float meleeAttackDamage = 10f;
     [SerializeField] private float meleeAttackRange = 2f;
+    [SerializeField] private Animator attackAnim;
+    [SerializeField] private string nameOfAttackAnim;
+    [SerializeField] private BoxCollider attackArea;
 
     private void Awake()
     {
