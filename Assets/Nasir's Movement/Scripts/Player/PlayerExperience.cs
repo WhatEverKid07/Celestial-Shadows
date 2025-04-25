@@ -1,8 +1,13 @@
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class PlayerExperience : MonoBehaviour
 {
-    [Header("Scripts")]
+    [Header("Enemies")]
+    [SerializeField] private List<GameObject> enemies;
+    [SerializeField] private List<Target> allTargets;
 
     [Header("XP")]
     private float maxXp;
@@ -20,6 +25,30 @@ public class PlayerExperience : MonoBehaviour
 
     private void Update()
     {
+        enemies = GameObject.FindGameObjectsWithTag("Enemy").ToList();
+        for (int i = 0; i < enemies.Count; i++)
+        {
+            var enemyTarget = enemies[i].GetComponent<Target>();
+            if (!allTargets.Contains(enemyTarget))
+            {
+                allTargets.Add(enemyTarget);
+            }
+        }
+
+        foreach (var target in allTargets)
+        {
+            Debug.Log(target.addXp);
+            if (target.addXp)
+            {
+                AddExperience();
+            }
+            else
+            {
+                return;
+            }
+        }
+
+
         if (currentXp >= maxXp)
         {
             xpLvl++;
@@ -31,6 +60,6 @@ public class PlayerExperience : MonoBehaviour
 
     private void AddExperience()
     {
-
+        Debug.Log("Add experience.");
     }
 }

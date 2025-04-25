@@ -618,7 +618,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 933128872412428547, guid: de7e15e579e75cf4aac69040f502caf0, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 933128872412428547, guid: de7e15e579e75cf4aac69040f502caf0, type: 3}
+      propertyPath: m_TagString
+      value: Enemy
       objectReference: {fileID: 0}
     - target: {fileID: 2544629352641191049, guid: de7e15e579e75cf4aac69040f502caf0, type: 3}
       propertyPath: player
@@ -1649,7 +1653,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 933128872412428547, guid: de7e15e579e75cf4aac69040f502caf0, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 933128872412428547, guid: de7e15e579e75cf4aac69040f502caf0, type: 3}
+      propertyPath: m_TagString
+      value: Enemy
       objectReference: {fileID: 0}
     - target: {fileID: 2544629352641191049, guid: de7e15e579e75cf4aac69040f502caf0, type: 3}
       propertyPath: player
@@ -18339,9 +18347,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 712959554}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 947ca965554445d4c93f3307b6ff495e, type: 3}
+  m_Script: {fileID: 11500000, guid: ad76deff4c42e47478bb38d77fd2a3a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  enemies: []
+  allTargets: []
 --- !u!1 &713090236
 GameObject:
   m_ObjectHideFlags: 0
