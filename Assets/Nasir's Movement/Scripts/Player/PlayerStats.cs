@@ -106,16 +106,17 @@ public class PlayerStats : MonoBehaviour
 
         dashCooldown = characterMoveScript.dashTime;
 
-        arAttack = arScript.fireRate;
-        pistolAttack = pistolScript.fireRate;
-        shotgunAttack = shotgunScript.fireRate;
     }
     private void Update()
     {
         UpdateCurrentGun();
-        UpdateAttackSpeed();
 
         UpdateStatText();
+
+        if (syringe.Count > 0 && syringeFunctionScript.canUpdateSyringeStat)
+        {
+            UpdateAttackSpeed();
+        }
 
         if (crocs.Count > 0 && crocsFunctionScript.canUpdateCrocStat)
         {
@@ -130,20 +131,33 @@ public class PlayerStats : MonoBehaviour
 
     private void UpdateCurrentGun()
     {
+        Debug.Log(currentGun);
         if (GameObject.Find("NewAssault Rifle"))
         {
             currentGun = ar;
-            attackSpeed = arAttack;
+            if (currentGun == ar)
+            {
+                arAttack = arScript.fireRate;
+                attackSpeed = arAttack;
+            }
         }
         else if (GameObject.Find("NewPistol"))
         {
             currentGun = pistol;
-            attackSpeed = pistolAttack;
+            if (currentGun == pistol)
+            {
+                pistolAttack = pistolScript.fireRate;
+                attackSpeed = pistolAttack;
+            }
         }
         else if (GameObject.Find("NewShotgun"))
         {
             currentGun = shotgun;
-            attackSpeed = shotgunAttack;
+            if (currentGun == shotgun)
+            {
+                shotgunAttack = shotgunScript.fireRate;
+                attackSpeed = shotgunAttack;
+            }
         }
         else
         {
@@ -155,19 +169,19 @@ public class PlayerStats : MonoBehaviour
     {
         float attackIncrease = syringeValue * syringe.Count;
 
-        if (arAttack <= minAttackSpeed)
+        if (arAttack >= minAttackSpeed)
         {
             float newArAttack = arAttack - attackIncrease;
             arAttack = newArAttack;
         }
 
-        if (pistolAttack <= minAttackSpeed)
+        if (pistolAttack >= minAttackSpeed)
         {
             float newPistolAttack = pistolAttack - attackIncrease;
             pistolAttack = newPistolAttack;
         }
 
-        if (shotgunAttack <= minAttackSpeed)
+        if (shotgunAttack >= minAttackSpeed)
         {
             float newShotgunAttack = shotgunAttack - attackIncrease;
             shotgunAttack = newShotgunAttack;
