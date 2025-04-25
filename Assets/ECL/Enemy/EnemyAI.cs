@@ -25,6 +25,7 @@ public class EnemyAI : MonoBehaviour
     private float threshold = 1f;
     private bool isAtTarget = false;
     private Rigidbody rb;
+    private bool the = true;
     void Start()
     {
         enemyAttack = GetComponentInChildren<EnemyAIAttack>();
@@ -183,6 +184,12 @@ public class EnemyAI : MonoBehaviour
             return;
         isAtTarget = false;
         agent.isStopped = false;
+        enemyAttack.walking = true;
+        if (enemyAttack.melee && the)
+        { 
+            the = false;
+            enemyAttack.Walk();
+        }
         //rb.isKinematic = false;
         agent.SetDestination(currentTarget.position);
         //Debug.Log("Moving to: " + currentTarget.name);
@@ -191,6 +198,8 @@ public class EnemyAI : MonoBehaviour
     {
         if (hasReachedTarget || isAtTarget) return;
         hasReachedTarget = true;
+        enemyAttack.walking = false;
+        the = true;
         isAtTarget = true;
         agent.isStopped = true;
         //rb.isKinematic = true;

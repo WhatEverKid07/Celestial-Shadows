@@ -8,8 +8,8 @@ public class EnemyAIAttack : MonoBehaviour
     [SerializeField] private float pauseBetweenEvents = 1f;
 
     [Header("Attack Mode")]
-    [SerializeField] private bool melee = false;
-    [SerializeField] private bool range = false;
+    [SerializeField] internal bool melee = false;
+    [SerializeField] internal bool range = false;
 
     [Tooltip("For Testing")]
     internal bool isAttacking = false; // Public for testing. Make Internal
@@ -37,8 +37,12 @@ public class EnemyAIAttack : MonoBehaviour
     [SerializeField] private float meleeAttackDamage = 10f;
     [SerializeField] private float meleeAttackRange = 2f;
     [SerializeField] private Animator attackAnim;
-    [SerializeField] private string nameOfAttackAnim;
+    [SerializeField] private string nameOfAttackTrigger;
+    [SerializeField] private string nameOfWalkingBool;
     [SerializeField] private BoxCollider attackArea;
+
+    private bool canAttack = true;
+    internal bool walking = false;
 
     private void Awake()
     {
@@ -67,7 +71,35 @@ public class EnemyAIAttack : MonoBehaviour
         }
         if (melee)
         {
+            if (isAttacking && !walking && enabled)
+            {
+                //attackAnim.SetBool(nameOfAttackAnim, true);
+                StartCoroutine(Attack());
+            }
 
+            /*if (walking)
+            {
+                attackAnim.SetInteger(nameOfWalkingBool, 1);
+            }
+            else
+            {
+                attackAnim.SetInteger(nameOfWalkingBool, 0);
+            }*/
+        }
+    }
+    internal void Walk()
+    {
+        attackAnim.SetTrigger(nameOfWalkingBool);
+    }
+    private IEnumerator Attack()
+    {
+        if (canAttack)
+        {
+            canAttack = false;
+            attackAnim.SetTrigger(nameOfAttackTrigger);
+            Debug.Log("attack");
+            yield return new WaitForSeconds(1.13f);
+            canAttack = true;
         }
     }
 
