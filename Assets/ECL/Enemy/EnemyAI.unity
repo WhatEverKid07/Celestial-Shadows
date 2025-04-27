@@ -447,6 +447,7 @@ GameObject:
   m_Component:
   - component: {fileID: 638797343}
   - component: {fileID: 638797344}
+  - component: {fileID: 638797345}
   m_Layer: 0
   m_Name: AttackArea
   m_TagString: Untagged
@@ -463,7 +464,7 @@ Transform:
   m_GameObject: {fileID: 638797342}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.229, z: 1.207}
+  m_LocalPosition: {x: -0.07, y: 0.22, z: 1.56}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -490,6 +491,19 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1.1861315, y: 1.0587786, z: 0.8824425}
   m_Center: {x: -0.024490833, y: 0.27430028, z: -0.058778763}
+--- !u!114 &638797345
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 638797342}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3b081bbae1aab1648a3ed860b69729ca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  damage: 10
 --- !u!1 &651061891
 GameObject:
   m_ObjectHideFlags: 0
@@ -955,7 +969,7 @@ MonoBehaviour:
   m_OverrideVoxelSize: 0
   m_VoxelSize: 0.9666667
   m_MinRegionArea: 2
-  m_NavMeshData: {fileID: 23800000, guid: d4a3f7bf680e3434c961933e6f0b4c5f, type: 2}
+  m_NavMeshData: {fileID: 23800000, guid: 4bbae90aeb59dbd47b71a855420c7fba, type: 2}
   m_BuildHeightMesh: 0
 --- !u!114 &1016311901
 MonoBehaviour:
@@ -986,7 +1000,7 @@ MonoBehaviour:
   m_OverrideVoxelSize: 0
   m_VoxelSize: 0.16666667
   m_MinRegionArea: 2
-  m_NavMeshData: {fileID: 23800000, guid: e880462e48dad54418387ef2c91c9cea, type: 2}
+  m_NavMeshData: {fileID: 23800000, guid: 0dbd018228e2bf04b854be01025163c9, type: 2}
   m_BuildHeightMesh: 0
 --- !u!1 &1157660242
 GameObject:
@@ -1262,6 +1276,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1409839357}
   - component: {fileID: 1409839356}
+  - component: {fileID: 1409839358}
   m_Layer: 0
   m_Name: '"Player"'
   m_TagString: Player
@@ -1305,6 +1320,19 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1409839358
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1409839355}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a4a783d8cebc4164ab02da6d81594833, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  health: 50
 --- !u!1 &1517502018
 GameObject:
   m_ObjectHideFlags: 0
@@ -19823,7 +19851,7 @@ MonoBehaviour:
   attackAnim: {fileID: 7728553635341366521}
   nameOfAttackTrigger: AttackTrig
   nameOfWalkingBool: Walk
-  attackArea: {fileID: 638797344}
+  enemyAttackArea: {fileID: 638797345}
 --- !u!1 &7784001511696607129
 GameObject:
   m_ObjectHideFlags: 0
@@ -24974,7 +25002,7 @@ MonoBehaviour:
   attackAnim: {fileID: 0}
   nameOfAttackTrigger: 
   nameOfWalkingBool: 
-  attackArea: {fileID: 0}
+  enemyAttackArea: {fileID: 0}
 --- !u!4 &8567213640015954148
 Transform:
   m_ObjectHideFlags: 0
@@ -29890,7 +29918,7 @@ MonoBehaviour:
   attackAnim: {fileID: 0}
   nameOfAttackTrigger: 
   nameOfWalkingBool: 
-  attackArea: {fileID: 0}
+  enemyAttackArea: {fileID: 0}
 --- !u!1 &8997134923796071842
 GameObject:
   m_ObjectHideFlags: 0

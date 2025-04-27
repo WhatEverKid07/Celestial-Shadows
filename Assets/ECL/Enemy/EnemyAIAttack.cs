@@ -39,7 +39,7 @@ public class EnemyAIAttack : MonoBehaviour
     [SerializeField] private Animator attackAnim;
     [SerializeField] private string nameOfAttackTrigger;
     [SerializeField] private string nameOfWalkingBool;
-    [SerializeField] private BoxCollider attackArea;
+    [SerializeField] private EnemyAttackArea enemyAttackArea;
 
     private bool canAttack = true;
     internal bool walking = false;
@@ -51,14 +51,6 @@ public class EnemyAIAttack : MonoBehaviour
             Debug.LogError("Both modes are the same value!");
         }
     }
-    private void Start()
-    {
-        if (range)
-        {
-
-        }
-    }
-
     private void Update()
     {
         if (range)
@@ -73,18 +65,8 @@ public class EnemyAIAttack : MonoBehaviour
         {
             if (isAttacking && !walking && enabled)
             {
-                //attackAnim.SetBool(nameOfAttackAnim, true);
                 StartCoroutine(Attack());
             }
-
-            /*if (walking)
-            {
-                attackAnim.SetInteger(nameOfWalkingBool, 1);
-            }
-            else
-            {
-                attackAnim.SetInteger(nameOfWalkingBool, 0);
-            }*/
         }
     }
     internal void Walk()
@@ -98,6 +80,8 @@ public class EnemyAIAttack : MonoBehaviour
             canAttack = false;
             attackAnim.SetTrigger(nameOfAttackTrigger);
             Debug.Log("attack");
+            yield return new WaitForSeconds(0.5f);
+            enemyAttackArea.Attack();
             yield return new WaitForSeconds(1.13f);
             canAttack = true;
         }
