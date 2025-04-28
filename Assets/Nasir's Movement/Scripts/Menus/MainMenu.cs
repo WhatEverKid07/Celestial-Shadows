@@ -20,6 +20,8 @@ public class MainMenu : MonoBehaviour
     private Coroutine rotateCoroutine;
 
     [Header("Menus")]
+    private GameObject lobby;
+
     private GameObject selectionMenu;
     private GameObject characterMenu;
     public GameObject arsenalMenu { get; private set; }
@@ -61,6 +63,8 @@ public class MainMenu : MonoBehaviour
         selectionMenu = GameObject.Find("SelectionMenu");
         characterMenu = GameObject.Find("CharacterMenu");
         arsenalMenu = GameObject.Find("ArsenalMenu");
+
+        lobby = GameObject.Find("Lobby");
 
         settingsGO = GameObject.Find("SettingsDisplay");
         settingsButtonGO = GameObject.Find("Settings");
@@ -234,6 +238,7 @@ public class MainMenu : MonoBehaviour
         {
             currentMenu.transform.rotation = Quaternion.Slerp(currentMenu.transform.rotation, Quaternion.Euler(0f, currentMenu.transform.rotation.eulerAngles.y - 10f, 0f), (rotationSpeed/2) * Time.deltaTime);
             previousMenu.transform.rotation = Quaternion.Slerp(previousMenu.transform.rotation, Quaternion.Euler(0f, previousMenu.transform.rotation.eulerAngles.y + 10f, 0f), (rotationSpeed / 2) * Time.deltaTime);
+            //lobby.transform.rotation = Quaternion.Slerp(lobby.transform.rotation, Quaternion.Euler(0f, lobby.transform.rotation.eulerAngles.y + 5f, 0f), (rotationSpeed / 2) * Time.deltaTime);
             elaspedTime += Time.deltaTime;
 
             yield return null;
