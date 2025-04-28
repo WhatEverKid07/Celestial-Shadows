@@ -149,6 +149,19 @@ public class MainMenu : MonoBehaviour
             ExitButtonOff();
             BackButtonOff();
         }
+
+        if (currentMenu == selectionMenu)
+        {
+            lobby.transform.rotation = Quaternion.Slerp(lobby.transform.rotation, Quaternion.Euler(0f, -5f, 0f), (rotationSpeed * 2) * Time.deltaTime);
+        }
+        else if (currentMenu == characterMenu)
+        {
+            lobby.transform.rotation = Quaternion.Slerp(lobby.transform.rotation, Quaternion.Euler(0f, 5f, 0f), (rotationSpeed * 2) * Time.deltaTime);
+        }
+        else
+        {
+            lobby.transform.rotation = Quaternion.Slerp(lobby.transform.rotation, Quaternion.Euler(0f, 10f, 0f), (rotationSpeed * 2) * Time.deltaTime);
+        }
     }
 
     public void EnterStory()
@@ -238,13 +251,10 @@ public class MainMenu : MonoBehaviour
         {
             currentMenu.transform.rotation = Quaternion.Slerp(currentMenu.transform.rotation, Quaternion.Euler(0f, currentMenu.transform.rotation.eulerAngles.y - 10f, 0f), (rotationSpeed/2) * Time.deltaTime);
             previousMenu.transform.rotation = Quaternion.Slerp(previousMenu.transform.rotation, Quaternion.Euler(0f, previousMenu.transform.rotation.eulerAngles.y + 10f, 0f), (rotationSpeed / 2) * Time.deltaTime);
-            //lobby.transform.rotation = Quaternion.Slerp(lobby.transform.rotation, Quaternion.Euler(0f, lobby.transform.rotation.eulerAngles.y + 5f, 0f), (rotationSpeed / 2) * Time.deltaTime);
             elaspedTime += Time.deltaTime;
-
-            yield return null;
         }
 
-        float camRotationTime = 1f;
+        float camRotationTime = 1.2f;
         float camElaspedTime = 0f;
 
         if (elaspedTime > rotationTime)
