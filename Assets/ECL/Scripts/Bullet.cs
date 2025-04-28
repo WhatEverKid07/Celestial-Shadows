@@ -1,11 +1,12 @@
+using System.Collections;
 using UnityEngine;
 
 public class Bullet : MonoBehaviour
 {
     [SerializeField] private float damage = 10f;
-    [SerializeField] private GameObject impactEffect;
+    [SerializeField] private ParticleSystem impactEffect;
     [SerializeField] private float lifeTime = 5f;
-    [SerializeField] private LayerMask ignoredLayers; // Layers to ignore
+    [SerializeField] private LayerMask ignoredLayers;
 
     private void Start()
     {
@@ -23,22 +24,38 @@ public class Bullet : MonoBehaviour
         if (!collision.gameObject.CompareTag("Bullet"))
         {
             Target target = collision.transform.GetComponent<Target>();
-            if (target != null)
+            if (target != null && collision.gameObject.CompareTag("Player"))
             {
                 target.TakeDamage(damage);
             }
 
             if (impactEffect != null)
             {
-                GameObject impactGO = Instantiate(
+                MeshRenderer renderer = impactEffect.GetComponentInParent<MeshRenderer>();
+                renderer.enabled = false;
+                Rigidbody rb = GetComponent<Rigidbody>();
+                rb.isKinematic = true;
+                Collider collider = GetComponent<Collider>();
+                collider.enabled = false;
+                
+                /*GameObject impactGO = Instantiate(
                     impactEffect,
                     collision.contacts[0].point,
                     Quaternion.LookRotation(collision.contacts[0].normal)
-                );
-                Destroy(impactGO, 2f);
+                );*/
+                //Destroy(impactGO, 2f);
+
+                impactEffect.Play();
+                StartCoroutine(DestroyAfterDelay(5f));
+                return;
             }
 
             Destroy(gameObject);
         }
+    }
+    private IEnumerator DestroyAfterDelay(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        Destroy(gameObject);
     }
 }

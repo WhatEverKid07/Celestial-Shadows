@@ -185,6 +185,7 @@ public class EnemyAI : MonoBehaviour
         isAtTarget = false;
         agent.isStopped = false;
         enemyAttack.walking = true;
+        enemyAttack.player = currentTarget;
         if (enemyAttack.melee && the)
         { 
             the = false;
