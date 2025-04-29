@@ -6,6 +6,10 @@ public class ArsenalFunction : MonoBehaviour
     [Header("Scripts")]
     [SerializeField] private MainMenu mainMenuScript;
 
+    [Header("Camera")]
+    [SerializeField] private Transform gunCam;
+    private Vector3 moveOffset;
+
     [Header("Guns")]
     [SerializeField] private GameObject[] allGuns;
     private int currentIndex;
@@ -32,6 +36,8 @@ public class ArsenalFunction : MonoBehaviour
 
     private void Start()
     {
+        gunCam = Camera.main.transform;
+
         mainMenuScript = FindAnyObjectByType<MainMenu>();
 
         if (allGuns.Length > 0)
@@ -74,6 +80,12 @@ public class ArsenalFunction : MonoBehaviour
         {
             canSwitchDown = false;
             CanSwitchGunDown();
+        }
+
+        if (mainMenuScript.currentMenu == mainMenuScript.arsenalMenu)
+        {
+            moveOffset = new(0f, 0f, currentGun.transform.position.z - 15f);
+            gunCam.transform.position = Vector3.Lerp(gunCam.transform.position, currentGun.transform.position, switchSpeed * Time.deltaTime);
         }
 
     }
@@ -154,13 +166,15 @@ public class ArsenalFunction : MonoBehaviour
         }
 
     }
+
     private IEnumerator SwitchGunUp()
     {
-        float rotationTime = 1f;
+        float rotationTime = 5f;
         float elapsedTime = 0f;
 
         while (elapsedTime < rotationTime)
         {
+            /*
             currentGun.transform.position = Vector3.Lerp(currentGun.transform.position, currentOrientation.position, switchSpeed * Time.deltaTime);
             previousGun.transform.position = Vector3.Lerp(previousGun.transform.position, previousOrientation.position, switchSpeed * Time.deltaTime);
             if (nextGun != null)
@@ -177,6 +191,8 @@ public class ArsenalFunction : MonoBehaviour
                     gun.transform.position = Vector3.Lerp(gun.transform.position, moveOffset, switchSpeed * Time.deltaTime);
                 }
             }
+            */
+            gunCam.transform.position = Vector3.Lerp(gunCam.transform.position, moveOffset, switchSpeed * Time.deltaTime);
 
             elapsedTime += Time.deltaTime;
 
@@ -191,11 +207,16 @@ public class ArsenalFunction : MonoBehaviour
     {
         if (mainMenuScript.currentMenu == mainMenuScript.arsenalMenu)
         {
-            float rotationTime = 1f;
+            float rotationTime = 5f;
             float elapsedTime = 0f;
 
             while (elapsedTime < rotationTime)
             {
+
+                gunCam.transform.position = Vector3.Lerp(gunCam.transform.position, currentGun.transform.position, switchSpeed * Time.deltaTime);
+                yield return null;
+
+                /*
                 currentGun.transform.position = Vector3.Lerp(currentGun.transform.position, currentOrientation.position, switchSpeed * Time.deltaTime);
 
                 if (previousGun != null)
@@ -212,8 +233,7 @@ public class ArsenalFunction : MonoBehaviour
                 {
                     if (gun != nextGun && gun != currentGun && gun != previousGun)
                     {
-                        Vector3 moveOffset = new(gun.transform.position.x - 15f, 0f, 0f);
-                        moveOffset.z = gun.transform.position.z;
+                        Vector3 moveOffset = new(-40f, 0f, gun.transform.position.z);
                         gun.transform.position = Vector3.Lerp(gun.transform.position, moveOffset, switchSpeed * Time.deltaTime);
                     }
                 }
@@ -257,6 +277,7 @@ public class ArsenalFunction : MonoBehaviour
 
 
                 yield return null;
+                */
             }
         }
 
