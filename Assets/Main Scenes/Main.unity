@@ -325,6 +325,7 @@ GameObject:
   - component: {fileID: 95148706}
   - component: {fileID: 95148709}
   - component: {fileID: 95148708}
+  - component: {fileID: 95148712}
   m_Layer: 15
   m_Name: PlayerPhys
   m_TagString: Player
@@ -453,10 +454,10 @@ CapsuleCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.21159513
-  m_Height: 1.2
+  m_Radius: 0.35546583
+  m_Height: 1.5141385
   m_Direction: 1
-  m_Center: {x: 0, y: -0.3, z: -0.00055001676}
+  m_Center: {x: 0.050049126, y: -0.14293087, z: -0.047029912}
 --- !u!4 &95148711
 Transform:
   m_ObjectHideFlags: 0
@@ -474,6 +475,19 @@ Transform:
   - {fileID: 343611879}
   m_Father: {fileID: 712959555}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &95148712
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 95148705}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a4a783d8cebc4164ab02da6d81594833, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  health: 50
 --- !u!1 &116899621
 GameObject:
   m_ObjectHideFlags: 0
@@ -5582,7 +5596,7 @@ GameObject:
   m_Component:
   - component: {fileID: 343611879}
   - component: {fileID: 343611880}
-  m_Layer: 15
+  m_Layer: 0
   m_Name: WeaponPickUpDetect
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6384,7 +6398,7 @@ PrefabInstance:
     - target: {fileID: 6946410625675599562, guid: 52fe3b3bef8164c4688fc91f93fd1812, type: 3}
       propertyPath: player
       value: 
-      objectReference: {fileID: 712959555}
+      objectReference: {fileID: 95148711}
     - target: {fileID: 6946410625675599562, guid: 52fe3b3bef8164c4688fc91f93fd1812, type: 3}
       propertyPath: target
       value: 
@@ -6404,10 +6418,9 @@ GameObject:
   m_Component:
   - component: {fileID: 712959555}
   - component: {fileID: 712959556}
-  - component: {fileID: 712959557}
   m_Layer: 0
   m_Name: Player
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -6444,19 +6457,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enemies: []
   allTargets: []
---- !u!114 &712959557
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 712959554}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a4a783d8cebc4164ab02da6d81594833, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  health: 50
 --- !u!1 &738163014
 GameObject:
   m_ObjectHideFlags: 0
@@ -11947,7 +11947,7 @@ PrefabInstance:
     - target: {fileID: 6605342979217219841, guid: 9f5303d680ef016499e2b687a7389c10, type: 3}
       propertyPath: player
       value: 
-      objectReference: {fileID: 712959555}
+      objectReference: {fileID: 95148711}
     - target: {fileID: 6605342979217219841, guid: 9f5303d680ef016499e2b687a7389c10, type: 3}
       propertyPath: target
       value: 

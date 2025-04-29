@@ -44,53 +44,40 @@ public class EnemyAI : MonoBehaviour
         UpdateIfHasReachedTarget();
         if (currentTarget == player)
             UpdateObjectPosition(player);
+        Debug.DrawRay(transform.position + Vector3.up, (player.position + Vector3.up) - (transform.position + Vector3.up), Color.green);
+
     }
     bool IsPlayerVisible()
     {
         if (player == null) return false;
 
-        // Target the center of the player's body (adjust Y if needed)
-        Vector3 eyePosition = transform.position + Vector3.up * 1.5f;
-        Vector3 targetPosition = player.position + Vector3.up * 1.0f;
+        Vector3 eyePosition = transform.position + Vector3.up;
+        Vector3 targetPosition = player.GetComponent<Collider>().bounds.center;
         Vector3 directionToPlayer = (targetPosition - eyePosition).normalized;
 
         float angleToPlayer = Vector3.Angle(transform.forward, directionToPlayer);
-
-        // Debug angle and direction
-        //Debug.Log($"[AI] Angle to Player: {angleToPlayer}");
-
-        // Add a small buffer to avoid edge flakiness
         if (angleToPlayer > fieldOfViewAngle * 0.5f + 2f)
-        {
-            //Debug.Log("[AI] Player out of FOV");
             return false;
-        }
 
-        // Visualize raycast
-        Debug.DrawRay(eyePosition, directionToPlayer * detectionRange, Color.red);
+        Debug.DrawRay(eyePosition, directionToPlayer * detectionRange, Color.green);
 
-        // Check if the ray hits the player
-        if (Physics.Raycast(eyePosition, directionToPlayer, out RaycastHit hit, detectionRange, ~obstructionLayer))
+        // Raycast to check if something blocks line of sight
+        if (Physics.Raycast(eyePosition, directionToPlayer, out RaycastHit hit, detectionRange))
         {
-            //Debug.Log($"[AI] Raycast hit: {hit.transform.name}");
-
-            if (hit.transform == player)
+            if (hit.transform == player || hit.transform.IsChildOf(player))
             {
-                agent.isStopped = false;
-                return true;
+                return true; // Clear line of sight
             }
             else
             {
-                //Debug.Log("[AI] Player blocked by: " + hit.transform.name);
+                Debug.Log($"[AI] View blocked by: {hit.transform.name}");
             }
-        }
-        else
-        {
-            //Debug.Log("[AI] Raycast didn't hit anything");
         }
 
         return false;
     }
+
+
 
     IEnumerator CheckPlayerVisibility()
     {
