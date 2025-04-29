@@ -6,6 +6,6 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Main Scenes/Main.unity
-    guid: aa6b80f577b47ac4f8136145678f6420
+    path: Assets/pedro/open world.unity
+    guid: fe51e12a3c67b314aac4ef9da44ddbda
   m_configObjects: {}

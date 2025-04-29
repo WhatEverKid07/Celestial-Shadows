@@ -24,7 +24,7 @@ public class MainMenu : MonoBehaviour
     private GameObject selectionMenu;
     private GameObject characterMenu;
     public GameObject arsenalMenu { get; private set; }
-
+    private Canvas weaponMenu;
     private GameObject settingsGO;
     private Canvas settingsMenu;
 
@@ -54,6 +54,8 @@ public class MainMenu : MonoBehaviour
     private Button settingsButton;
     private Image settingsButtonImage;
 
+    private Canvas modeGrid;
+    private Button storyModeButton;
     public bool goToStory { get; private set; }
     public bool goToEndless { get; private set; }
 
@@ -72,13 +74,16 @@ public class MainMenu : MonoBehaviour
         backGO = GameObject.Find("Back");
         constantMenuGO = GameObject.Find("MenuConstants");
 
+        modeGrid = selectionMenu.GetComponentInChildren<Canvas>();
         settingsMenu = settingsGO.GetComponentInChildren<Canvas>();
         quitMenu = quitGO.GetComponentInChildren<Canvas>();
         constantMenu = constantMenuGO.GetComponentInChildren<Canvas>();
+        weaponMenu = arsenalMenu.GetComponentInChildren<Canvas>();
 
         settingsMenu.enabled = false;
         quitMenu.enabled = false;
 
+        storyModeButton = selectionMenu.GetComponentInChildren<Button>();
         exitButton = exitGO.GetComponentInChildren<Button>();
         backButton = backGO.GetComponentInChildren<Button>();
         settingsButton = settingsButtonGO.GetComponentInChildren<Button>();
@@ -99,6 +104,7 @@ public class MainMenu : MonoBehaviour
         canRotate = false;
 
         allButtons = FindObjectsByType<Button>(FindObjectsSortMode.None);
+        storyModeButton.interactable = false;
         menus.Add(selectionMenu);
     }
 
@@ -141,6 +147,15 @@ public class MainMenu : MonoBehaviour
             {
                 ExitButtonOff();
                 BackButtonOn();
+            }
+
+            if (currentMenu == arsenalMenu)
+            {
+                weaponMenu.enabled = true;
+            }
+            else
+            {
+                weaponMenu.enabled = false;
             }
         }
         else
@@ -208,6 +223,7 @@ public class MainMenu : MonoBehaviour
     {
         settingsMenu.enabled = true;
         constantMenu.enabled = false;
+        weaponMenu.enabled = false;
         SettingsButtonOff();
         ExitButtonOff();
         BackButtonOff();
@@ -217,6 +233,7 @@ public class MainMenu : MonoBehaviour
     {
         settingsMenu.enabled = false;
         constantMenu.enabled = true;
+        weaponMenu.enabled = true;
         SettingsButtonOn();
         ExitButtonOn();
         BackButtonOn();
@@ -227,6 +244,7 @@ public class MainMenu : MonoBehaviour
     {
         quitMenu.enabled = true;
         constantMenu.enabled = false;
+        weaponMenu.enabled = false;
         SettingsButtonOff();
         ExitButtonOff();
         BackButtonOff();
@@ -236,6 +254,7 @@ public class MainMenu : MonoBehaviour
     {
         quitMenu.enabled = false;
         constantMenu.enabled = true;
+        weaponMenu.enabled = true;
         SettingsButtonOn();
         ExitButtonOn();
         BackButtonOn();
