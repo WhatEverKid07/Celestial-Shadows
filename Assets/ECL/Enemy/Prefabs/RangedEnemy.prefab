@@ -48,7 +48,7 @@ MonoBehaviour:
   melee: 0
   range: 1
   coneAngle: 2
-  semiAutoShotDelay: 2
+  semiAutoShotDelay: 4
   bulletSpeed: 20
   rangeAttackRadius: 10
   bulletSpawn: {fileID: 4177885915053330862}
@@ -161,6 +161,7 @@ Transform:
   m_Children:
   - {fileID: 5392712897135609488}
   - {fileID: 2705668176068619535}
+  - {fileID: 6509229137980895157}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &6171742991784931176
@@ -5204,6 +5205,37 @@ ParticleSystemRenderer:
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
   m_MaskInteraction: 0
+--- !u!1 &5220114064858366428
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6509229137980895157}
+  m_Layer: 10
+  m_Name: DeathParticles
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6509229137980895157
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5220114064858366428}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 5345203622868548329}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &6313301660061868805
 GameObject:
   m_ObjectHideFlags: 0

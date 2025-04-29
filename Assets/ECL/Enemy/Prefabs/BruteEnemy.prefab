@@ -227,6 +227,37 @@ Transform:
   - {fileID: 4256538034782712309}
   m_Father: {fileID: 3090780858313386439}
   m_LocalEulerAnglesHint: {x: -37.525047, y: -6.704668, z: 0.7478111}
+--- !u!1 &3882860617816073833
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 513106421613200843}
+  m_Layer: 10
+  m_Name: Death
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &513106421613200843
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3882860617816073833}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 724159933954667340}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &4440344754798587620
 GameObject:
   m_ObjectHideFlags: 0
@@ -456,6 +487,7 @@ Transform:
   - {fileID: 530832828876961151}
   - {fileID: 8494421400841990878}
   - {fileID: 3205727577369206898}
+  - {fileID: 513106421613200843}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!54 &2537396250534210549
@@ -924,6 +956,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   damage: 10
+  playerTargetScript: {fileID: 0}
 --- !u!1 &8724428464795208318
 GameObject:
   m_ObjectHideFlags: 0

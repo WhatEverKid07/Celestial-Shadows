@@ -24,7 +24,7 @@ public class Bullet : MonoBehaviour
         if (!collision.gameObject.CompareTag("Bullet"))
         {
             Target target = collision.transform.GetComponent<Target>();
-            if (target != null && collision.gameObject.CompareTag("Player"))
+            if (target != null)
             {
                 target.TakeDamage(damage);
             }

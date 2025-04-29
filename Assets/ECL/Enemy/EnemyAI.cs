@@ -51,8 +51,9 @@ public class EnemyAI : MonoBehaviour
     {
         if (player == null) return false;
 
-        Vector3 eyePosition = transform.position + Vector3.up;
-        Vector3 targetPosition = player.GetComponent<Collider>().bounds.center;
+        Vector3 eyePosition = transform.position + Vector3.up * 1.5f;
+        Collider playerCollider = player.GetComponentInChildren<Collider>();
+        Vector3 targetPosition = playerCollider.bounds.center;
         Vector3 directionToPlayer = (targetPosition - eyePosition).normalized;
 
         float angleToPlayer = Vector3.Angle(transform.forward, directionToPlayer);
@@ -61,24 +62,24 @@ public class EnemyAI : MonoBehaviour
 
         Debug.DrawRay(eyePosition, directionToPlayer * detectionRange, Color.green);
 
-        // Raycast to check if something blocks line of sight
         if (Physics.Raycast(eyePosition, directionToPlayer, out RaycastHit hit, detectionRange))
         {
+            if (hit.transform == transform || hit.transform.IsChildOf(transform))
+            {
+                // Ignore self
+                return false;
+            }
+
             if (hit.transform == player || hit.transform.IsChildOf(player))
             {
-                return true; // Clear line of sight
+                return true;
             }
-            else
-            {
-                Debug.Log($"[AI] View blocked by: {hit.transform.name}");
-            }
+
+            Debug.Log("[AI] View blocked by: " + hit.transform.name);
         }
 
         return false;
     }
-
-
-
     IEnumerator CheckPlayerVisibility()
     {
         while (true)

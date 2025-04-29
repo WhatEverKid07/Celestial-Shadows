@@ -5,10 +5,11 @@ using UnityEngine;
 public class EnemyAttackArea : MonoBehaviour
 {
     [SerializeField] float damage;
-    private Target playerTargetScript;
+    public Target playerTargetScript; // private
 
     private void OnTriggerEnter(Collider other)
     {
+        Debug.Log("Triggered!");
         if (other.CompareTag("Player") || other.CompareTag("Target"))
         {
             if (other.TryGetComponent<Target>(out Target enemy))

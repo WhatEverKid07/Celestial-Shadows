@@ -4928,7 +4928,7 @@ MonoBehaviour:
   lifeTime: 5
   ignoredLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 32768
 --- !u!65 &7919176739341494283
 BoxCollider:
   m_ObjectHideFlags: 0
