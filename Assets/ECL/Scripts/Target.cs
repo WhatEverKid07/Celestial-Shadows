@@ -1,10 +1,12 @@
 using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Target : MonoBehaviour
 {
-    [SerializeField] private float health = 50f;
+    [SerializeField] internal float health = 50f;
     [SerializeField] private GameObject shadowBody;
+    [SerializeField] private GameObject shadowAttack;
     [SerializeField] private ParticleSystem deathParticles;
     public bool addXp {get; private set;}
 
@@ -26,11 +28,12 @@ public class Target : MonoBehaviour
 
     private void Die()
     {
-        if (shadowBody != null && deathParticles != null)
+        if (shadowBody != null && deathParticles != null && shadowAttack != null)
         {
             deathParticles.Play();
             shadowBody.SetActive(false);
-            StartCoroutine(Die2(deathParticles.main.duration));
+            shadowAttack.SetActive(false);
+            StartCoroutine(Die2(4));
         }
         else
         {
