@@ -1,3 +1,4 @@
+using UnityEngine.UI;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -16,12 +17,6 @@ public class PlayerStats : MonoBehaviour
     [Header("Stats")]
     //Syringe
     private GameObject currentGun;
-    [SerializeField] private GameObject ar;
-    [SerializeField] private GameObject pistol;
-    [SerializeField] private GameObject shotgun;
-    [SerializeField] private GameObject knife;
-    [SerializeField] private GameObject grenade;
-    [SerializeField] private GameObject sniper;
 
     private float attackSpeed;
     private float arAttack;
@@ -79,6 +74,16 @@ public class PlayerStats : MonoBehaviour
     [SerializeField] private TextMeshProUGUI reloadSpeedTxt;
     [SerializeField] private TextMeshProUGUI xpMultiTxt;
 
+    [Header("ItemUI")]
+    [SerializeField] private Image watchImage;
+    [SerializeField] private TextMeshProUGUI watchCount;
+
+    [SerializeField] private Image crocsImage;
+    [SerializeField] private TextMeshProUGUI crocsCount;
+
+    [SerializeField] private Image syringeImage;
+    [SerializeField] private TextMeshProUGUI syringeCount;
+
     [Header("ItemLists")]
     [SerializeField] internal List<GameObject> watches;
     [SerializeField] internal List<GameObject> crocs;
@@ -91,13 +96,13 @@ public class PlayerStats : MonoBehaviour
 
     private void Start()
     {
-        arScript = FindAnyObjectByType<NewARScript>();
-        pistolScript = FindAnyObjectByType<NewPistolScript>();
-        shotgunScript = FindAnyObjectByType<NewShotgunScript>();
-
         crocsFunctionScript = FindAnyObjectByType<CrocsFunction>();
         watchFunctionScript = FindAnyObjectByType<WatchFunction>();
         syringeFunctionScript = FindAnyObjectByType<SyringeFunction>();
+
+        watchImage.enabled = false;
+        crocsImage.enabled = false;
+        syringeImage.enabled = false;
 
         walkSpeed = characterMoveScript.walkSpeed;
         runSpeed = characterMoveScript.runSpeed;
@@ -111,57 +116,41 @@ public class PlayerStats : MonoBehaviour
     {
         UpdateCurrentGun();
 
-        UpdateStatText();
-
         if (syringe.Count > 0 && syringeFunctionScript.canUpdateSyringeStat)
         {
             UpdateAttackSpeed();
+            syringeImage.enabled = true;
+            
         }
 
         if (crocs.Count > 0 && crocsFunctionScript.canUpdateCrocStat)
         {
             UpdateSpeedStat();
+            crocsImage.enabled = true;
         }
 
         if (watches.Count > 0 && watchFunctionScript.canUpdateWatchStat)
         {
             UpdateDashStat();
+            watchImage.enabled = true;
+        }
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Item"))
+        {
+            UpdateStatText();
+            UpdateItemUIText();
         }
     }
 
     private void UpdateCurrentGun()
     {
-        Debug.Log(currentGun);
-        if (GameObject.Find("NewAssault Rifle"))
+        if (arScript.isActiveAndEnabled)
         {
-            currentGun = ar;
-            if (currentGun == ar)
-            {
-                arAttack = arScript.fireRate;
-                attackSpeed = arAttack;
-            }
-        }
-        else if (GameObject.Find("NewPistol"))
-        {
-            currentGun = pistol;
-            if (currentGun == pistol)
-            {
-                pistolAttack = pistolScript.fireRate;
-                attackSpeed = pistolAttack;
-            }
-        }
-        else if (GameObject.Find("NewShotgun"))
-        {
-            currentGun = shotgun;
-            if (currentGun == shotgun)
-            {
-                shotgunAttack = shotgunScript.fireRate;
-                attackSpeed = shotgunAttack;
-            }
-        }
-        else
-        {
-            return;
+            arAttack = arScript.fireRate;
+            attackSpeed = arAttack;
         }
     }
 
@@ -259,5 +248,23 @@ public class PlayerStats : MonoBehaviour
         dashCooldownTxt.text = string.Format("Dash Cooldown: " + dashCooldown);
 
         attackSpeedTxt.text = string.Format("Attack speed: " + attackSpeed);
+    }
+
+    private void UpdateItemUIText()
+    {
+        if (watches.Count > 1)
+        {
+            watchCount.text = string.Format("x" + watches.Count);
+        }
+        
+        if (crocs.Count > 1)
+        {
+            crocsCount.text = string.Format("x" + crocs.Count);
+        }
+
+        if (syringe.Count > 1)
+        {
+            syringeCount.text = string.Format("x" + syringe.Count);
+        }
     }
 }

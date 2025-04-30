@@ -15,7 +15,7 @@ public class GunManagement : MonoBehaviour
     [SerializeField] private GameObject knife;
     [SerializeField] private GameObject grenade;
 
-    private int currentGunIndex = 0;
+    private int currentGunIndex = 0; 
     internal bool canSwitch = true;
     private InputAction scroll;
 
