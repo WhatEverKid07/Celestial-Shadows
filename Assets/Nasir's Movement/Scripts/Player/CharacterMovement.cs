@@ -583,12 +583,6 @@ public class CharacterMovement : MonoBehaviour
 
         Vector3 dashDirection = cameraForward * moveDir.z + cameraRight * moveDir.x;
 
-        //Default dash direction
-        if (dashDirection.magnitude < .1f)
-        {
-            dashDirection = cameraForward;
-        }
-
         float verticalVelocity = rb.velocity.y;
 
         float dashDuration = .2f;
@@ -628,6 +622,7 @@ public class CharacterMovement : MonoBehaviour
             yield return null;
         }
 
+        rb.velocity = new Vector3(0f, rb.velocity.y, 0f);
         dashMomentum = Vector3.zero;
     }
 

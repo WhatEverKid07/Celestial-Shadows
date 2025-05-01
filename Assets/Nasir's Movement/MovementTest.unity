@@ -13100,7 +13100,7 @@ MonoBehaviour:
   fallMulti: 3
   coyoteTime: 0.2
   enableDash: 1
-  dashPower: 3
+  dashPower: 5
   dashTime: 0.5
   ignore:
     serializedVersion: 2
