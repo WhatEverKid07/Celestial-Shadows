@@ -10,6 +10,7 @@ public class PlayerStats : MonoBehaviour
     [SerializeField] private NewARScript arScript;
     [SerializeField] private NewPistolScript pistolScript;
     [SerializeField] private NewShotgunScript shotgunScript;
+    [SerializeField] private KnifeAnimation knifeScript;
     [SerializeField] private WatchFunction watchFunctionScript;
     [SerializeField] private CrocsFunction crocsFunctionScript;
     [SerializeField] private SyringeFunction syringeFunctionScript;
@@ -19,13 +20,21 @@ public class PlayerStats : MonoBehaviour
     private GameObject currentGun;
 
     private float attackSpeed;
+
     private float arAttack;
+    private float minArAttackSpeed = 5f;
+
     private float pistolAttack;
+    private float minPistolAttackSpeed = 2f;
+
     private float shotgunAttack;
+    private float minShotAttackSpeed = 7.5f;
+
     private float knifeAttack;
+    private float setKnifeAttackSpeed = 1f;
+
     private float grenadeAttack;
     private float sniperAttack;
-    private float minAttackSpeed;
 
     //Crocs
     private float walkSpeed;
@@ -111,16 +120,18 @@ public class PlayerStats : MonoBehaviour
 
         dashCooldown = characterMoveScript.dashTime;
 
+        arAttack = arScript.fireRate;
+        pistolAttack = pistolScript.fireRate;
+        shotgunAttack = shotgunScript.fireRate;
+
     }
     private void Update()
     {
-        UpdateCurrentGun();
-
         if (syringe.Count > 0 && syringeFunctionScript.canUpdateSyringeStat)
         {
             UpdateAttackSpeed();
             syringeImage.enabled = true;
-            
+
         }
 
         if (crocs.Count > 0 && crocsFunctionScript.canUpdateCrocStat)
@@ -136,21 +147,30 @@ public class PlayerStats : MonoBehaviour
         }
     }
 
-    private void OnTriggerEnter(Collider other)
+    private void LateUpdate()
     {
-        if (other.CompareTag("Item"))
-        {
-            UpdateStatText();
-            UpdateItemUIText();
-        }
+        UpdateStatText();
+        UpdateItemUIText();
+        UpdateCurrentGun();
     }
 
     private void UpdateCurrentGun()
     {
         if (arScript.isActiveAndEnabled)
         {
-            arAttack = arScript.fireRate;
             attackSpeed = arAttack;
+        }
+        else if (pistolScript.isActiveAndEnabled)
+        {
+            attackSpeed = pistolAttack;
+        }
+        else if (shotgunScript.isActiveAndEnabled)
+        {
+            attackSpeed = shotgunAttack;
+        }
+        else
+        {
+            attackSpeed = setKnifeAttackSpeed;
         }
     }
 
@@ -158,19 +178,19 @@ public class PlayerStats : MonoBehaviour
     {
         float attackIncrease = syringeValue * syringe.Count;
 
-        if (arAttack >= minAttackSpeed)
+        if (arAttack > minArAttackSpeed)
         {
             float newArAttack = arAttack - attackIncrease;
             arAttack = newArAttack;
         }
 
-        if (pistolAttack >= minAttackSpeed)
+        if (pistolAttack > minPistolAttackSpeed)
         {
             float newPistolAttack = pistolAttack - attackIncrease;
             pistolAttack = newPistolAttack;
         }
 
-        if (shotgunAttack >= minAttackSpeed)
+        if (shotgunAttack > minShotAttackSpeed)
         {
             float newShotgunAttack = shotgunAttack - attackIncrease;
             shotgunAttack = newShotgunAttack;
@@ -180,9 +200,7 @@ public class PlayerStats : MonoBehaviour
     private void UpdateSpeedStat()
     {
         float walkIncrease = crocValue * crocs.Count;
-        float runIncrease = walkIncrease + .5f;
         float wallRunIncrease = (crocValue * crocs.Count) * 100;
-        float dashIncrease = walkIncrease - .1f;
 
         if (characterMoveScript.walkSpeed <= maxWalkSpeed)
         {
@@ -196,15 +214,19 @@ public class PlayerStats : MonoBehaviour
 
         if (characterMoveScript.runSpeed <= maxRunSpeed)
         {
-            float newRunSpeed = runSpeed + runIncrease;
-            characterMoveScript.runSpeed = newRunSpeed;
+            if (crocValue != 0)
+            {
+                float runIncrease = walkIncrease + .5f;
+                float newRunSpeed = runSpeed + runIncrease;
+                characterMoveScript.runSpeed = newRunSpeed;
+            }
         }
         else
         {
             characterMoveScript.runSpeed = maxRunSpeed;
         }
 
-        if(characterMoveScript.wallRunForce <= maxWallRunSpeed)
+        if (characterMoveScript.wallRunForce <= maxWallRunSpeed)
         {
             float newWallRunSpeed = wallRunSpeed + wallRunIncrease;
             characterMoveScript.wallRunForce = newWallRunSpeed;
@@ -214,10 +236,14 @@ public class PlayerStats : MonoBehaviour
             characterMoveScript.wallRunForce = maxWallRunSpeed;
         }
 
-        if(characterMoveScript.dashPower <= maxDashPower)
+        if (characterMoveScript.dashPower <= maxDashPower)
         {
-            float newDashPower = dashPower + dashIncrease;
-            characterMoveScript.dashPower = newDashPower;
+            if (crocValue != 0)
+            {
+                float dashIncrease = walkIncrease - .1f;
+                float newDashPower = dashPower + dashIncrease;
+                characterMoveScript.dashPower = newDashPower;
+            }
         }
         else
         {

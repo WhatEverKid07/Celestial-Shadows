@@ -33,6 +33,27 @@ public class GunManagement : MonoBehaviour
         scroll = gunControls.FindActionMap("Gun Controls").FindAction("Scroll");
         scroll.Enable();
         UpdateGunSelection();
+
+        if (assaultRifle.activeInHierarchy)
+        {
+            activeWeapons.Add(assaultRifle);
+        }
+        else if (shotgun.activeInHierarchy)
+        {
+            activeWeapons.Add(shotgun);
+        }
+        else if (pistol.activeInHierarchy)
+        {
+            activeWeapons.Add(pistol);
+        }
+        else if (grenade.activeInHierarchy)
+        {
+            activeWeapons.Add(grenade);
+        }
+        else
+        {
+            activeWeapons.Add(knife);
+        }
     }
 
     void Update()
