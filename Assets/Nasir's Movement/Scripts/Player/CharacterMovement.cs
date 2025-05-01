@@ -2,6 +2,7 @@ using UnityEngine.InputSystem;
 using UnityEngine;
 using System.Collections;
 using System;
+using UnityEngine.UI;
 
 public class CharacterMovement : MonoBehaviour
 {
@@ -114,6 +115,15 @@ public class CharacterMovement : MonoBehaviour
     private bool enableDebug = false;
     [SerializeField] private LayerMask ignore;
 
+    [Header("Stamina")]
+    [SerializeField] private Slider staminaBar;
+    [SerializeField] private int maxStamina;
+    [SerializeField] private float staminaLose;
+    public float stamina;
+    public bool loseStamina = false;
+    public bool regenStamina = false;
+    public bool isLosingStamina = false;
+
     private void Start()
     {
         groundChecker = GameObject.Find("GroundChecker");
@@ -141,6 +151,10 @@ public class CharacterMovement : MonoBehaviour
 
         showDebugs.canceled += ctx => enableDebug = true;
         //ClearDebugs.performed += ctx => ClearDebugLog();
+
+        stamina = maxStamina;
+        staminaBar.maxValue = maxStamina;
+        staminaBar.value = maxStamina;
     }
 
     private void Update()
@@ -313,6 +327,20 @@ public class CharacterMovement : MonoBehaviour
             {
                 setCoyoteTime = 0f;
             }
+        }
+
+        if (loseStamina && stamina >= 0)
+        {
+            isLosingStamina = true;
+            stamina -= staminaLose;
+        }
+        else
+        {
+            //isLosingStamina = false;
+        }
+        if (regenStamina && stamina < maxStamina && !isLosingStamina)
+        {
+            stamina += 0.3f;
         }
     }
 
@@ -776,4 +804,17 @@ public class CharacterMovement : MonoBehaviour
         var method = type.GetMethod("Clear");
         method.Invoke(new object(), null);
     }*/
+
+    private void UpdateHealthbar()
+    {
+        staminaBar.value = stamina;
+    }
+
+    private IEnumerator RegainStamina()
+    {
+        yield return new WaitForSeconds(2);
+        if (isLosingStamina || loseStamina) { regenStamina = false; yield break;}
+        if (stamina == maxStamina) { regenStamina = false; yield break;}
+        regenStamina = true;
+    }
 }

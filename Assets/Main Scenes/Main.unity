@@ -441,6 +441,13 @@ MonoBehaviour:
   ignore:
     serializedVersion: 2
     m_Bits: 0
+  staminaBar: {fileID: 510212669}
+  maxStamina: 100
+  staminaLose: 0.1
+  stamina: 0
+  loseStamina: 0
+  regenStamina: 0
+  isLosingStamina: 0
 --- !u!54 &95148707
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -6652,7 +6659,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3193067490597891918, guid: 52fe3b3bef8164c4688fc91f93fd1812, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5220114064858366428, guid: 52fe3b3bef8164c4688fc91f93fd1812, type: 3}
       propertyPath: m_Name
@@ -12152,7 +12159,7 @@ RectTransform:
   m_Father: {fileID: 1739747054}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: -33.794067, y: -60.699997}
   m_SizeDelta: {x: -23.87685, y: 0.20828}
   m_Pivot: {x: 0.01, y: 0.5}
@@ -12306,7 +12313,7 @@ RectTransform:
   m_Father: {fileID: 1780207975}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: -33.794067, y: -60.699997}
   m_SizeDelta: {x: -23.87685, y: 0.20828}
   m_Pivot: {x: 0.01, y: 0.5}
@@ -12526,7 +12533,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6813750136077729383, guid: 9f5303d680ef016499e2b687a7389c10, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7319029028647742354, guid: 9f5303d680ef016499e2b687a7389c10, type: 3}
       propertyPath: m_Layer
