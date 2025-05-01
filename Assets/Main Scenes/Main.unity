@@ -428,6 +428,9 @@ MonoBehaviour:
   fov: 60
   walkSpeed: 7
   runSpeed: 10
+  crouchWalkSpeed: 0
+  crouchRunSpeed: 0
+  crouchYScale: 0
   maxSlopeAngle: 0
   wallRunForce: 500
   wallRunForceMulti: 1.5
