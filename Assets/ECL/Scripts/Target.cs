@@ -11,7 +11,8 @@ public class Target : MonoBehaviour
     [SerializeField] private GameObject shadowBody;
     [SerializeField] private GameObject shadowAttack;
     [SerializeField] private ParticleSystem deathParticles;
-    public bool addXp {get; private set;}
+
+    internal bool addXp;
 
     private void Start()
     {
@@ -31,7 +32,6 @@ public class Target : MonoBehaviour
         health -= amount;
         if (health <= 0f)
         {
-            Invoke(nameof(AddExperience), .01f);
             Die();
         }
     }
@@ -43,6 +43,7 @@ public class Target : MonoBehaviour
             deathParticles.Play();
             shadowBody.SetActive(false);
             shadowAttack.SetActive(false);
+            addXp = true;
             StartCoroutine(Die2(4));
         }
         else
@@ -55,11 +56,6 @@ public class Target : MonoBehaviour
     {
         yield return new WaitForSeconds(waitTime);
         Destroy(gameObject);
-    }
-
-    private void AddExperience()
-    {
-        Debug.Log("Add experience.");
     }
 
     private void UpdateHealthbar()

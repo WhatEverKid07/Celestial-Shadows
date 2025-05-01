@@ -11,16 +11,14 @@ public class PlayerExperience : MonoBehaviour
 
     [Header("XP")]
     private float maxXp;
-    private float previousMaxXp;
-    private int xpLvl;
-    private float currentXp;
+    public int xpLvl { get; private set; }
+    public float currentXp { get; private set; }
 
     private void Start()
     {
         xpLvl = 0;
         currentXp = 0;
         maxXp = 100;
-        previousMaxXp = maxXp - 100;
     }
 
     private void Update()
@@ -41,6 +39,8 @@ public class PlayerExperience : MonoBehaviour
             if (target.addXp)
             {
                 AddExperience();
+                target.addXp = false;
+                allTargets.Remove(target);
             }
             else
             {
@@ -53,13 +53,12 @@ public class PlayerExperience : MonoBehaviour
         {
             xpLvl++;
             maxXp += 100;
-            previousMaxXp = maxXp - 100;
-            currentXp = currentXp - previousMaxXp;
+            currentXp = 0;
         }
     }
 
     private void AddExperience()
     {
-        Debug.Log("Add experience.");
+        currentXp = currentXp + 25;
     }
 }

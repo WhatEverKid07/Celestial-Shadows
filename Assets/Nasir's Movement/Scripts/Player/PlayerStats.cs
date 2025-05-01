@@ -15,6 +15,8 @@ public class PlayerStats : MonoBehaviour
     [SerializeField] private CrocsFunction crocsFunctionScript;
     [SerializeField] private SyringeFunction syringeFunctionScript;
 
+    [SerializeField] private PlayerExperience playerXpScript;
+
     [Header("Stats")]
     //Syringe
     private GameObject currentGun;
@@ -67,6 +69,8 @@ public class PlayerStats : MonoBehaviour
     private float maxReloadSpeed;
 
     //XP
+    private float xp;
+    private int xpLvl;
     private float xpMulti;
     private float maxXpMulti;
 
@@ -81,6 +85,8 @@ public class PlayerStats : MonoBehaviour
     [SerializeField] private TextMeshProUGUI critChanceTxt;
     [SerializeField] private TextMeshProUGUI critDamageTxt;
     [SerializeField] private TextMeshProUGUI reloadSpeedTxt;
+    [SerializeField] private TextMeshProUGUI xpTxt;
+    [SerializeField] private TextMeshProUGUI xpLvlTxt;
     [SerializeField] private TextMeshProUGUI xpMultiTxt;
 
     [Header("ItemUI")]
@@ -124,6 +130,9 @@ public class PlayerStats : MonoBehaviour
         pistolAttack = pistolScript.fireRate;
         shotgunAttack = shotgunScript.fireRate;
 
+        xp = playerXpScript.currentXp;
+        xpLvl = playerXpScript.xpLvl;
+
     }
     private void Update()
     {
@@ -152,6 +161,10 @@ public class PlayerStats : MonoBehaviour
         UpdateStatText();
         UpdateItemUIText();
         UpdateCurrentGun();
+
+        xp = playerXpScript.currentXp;
+        xpLvl = playerXpScript.xpLvl;
+
     }
 
     private void UpdateCurrentGun()
@@ -278,6 +291,9 @@ public class PlayerStats : MonoBehaviour
         dashCooldownTxt.text = string.Format("Dash Cooldown: " + dashCooldown);
 
         attackSpeedTxt.text = string.Format("Attack speed: " + attackSpeed);
+
+        xpTxt.text = string.Format("Xp: " +  xp);
+        xpLvlTxt.text = string.Format("XpLvl: " + xpLvl);
     }
 
     private void UpdateItemUIText()

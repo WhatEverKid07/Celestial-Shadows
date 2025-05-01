@@ -12,8 +12,8 @@ public class CharacterMovement : MonoBehaviour
     private InputAction jump;
     private InputAction run;
     private InputAction dash;
-    private InputAction showDebugs;
-    private InputAction ClearDebugs;
+    private InputAction crouch;
+
     private bool restricted = false;
 
     [Header("Properties")]
@@ -36,6 +36,12 @@ public class CharacterMovement : MonoBehaviour
     public bool isGrounded { get; private set; }
 
     private bool isWalking = false;
+
+    [Header("Crouching")]
+    [SerializeField] private float crouchWalkSpeed;
+    [SerializeField] private float crouchRunSpeed;
+    [SerializeField] private float crouchYScale;
+    private float startYScale;
 
     [Header("Slope Movement")]
     [SerializeField] private float maxSlopeAngle;
@@ -134,23 +140,17 @@ public class CharacterMovement : MonoBehaviour
         jump = playerCntrlsAss.FindActionMap("Player Controls").FindAction("Jump");
         run = playerCntrlsAss.FindActionMap("Player Controls").FindAction("Run");
         dash = playerCntrlsAss.FindActionMap("Player Controls").FindAction("Dash");
-
-        showDebugs = playerCntrlsAss.FindActionMap("Debug Controls").FindAction("EnableRaycasts");
-        ClearDebugs = playerCntrlsAss.FindActionMap("Debug Controls").FindAction("DisableRaycasts");
-
+        crouch = playerCntrlsAss.FindActionMap("Player Controls").FindAction("Crouch");
 
         jump.Enable();
         run.Enable();
         dash.Enable();
-
-        showDebugs.Enable();
-        ClearDebugs.Enable();
+        crouch.Enable();
 
         dash.performed += ctx => Dash();
         jump.performed += ctx => WallJump();
 
-        showDebugs.canceled += ctx => enableDebug = true;
-        //ClearDebugs.performed += ctx => ClearDebugLog();
+        startYScale = transform.localScale.y;
 
         stamina = maxStamina;
         staminaBar.maxValue = maxStamina;
@@ -161,27 +161,6 @@ public class CharacterMovement : MonoBehaviour
     {
         //MOVE INPUT
         moveDir = playerCntrls.action.ReadValue<Vector3>();
-
-        //Debug.Log("Is jumping: " + isJumping);
-
-        //COYOTE TIME
-        /*if (!IsGrounded())
-        {
-            isGrounded = false;
-            if (!isWallRunning)
-            {
-                setCoyoteTime -= Time.deltaTime;
-            }
-            if (rb.velocity.y > 0f)
-            {
-                setCoyoteTime = 0f;
-            }
-        }
-        else
-        {
-            isGrounded = true;
-            setCoyoteTime = coyoteTime;
-        }*/
 
         if (OnSlope())
         {
@@ -250,11 +229,6 @@ public class CharacterMovement : MonoBehaviour
         if (isHoldingLedge && moveDir.magnitude > 0.1f)
         {
             ExitLedgeGrab();
-        }
-
-        if (enableDebug)
-        {
-            ShowDebugs();
         }
 
         if (isWalking && !isJumping)
@@ -362,9 +336,12 @@ public class CharacterMovement : MonoBehaviour
 
         bool hasMovementInput = moveDir.magnitude > 0.1f;
 
-        if (run.ReadValue<float>() > 0 && canRun && hasMovementInput)
+        if (run.ReadValue<float>() > 0 && canRun && hasMovementInput && !(crouch.ReadValue<float>() > 0))
         {
+            transform.localScale = new Vector3(transform.localScale.x, startYScale, transform.localScale.z);
+
             rb.velocity = new Vector3(move.x * runSpeed, rb.velocity.y, move.z * runSpeed);
+
             isRunning = true;
             isWalking = false;
 
@@ -380,9 +357,12 @@ public class CharacterMovement : MonoBehaviour
                 }
             }
         }
-        else if (hasMovementInput)
+        else if (hasMovementInput && !(crouch.ReadValue<float>() > 0))
         {
+            transform.localScale = new Vector3(transform.localScale.x, startYScale, transform.localScale.z);
+
             rb.velocity = new Vector3(move.x * walkSpeed, rb.velocity.y, move.z * walkSpeed);
+
             isRunning = false;
             isWalking = true;
 
@@ -398,8 +378,25 @@ public class CharacterMovement : MonoBehaviour
                 }
             }
         }
+        else if (crouch.ReadValue<float>() > 0)
+        {
+            transform.localScale = new Vector3(transform.localScale.x, crouchYScale, transform.localScale.z);
+            rb.AddForce(Vector3.down * 2f, ForceMode.Force);
+
+            if (hasMovementInput)
+            {
+                rb.velocity = new Vector3(move.x * crouchWalkSpeed, rb.velocity.y, move.z * crouchWalkSpeed);
+            }
+
+            if (run.ReadValue<float>() > 0 && canRun && hasMovementInput)
+            {
+                rb.velocity = new Vector3(move.x * crouchRunSpeed, rb.velocity.y, move.z * crouchRunSpeed);
+            }
+        }
         else
         {
+            transform.localScale = new Vector3(transform.localScale.x, startYScale, transform.localScale.z);
+
             isWalking = false;
             isRunning = false;
         }
@@ -648,16 +645,10 @@ public class CharacterMovement : MonoBehaviour
         isLeftWalled = Physics.Raycast(transform.position, lft, out leftHit, wallCheckDist, wall);
         isRightWalled = Physics.Raycast(transform.position, rght, out rightHit, wallCheckDist, wall);
 
-        //Debug.DrawLine(transform.position, transform.position + orientation.right * wallCheckDist, Color.green);
-        //Debug.DrawLine(transform.position, transform.position + -orientation.right * wallCheckDist, Color.red);
-
         if (isLeftWalled || isRightWalled)
         {
             Vector3 wallNormal = isLeftWalled ? leftHit.normal : rightHit.normal;
             float angle = Vector3.Angle(transform.forward, -wallNormal);
-
-            //Debug.Log("Current angle from the wall: " + angle);
-            //Debug.Log("This is the correct wall angle: " + correctWallRunAngle);
 
             correctWallRunAngle = angle >= minWallRunAngle && angle <= maxWallRunAngle;
         }
@@ -695,8 +686,6 @@ public class CharacterMovement : MonoBehaviour
         Vector3 ledgePos = new (transform.position.x, 0f, ledgeHit.point.z);
         float distToLedge = Vector3.Distance(playerPos, ledgePos);
 
-        //Debug.Log("The ledge distance is: " + distToLedge);
-
         if (distToLedge < maxLedgeGrabDist && !isHoldingLedge)
         {
             currentLedge = ledgeHit.transform;
@@ -720,8 +709,6 @@ public class CharacterMovement : MonoBehaviour
     {
         Vector3 ledgeDir = currentLedge.position - transform.position;
         float ledgeDist = Vector3.Distance(transform.position, currentLedge.position);
-
-        //Debug.Log("The ledge distance is: " + ledgeDist);
 
         while (ledgeDist > 1f)
         {
@@ -785,25 +772,6 @@ public class CharacterMovement : MonoBehaviour
     {
         rb.useGravity = true;
     }
-
-    private void ShowDebugs()
-    {
-      //Debug.Log("The dash time is: " + setDashTime);
-      //Debug.Log(hasLanded);
-        Debug.Log(OnSlope());
-        Debug.DrawRay(transform.position, Vector3.down * 2f ,Color.black);
-        Debug.DrawRay(transform.position, Vector3.down * 2f, Color.cyan);
-    }
-
-    /*private void ClearDebugLog()
-    {
-        enableDebug = false;
-
-        var assembly = Assembly.GetAssembly(typeof(UnityEditor.Editor));
-        var type = assembly.GetType("UnityEditor.LogEntries");
-        var method = type.GetMethod("Clear");
-        method.Invoke(new object(), null);
-    }*/
 
     private void UpdateHealthbar()
     {
