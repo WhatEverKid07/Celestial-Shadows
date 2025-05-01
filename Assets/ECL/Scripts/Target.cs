@@ -1,10 +1,13 @@
 using System.Collections;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Target : MonoBehaviour
 {
-    [SerializeField] internal float health = 50f;
+    [SerializeField] private float maxHealth;
+    [SerializeField] internal float health;
+    [SerializeField] private Slider healthBar;
     [SerializeField] private GameObject shadowBody;
     [SerializeField] private GameObject shadowAttack;
     [SerializeField] private ParticleSystem deathParticles;
@@ -13,6 +16,13 @@ public class Target : MonoBehaviour
     private void Start()
     {
         addXp = false;
+        health = maxHealth;
+        healthBar.maxValue = maxHealth;
+        healthBar.value = maxHealth;
+    }
+    private void FixedUpdate()
+    {
+        if (healthBar != null) { UpdateHealthbar();}
     }
 
     public void TakeDamage(float amount)
@@ -50,5 +60,10 @@ public class Target : MonoBehaviour
     private void AddExperience()
     {
         Debug.Log("Add experience.");
+    }
+
+    private void UpdateHealthbar()
+    {
+        healthBar.value = health;
     }
 }
