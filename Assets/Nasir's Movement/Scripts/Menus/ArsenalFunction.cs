@@ -48,19 +48,6 @@ public class ArsenalFunction : MonoBehaviour
     {
         currentIndex = System.Array.IndexOf(allGuns, currentGun);
 
-        //Debug.Log("Is switching: " + isSwitching);
-        //Debug.Log("Can switch up: " + canSwitchUp);
-        //Debug.Log("Can switch down: " + canSwitchDown);
-
-        //Debug.Log("The current index is: " +  currentIndex);
-        //Debug.Log("Previous gun: " + previousGun);
-        //Debug.Log("Current gun: " + currentGun);
-        //Debug.Log("Next gun: " + nextGun);
-        //Debug.Log("Selected gun: " + selectedGun);
-
-        //Debug.Log("GoToStory: " + mainMenuScript.goToStory);
-        //Debug.Log("GoToEndless: " + mainMenuScript.goToEndless);
-
         if (isSwitching)
         {
             return;

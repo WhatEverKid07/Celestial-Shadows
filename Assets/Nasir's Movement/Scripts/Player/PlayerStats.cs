@@ -34,7 +34,7 @@ public class PlayerStats : MonoBehaviour
     private float setKnifeAttackSpeed = 1f;
 
     private float grenadeAttack;
-    private float sniperAttack;
+    private float setGrenadeAttackSpeed = 1.2f;
 
     //Crocs
     private float walkSpeed;
@@ -168,9 +168,13 @@ public class PlayerStats : MonoBehaviour
         {
             attackSpeed = shotgunAttack;
         }
-        else
+        else if (knifeScript.isActiveAndEnabled)
         {
             attackSpeed = setKnifeAttackSpeed;
+        }
+        else
+        {
+            attackSpeed = setGrenadeAttackSpeed;
         }
     }
 

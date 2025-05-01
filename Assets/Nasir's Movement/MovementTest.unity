@@ -1107,6 +1107,17 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 483239939}
   m_CullTransparentMesh: 1
+--- !u!114 &490611994 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6502746254381970532, guid: 4ca9444633935d84c92c506d2f67be35, type: 3}
+  m_PrefabInstance: {fileID: 1126370891}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bb5e4e1431789fe4796b22239ad01b79, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &523640439 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7303771309166300770, guid: 4aa75ee4f7ec4c6459d9486105f0c1b9, type: 3}
@@ -11967,9 +11978,6 @@ MonoBehaviour:
   enableDash: 1
   dashPower: 3
   dashTime: 0.5
-  ignore:
-    serializedVersion: 2
-    m_Bits: 0
 --- !u!54 &771014608
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -12095,7 +12103,7 @@ MonoBehaviour:
   arScript: {fileID: 1202731113}
   pistolScript: {fileID: 9852522}
   shotgunScript: {fileID: 867040928}
-  knifeScript: {fileID: 0}
+  knifeScript: {fileID: 490611994}
   watchFunctionScript: {fileID: 949978788}
   crocsFunctionScript: {fileID: 2022540195}
   syringeFunctionScript: {fileID: 1286471925}
@@ -36447,12 +36455,12 @@ SceneRoots:
   - {fileID: 2085935762}
   - {fileID: 1028637729}
   - {fileID: 358796622}
-  - {fileID: 95048456}
   - {fileID: 1073247538}
   - {fileID: 305980122}
   - {fileID: 658163982}
   - {fileID: 1308127448}
   - {fileID: 1128198986}
-  - {fileID: 583110528}
   - {fileID: 872053189}
   - {fileID: 916112965}
+  - {fileID: 583110528}
+  - {fileID: 95048456}
