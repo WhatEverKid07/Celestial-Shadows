@@ -6,9 +6,9 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/pedro/open world.unity
-    guid: fe51e12a3c67b314aac4ef9da44ddbda
+    path: Assets/Nasir's Movement/MainMenu.unity
+    guid: 8e8d034d187f7684d956fffc12af314a
   - enabled: 1
-    path: Assets/Main Scenes/Main.unity
-    guid: aa6b80f577b47ac4f8136145678f6420
+    path: Assets/Finale Scenes/Story Mode.unity
+    guid: 76ad2fd69bff37345a1a8bb909f6017e
   m_configObjects: {}

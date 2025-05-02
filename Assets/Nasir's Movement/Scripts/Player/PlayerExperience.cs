@@ -42,18 +42,13 @@ public class PlayerExperience : MonoBehaviour
                 target.addXp = false;
                 allTargets.Remove(target);
             }
-            else
-            {
-                return;
-            }
         }
-
 
         if (currentXp >= maxXp)
         {
             xpLvl++;
-            maxXp += 100;
             currentXp = 0;
+            maxXp += 100;
         }
     }
 

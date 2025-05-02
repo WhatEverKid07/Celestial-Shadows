@@ -117,7 +117,7 @@ public class ArsenalFunction : MonoBehaviour
         }
         else
         {
-            SceneManager.LoadScene("open world", LoadSceneMode.Single);
+            SceneManager.LoadScene("Endless", LoadSceneMode.Single);
         }
     }
 

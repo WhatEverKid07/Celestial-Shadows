@@ -12,6 +12,7 @@ public class Target : MonoBehaviour
     [SerializeField] private GameObject shadowAttack;
     [SerializeField] private ParticleSystem deathParticles;
 
+    private Coroutine xpGain;
     internal bool addXp;
 
     private void Start()
@@ -38,12 +39,13 @@ public class Target : MonoBehaviour
 
     private void Die()
     {
-        if (shadowBody != null && deathParticles != null && shadowAttack != null)
+        if (shadowBody != null && deathParticles != null && shadowAttack != null && gameObject.GetComponent<Collider>() != null)
         {
             deathParticles.Play();
             shadowBody.SetActive(false);
             shadowAttack.SetActive(false);
-            addXp = true;
+            gameObject.GetComponent<Collider>().enabled = false;
+            xpGain = StartCoroutine(CancelXPGain());
             StartCoroutine(Die2(4));
         }
         else
@@ -56,6 +58,15 @@ public class Target : MonoBehaviour
     {
         yield return new WaitForSeconds(waitTime);
         Destroy(gameObject);
+    }
+
+    private IEnumerator CancelXPGain()
+    {
+        addXp = true;
+
+        yield return new WaitForSeconds(.001f);
+
+        addXp = false;
     }
 
     private void UpdateHealthbar()
