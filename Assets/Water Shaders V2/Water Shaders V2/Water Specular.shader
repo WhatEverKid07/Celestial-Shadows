@@ -33,7 +33,7 @@ Properties{
 [HideInInspector]_NormalMap2Strength("Normal Map 2 Strength", Range(0.001, 10)) = 1
 [HideInInspector]_NormalMap2Flow("Normal Map 2 Flow", float) = 0.5
 [HideInInspector]_MicrowaveScale("Micro Waves Scale", Range(0.5, 10)) = 1
-[HideInInspector]_MicrowaveStrength("Micro Waves Strength", Range(0.001, 1.5)) = 0.5
+[HideInInspector]_MicrowaveStrength("Micro Waves Strength", Range(0.001, 5)) = 0.5
 [HideInInspector]_ParallaxAmount("Parallax Amount", float) = 0.1
 [HideInInspector]_ParallaxFlow("Parallax Flow", float) = 40
 [HideInInspector]_ParallaxNormal2Offset("Parallax Normal Map 2 Offset", float) = 1
