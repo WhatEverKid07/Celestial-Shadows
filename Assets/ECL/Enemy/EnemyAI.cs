@@ -8,8 +8,8 @@ public class EnemyAI : MonoBehaviour
 {
     private EnemyAIAttack enemyAttack;
 
-    private GameObject target;
-    private GameObject player;
+    public GameObject target;
+    public GameObject player;
     [SerializeField] private float rotationSpeed;
     [SerializeField] private float speed;
     [SerializeField] private float acceleration;
@@ -26,19 +26,22 @@ public class EnemyAI : MonoBehaviour
     private bool isAtTarget = false;
     private Rigidbody rb;
     private bool the = true;
-    void Start()
+    private void Awake()
     {
         enemyAttack = GetComponentInChildren<EnemyAIAttack>();
         agent = GetComponent<NavMeshAgent>();
         target = GameObject.FindGameObjectWithTag("Target");
         player = GameObject.Find("PlayerPhys");
+        rb = GetComponent<Rigidbody>();
+    }
+    void Start()
+    {
         agent.speed = speed;
         agent.acceleration = acceleration;
         InvokeRepeating("MoveToTarget", 0, 0.3f);
         StartCoroutine(CheckPlayerVisibility());
         currentTarget = target;
         lastPos = player.transform.position;
-        rb = GetComponent<Rigidbody>();
     }
     void Update()
     {
@@ -46,7 +49,7 @@ public class EnemyAI : MonoBehaviour
         UpdateIfHasReachedTarget();
         if (currentTarget == player)
             UpdateObjectPosition(player);
-        Debug.DrawRay(transform.position + Vector3.up, (player.transform.position + Vector3.up) - (transform.position + Vector3.up), Color.green);
+        //Debug.DrawRay(transform.position + Vector3.up, (player.transform.position + Vector3.up) - (transform.position + Vector3.up), Color.green);
 
     }
     bool IsPlayerVisible()
