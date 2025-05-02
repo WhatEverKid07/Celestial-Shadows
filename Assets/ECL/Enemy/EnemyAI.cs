@@ -8,8 +8,8 @@ public class EnemyAI : MonoBehaviour
 {
     private EnemyAIAttack enemyAttack;
 
-    [SerializeField] private Transform target;
-    [SerializeField] private Transform player;
+    private GameObject target;
+    private GameObject player;
     [SerializeField] private float rotationSpeed;
     [SerializeField] private float speed;
     [SerializeField] private float acceleration;
@@ -17,7 +17,7 @@ public class EnemyAI : MonoBehaviour
     [SerializeField] private float fieldOfViewAngle = 120f;
     [SerializeField] private LayerMask obstructionLayer;
 
-    public Transform currentTarget;
+    public GameObject currentTarget;
     private NavMeshAgent agent;
     private bool playerVisible = false;
     private bool hasReachedTarget = false;
@@ -30,12 +30,14 @@ public class EnemyAI : MonoBehaviour
     {
         enemyAttack = GetComponentInChildren<EnemyAIAttack>();
         agent = GetComponent<NavMeshAgent>();
+        target = GameObject.FindGameObjectWithTag("Target");
+        player = GameObject.Find("PlayerPhys");
         agent.speed = speed;
         agent.acceleration = acceleration;
         InvokeRepeating("MoveToTarget", 0, 0.3f);
         StartCoroutine(CheckPlayerVisibility());
         currentTarget = target;
-        lastPos = player.position;
+        lastPos = player.transform.position;
         rb = GetComponent<Rigidbody>();
     }
     void Update()
@@ -44,7 +46,7 @@ public class EnemyAI : MonoBehaviour
         UpdateIfHasReachedTarget();
         if (currentTarget == player)
             UpdateObjectPosition(player);
-        Debug.DrawRay(transform.position + Vector3.up, (player.position + Vector3.up) - (transform.position + Vector3.up), Color.green);
+        Debug.DrawRay(transform.position + Vector3.up, (player.transform.position + Vector3.up) - (transform.position + Vector3.up), Color.green);
 
     }
     bool IsPlayerVisible()
@@ -70,7 +72,7 @@ public class EnemyAI : MonoBehaviour
                 return false;
             }
 
-            if (hit.transform == player || hit.transform.IsChildOf(player))
+            if (hit.transform == player || hit.transform.IsChildOf(player.transform))
             {
                 return true;
             }
@@ -100,7 +102,7 @@ public class EnemyAI : MonoBehaviour
             yield return new WaitForSeconds(0.8f);
         }
     }
-    IEnumerator ChangeCurrentTarget(Transform changeToo)
+    IEnumerator ChangeCurrentTarget(GameObject changeToo)
     {
         agent.isStopped = true;
         //rb.isKinematic = true;
@@ -143,26 +145,26 @@ public class EnemyAI : MonoBehaviour
         }
     }
 
-    private void UpdateObjectPosition(Transform obj)
+    private void UpdateObjectPosition(GameObject obj)
     {
-        Vector3 offset = obj.position - lastPos;
+        Vector3 offset = obj.transform.position - lastPos;
         if (offset.x > threshold)
         {
-            lastPos = obj.position;
+            lastPos = obj.transform.position;
             hasReachedTarget = false;
             //Debug.Log("Attack False 2");
             enemyAttack.isAttacking = false;
             MoveToTarget();
-            agent.SetDestination(currentTarget.position);
+            agent.SetDestination(currentTarget.transform.position);
         }
         else if (offset.x < -threshold)
         {
-            lastPos = obj.position;
+            lastPos = obj.transform.position;
             hasReachedTarget = false;
             //Debug.Log("Attack False 3");
             enemyAttack.isAttacking = false;
             MoveToTarget();
-            agent.SetDestination(currentTarget.position);
+            agent.SetDestination(currentTarget.transform.position);
         }
     }
 
@@ -180,7 +182,7 @@ public class EnemyAI : MonoBehaviour
             enemyAttack.Walk();
         }
         //rb.isKinematic = false;
-        agent.SetDestination(currentTarget.position);
+        agent.SetDestination(currentTarget.transform.position);
         //Debug.Log("Moving to: " + currentTarget.name);
     }
     private void OnReachedTarget()

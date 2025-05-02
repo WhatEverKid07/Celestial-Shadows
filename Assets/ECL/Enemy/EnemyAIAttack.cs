@@ -26,7 +26,7 @@ public class EnemyAIAttack : MonoBehaviour
     [SerializeField] private GameObject projectilePrefab;
     [SerializeField] private ParticleSystem muzzleFlash;
     
-    internal Transform player;
+    internal GameObject player;
     private bool canShoot = true;
     private float nextTimeToFire = 0f;
     private float currentConeAngle;

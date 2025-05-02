@@ -1265,7 +1265,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a4a783d8cebc4164ab02da6d81594833, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  maxHealth: 0
   health: 50
+  healthBar: {fileID: 0}
+  shadowBody: {fileID: 0}
+  shadowAttack: {fileID: 0}
+  deathParticles: {fileID: 0}
 --- !u!1 &1517502018
 GameObject:
   m_ObjectHideFlags: 0
@@ -1522,12 +1527,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enemies:
-  - enemy: {fileID: 175922705804543046}
-    percentChance: 34
-  - enemy: {fileID: 933128871011895796}
-    percentChance: 33
-  - enemy: {fileID: 0}
-    percentChance: 33
+  - enemy: {fileID: 3193067490597891918, guid: 52fe3b3bef8164c4688fc91f93fd1812, type: 3}
+    percentChance: 50
+  - enemy: {fileID: 6813750136077729383, guid: 9f5303d680ef016499e2b687a7389c10, type: 3}
+    percentChance: 50
 --- !u!1 &1826668096
 GameObject:
   m_ObjectHideFlags: 0
@@ -2200,11 +2203,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1016311898}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &175922705804543046 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 3193067490597891918, guid: 52fe3b3bef8164c4688fc91f93fd1812, type: 3}
-  m_PrefabInstance: {fileID: 9125585337530006209}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &183865341124196602
 PrefabInstance:
   m_ObjectHideFlags: 0
