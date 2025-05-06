@@ -40,8 +40,6 @@ public class SyringeFunction : MonoBehaviour
             playerStatsScript.syringe.Add(gameObject);
             canUpdateSyringeStat = true;
 
-            syringe?.SetActive(false);
-
             Invoke(nameof(NoMoreUpdates), .0001f);
         }
     }
@@ -49,6 +47,6 @@ public class SyringeFunction : MonoBehaviour
     private void NoMoreUpdates()
     {
         canUpdateSyringeStat = false;
-        Destroy(this);
+        Destroy(gameObject);
     }
 }

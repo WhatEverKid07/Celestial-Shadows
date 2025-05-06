@@ -135,78 +135,7 @@ public class PlayerStats : MonoBehaviour
     }
     private void Update()
     {
-        itemScripts = GameObject.FindGameObjectsWithTag("Item").ToList();
-
-        for (int i = 0; i < itemScripts.Count; i++)
-        {
-            if (GetComponent<SyringeFunction>())
-            {
-                var syringe = itemScripts[i].GetComponent<SyringeFunction>();
-                if (!itemScripts.Contains(itemScripts[i]))
-                {
-                    syringeFuncScript.Add(syringe);
-                }
-            }
-             
-            /*
-            if (item.GetComponent<CrocsFunction>())
-            {
-                crocsFuncScript.Add(item.GetComponent<CrocsFunction>());
-            }
-
-            if (item.GetComponent<WatchFunction>())
-            {
-                watchFuncScript.Add(item.GetComponent<WatchFunction>());
-            }
-            */
-        }
-
-        foreach (var syringe in syringeFuncScript)
-        {
-            if (syringe.canUpdateSyringeStat)
-            {
-                UpdateAttackSpeed();
-                syringeImage.enabled = true;
-            }
-        }
-
-        foreach (var croc in crocsFuncScript)
-        {
-            if (croc.canUpdateCrocStat)
-            {
-                UpdateSpeedStat();
-                crocsImage.enabled = true;
-            }
-        }
-
-        foreach (var watch in watchFuncScript)
-        {
-            if (watch.canUpdateWatchStat)
-            {
-                UpdateDashStat();
-                watchImage.enabled = true;
-            }
-        }
-
-        /*
-        if (syringe.Count > 0 && syringeFuncScript.canUpdateSyringeStat)
-        {
-            UpdateAttackSpeed();
-            syringeImage.enabled = true;
-        }
-
-        if (crocs.Count > 0 && crocsFuncScript.canUpdateCrocStat)
-        {
-            UpdateSpeedStat();
-            crocsImage.enabled = true;
-        }
-
-        if (watches.Count > 0 && watchFuncScript.canUpdateWatchStat)
-        {
-            UpdateDashStat();
-            watchImage.enabled = true;
-        }
-        */
+        UpdateItemDrops();
     }
 
     private void LateUpdate()
@@ -218,6 +147,64 @@ public class PlayerStats : MonoBehaviour
         xp = playerXpScript.currentXp;
         xpLvl = playerXpScript.xpLvl;
 
+    }
+
+    private void UpdateItemDrops()
+    {
+        itemScripts = GameObject.FindGameObjectsWithTag("Item").ToList();
+
+        HashSet<SyringeFunction> currentSyringes = new HashSet<SyringeFunction>();
+        HashSet<CrocsFunction> currentCrocs = new HashSet<CrocsFunction>();
+        HashSet<WatchFunction> currentWatches = new HashSet<WatchFunction>();
+
+        foreach (GameObject item in itemScripts)
+        {
+            if (item.TryGetComponent(out SyringeFunction syringe))
+            {
+                currentSyringes.Add(syringe);
+            }
+
+            if (item.TryGetComponent(out CrocsFunction crocs))
+            {
+                currentCrocs.Add(crocs);
+            }
+
+            if (item.TryGetComponent(out WatchFunction watch))
+            {
+                currentWatches.Add(watch);
+            }
+        }
+
+        syringeFuncScript = currentSyringes.ToList();
+        crocsFuncScript = currentCrocs.ToList();
+        watchFuncScript = currentWatches.ToList();
+
+        for (int i = syringeFuncScript.Count - 1; i >= 0; i--)
+        {
+            if (syringeFuncScript[i].canUpdateSyringeStat)
+            {
+                UpdateAttackSpeed();
+                syringeImage.enabled = true;
+            }
+        }
+
+        for (int i = crocsFuncScript.Count - 1; i >= 0; i--)
+        {
+            if (crocsFuncScript[i].canUpdateCrocStat)
+            {
+                UpdateSpeedStat();
+                crocsImage.enabled = true;
+            }
+        }
+
+        for (int i = watchFuncScript.Count - 1; i >= 0; i--)
+        {
+            if (watchFuncScript[i].canUpdateWatchStat)
+            {
+                UpdateDashStat();
+                watchImage.enabled = true;
+            }
+        }
     }
 
     private void UpdateCurrentGun()

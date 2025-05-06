@@ -73,13 +73,14 @@ public class PlayerExperience : MonoBehaviour
             }
         }
 
+        Items randomItem = GetRandomItem();
+
         if (currentXp >= maxXp)
         {
             xpLvl++;
             currentXp = 0;
-            maxXp += 100;
+            maxXp += 50;
 
-            Items randomItem = GetRandomItem();
             SummonItem(randomItem.ItemDrops);
         }
     }
@@ -106,6 +107,7 @@ public class PlayerExperience : MonoBehaviour
     }
     private void SummonItem(GameObject item)
     {
-        Instantiate(item, gameObject.transform.position, gameObject.transform.rotation);
+        Vector3 spawn = new Vector3(gameObject.transform.position.x + 2f, gameObject.transform.position.y, gameObject.transform.position.z + 2f);
+        Instantiate(item, spawn, gameObject.transform.rotation);
     }
 }

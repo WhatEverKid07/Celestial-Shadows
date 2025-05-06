@@ -42,9 +42,6 @@ public class CrocsFunction : MonoBehaviour
             playerStatsScript.crocs.Add(gameObject);
             canUpdateCrocStat = true;
 
-            croc1?.SetActive(false);
-            croc2?.SetActive(false);
-
             Invoke(nameof(NoMoreUpdates), .0001f);
         }
     }
@@ -52,6 +49,6 @@ public class CrocsFunction : MonoBehaviour
     private void NoMoreUpdates()
     {
         canUpdateCrocStat = false;
-        Destroy(this);
+        Destroy(gameObject);
     }
 }

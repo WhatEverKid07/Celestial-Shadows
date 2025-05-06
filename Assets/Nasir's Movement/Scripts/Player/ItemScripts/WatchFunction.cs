@@ -43,10 +43,6 @@ public class WatchFunction : MonoBehaviour
             playerStatsScript.watches.Add(gameObject);
             canUpdateWatchStat = true;
 
-            clock?.SetActive(false);
-            chain?.SetActive(false);
-            time?.SetActive(false);
-
             Invoke(nameof(NoMoreUpdates), .0001f);
         }
     }
@@ -54,6 +50,6 @@ public class WatchFunction : MonoBehaviour
     private void NoMoreUpdates()
     {
         canUpdateWatchStat = false;
-        Destroy(this);
+        Destroy(gameObject);
     }
 }
