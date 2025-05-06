@@ -37,15 +37,17 @@ public class GunManagement : MonoBehaviour
         GameObject gun_2 = GameObject.Find(ARName);
         GameObject gun_3 = GameObject.Find(ShotgunName);
 
-        if(gun_1 != null) { pistol.SetActive(true); }
-        if(gun_2 != null) { assaultRifle.SetActive(true); }
-        if(gun_3 != null) { shotgun.SetActive(true); }
+        if(gun_1 != null) { activeWeapons.Add(pistol); Debug.Log("Gun1"); }
+        if(gun_2 != null) { activeWeapons.Add(assaultRifle); Debug.Log("Gun2"); }
+        if(gun_3 != null) { activeWeapons.Add(shotgun); Debug.Log("Gun3"); }
+
+        UpdateGunSelection();
     }
     void Start()
     {
         scroll = gunControls.FindActionMap("Gun Controls").FindAction("Scroll");
         scroll.Enable();
-        UpdateGunSelection();
+        //UpdateGunSelection();
 
         if (assaultRifle.activeInHierarchy)
         {
