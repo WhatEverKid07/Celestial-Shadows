@@ -107,7 +107,7 @@ public class PlayerExperience : MonoBehaviour
     }
     private void SummonItem(GameObject item)
     {
-        Vector3 spawn = new Vector3(gameObject.transform.position.x + 2f, gameObject.transform.position.y, gameObject.transform.position.z + 2f);
-        Instantiate(item, spawn, gameObject.transform.rotation);
+        Vector3 spawn = new Vector3(gameObject.transform.position.x + 1f, gameObject.transform.position.y, gameObject.transform.position.z + 1f);
+        Instantiate(item, spawn, item.transform.rotation);
     }
 }

@@ -17,6 +17,7 @@ public class PlayerStats : MonoBehaviour
     [SerializeField] private List<WatchFunction> watchFuncScript;
     [SerializeField] private List<CrocsFunction> crocsFuncScript;
     [SerializeField] private List<SyringeFunction> syringeFuncScript;
+    //[SerializeField] private List<ClipFunction> clipFuncScript;
 
     [SerializeField] private PlayerExperience playerXpScript;
 
@@ -69,7 +70,21 @@ public class PlayerStats : MonoBehaviour
 
     //Gun Clip
     private float reloadSpeed;
-    private float maxReloadSpeed;
+
+    private float arReload;
+    private float minArReload = 3f;
+
+    private float pistolReload;
+    private float minPistolReload = 1f;
+
+    private float shotgunReload;
+    private float minShotReload = 2f;
+
+    private float knifeReload;
+    private float setKnifeReload;
+
+    private float grenadeReload;
+    private float setGrenadeReload;
 
     //XP
     private float xp;
@@ -102,15 +117,20 @@ public class PlayerStats : MonoBehaviour
     [SerializeField] private Image syringeImage;
     [SerializeField] private TextMeshProUGUI syringeCount;
 
+    [SerializeField] private Image clipImage;
+    [SerializeField] private TextMeshProUGUI clipCount;
+
     [Header("ItemLists")]
     [SerializeField] internal List<GameObject> watches;
     [SerializeField] internal List<GameObject> crocs;
-    [SerializeField] internal List<GameObject> syringe;
+    [SerializeField] internal List<GameObject> syringes;
+    [SerializeField] internal List<GameObject> clips;
 
     [Header("ItemValue")]
     [SerializeField] private float watchValue;
     [SerializeField] private float crocValue;
     [SerializeField] private float syringeValue;
+    [SerializeField] private float clipValue;
 
     private void Start()
     {
@@ -233,7 +253,7 @@ public class PlayerStats : MonoBehaviour
 
     private void UpdateAttackSpeed()
     {
-        float attackIncrease = syringeValue * syringe.Count;
+        float attackIncrease = syringeValue * syringes.Count;
 
         if (arAttack > minArAttackSpeed)
         {
@@ -348,9 +368,9 @@ public class PlayerStats : MonoBehaviour
             crocsCount.text = string.Format("x" + crocs.Count);
         }
 
-        if (syringe.Count > 1)
+        if (syringes.Count > 1)
         {
-            syringeCount.text = string.Format("x" + syringe.Count);
+            syringeCount.text = string.Format("x" + syringes.Count);
         }
     }
 }
