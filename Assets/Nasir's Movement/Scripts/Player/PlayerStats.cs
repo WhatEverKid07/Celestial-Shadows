@@ -2,6 +2,8 @@ using UnityEngine.UI;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using System.Linq;
+using Unity.VisualScripting;
 
 public class PlayerStats : MonoBehaviour
 {
@@ -11,9 +13,10 @@ public class PlayerStats : MonoBehaviour
     [SerializeField] private NewPistolScript pistolScript;
     [SerializeField] private NewShotgunScript shotgunScript;
     [SerializeField] private KnifeAnimation knifeScript;
-    [SerializeField] private WatchFunction watchFunctionScript;
-    [SerializeField] private CrocsFunction crocsFunctionScript;
-    [SerializeField] private SyringeFunction syringeFunctionScript;
+    [SerializeField] private List<GameObject> itemScripts;
+    [SerializeField] private List<WatchFunction> watchFuncScript;
+    [SerializeField] private List<CrocsFunction> crocsFuncScript;
+    [SerializeField] private List<SyringeFunction> syringeFuncScript;
 
     [SerializeField] private PlayerExperience playerXpScript;
 
@@ -111,10 +114,6 @@ public class PlayerStats : MonoBehaviour
 
     private void Start()
     {
-        crocsFunctionScript = FindAnyObjectByType<CrocsFunction>();
-        watchFunctionScript = FindAnyObjectByType<WatchFunction>();
-        syringeFunctionScript = FindAnyObjectByType<SyringeFunction>();
-
         watchImage.enabled = false;
         crocsImage.enabled = false;
         syringeImage.enabled = false;
@@ -136,24 +135,78 @@ public class PlayerStats : MonoBehaviour
     }
     private void Update()
     {
-        if (syringe.Count > 0 && syringeFunctionScript.canUpdateSyringeStat)
+        itemScripts = GameObject.FindGameObjectsWithTag("Item").ToList();
+
+        for (int i = 0; i < itemScripts.Count; i++)
+        {
+            if (GetComponent<SyringeFunction>())
+            {
+                var syringe = itemScripts[i].GetComponent<SyringeFunction>();
+                if (!itemScripts.Contains(itemScripts[i]))
+                {
+                    syringeFuncScript.Add(syringe);
+                }
+            }
+             
+            /*
+            if (item.GetComponent<CrocsFunction>())
+            {
+                crocsFuncScript.Add(item.GetComponent<CrocsFunction>());
+            }
+
+            if (item.GetComponent<WatchFunction>())
+            {
+                watchFuncScript.Add(item.GetComponent<WatchFunction>());
+            }
+            */
+        }
+
+        foreach (var syringe in syringeFuncScript)
+        {
+            if (syringe.canUpdateSyringeStat)
+            {
+                UpdateAttackSpeed();
+                syringeImage.enabled = true;
+            }
+        }
+
+        foreach (var croc in crocsFuncScript)
+        {
+            if (croc.canUpdateCrocStat)
+            {
+                UpdateSpeedStat();
+                crocsImage.enabled = true;
+            }
+        }
+
+        foreach (var watch in watchFuncScript)
+        {
+            if (watch.canUpdateWatchStat)
+            {
+                UpdateDashStat();
+                watchImage.enabled = true;
+            }
+        }
+
+        /*
+        if (syringe.Count > 0 && syringeFuncScript.canUpdateSyringeStat)
         {
             UpdateAttackSpeed();
             syringeImage.enabled = true;
-
         }
 
-        if (crocs.Count > 0 && crocsFunctionScript.canUpdateCrocStat)
+        if (crocs.Count > 0 && crocsFuncScript.canUpdateCrocStat)
         {
             UpdateSpeedStat();
             crocsImage.enabled = true;
         }
 
-        if (watches.Count > 0 && watchFunctionScript.canUpdateWatchStat)
+        if (watches.Count > 0 && watchFuncScript.canUpdateWatchStat)
         {
             UpdateDashStat();
             watchImage.enabled = true;
         }
+        */
     }
 
     private void LateUpdate()

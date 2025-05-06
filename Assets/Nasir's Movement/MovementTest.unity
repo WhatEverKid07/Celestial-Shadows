@@ -15114,9 +15114,10 @@ MonoBehaviour:
   pistolScript: {fileID: 9852522}
   shotgunScript: {fileID: 867040928}
   knifeScript: {fileID: 490611994}
-  watchFunctionScript: {fileID: 949978788}
-  crocsFunctionScript: {fileID: 2022540195}
-  syringeFunctionScript: {fileID: 1286471925}
+  itemScripts: []
+  watchFuncScript: []
+  crocsFuncScript: []
+  syringeFuncScript: []
   playerXpScript: {fileID: 771014614}
   attackSpeedTxt: {fileID: 842345144}
   walkSpeedTxt: {fileID: 483239941}
@@ -15155,6 +15156,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ad76deff4c42e47478bb38d77fd2a3a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  items:
+  - itemDrop: {fileID: 949978786}
+    percentChance: 34
+  - itemDrop: {fileID: 2022540194}
+    percentChance: 33
+  - itemDrop: {fileID: 1286471922}
+    percentChance: 33
   enemies: []
   allTargets: []
 --- !u!1 &775693493 stripped
