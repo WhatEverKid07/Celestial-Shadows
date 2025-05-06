@@ -35,6 +35,11 @@ public class EnemySpawner : MonoBehaviour
 
     private void Start()
     {
+        Summon();
+    }
+
+    public void Summon()
+    {
         Enemies randomEnemy = GetRandomEnemy();
         Debug.Log("Randomly selected enemy: " + randomEnemy.Enemy.name + " | Chance: " + randomEnemy.PercentChance + "%");
         SummonEnemy(randomEnemy.Enemy);

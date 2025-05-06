@@ -6,7 +6,6 @@ using UnityEngine.InputSystem;
 public class GunManagement : MonoBehaviour
 {
     [SerializeField] private List<GameObject> activeWeapons;
-    //[SerializeField] private List<GameObject> nonActiveWeapons;
     [SerializeField] private InputActionAsset gunControls;
 
     [SerializeField] private GameObject assaultRifle;
@@ -14,6 +13,11 @@ public class GunManagement : MonoBehaviour
     [SerializeField] private GameObject pistol;
     [SerializeField] private GameObject knife;
     [SerializeField] private GameObject grenade;
+
+    [Header("Selected Start Gun")]
+    [SerializeField] private string pistolName;
+    [SerializeField] private string ARName;
+    [SerializeField] private string ShotgunName;
 
     private int currentGunIndex = 0; 
     internal bool canSwitch = true;
@@ -27,7 +31,16 @@ public class GunManagement : MonoBehaviour
         Grenade,
         Knife
     }
+    private void Awake()
+    {
+        GameObject gun_1 = GameObject.Find(pistolName);
+        GameObject gun_2 = GameObject.Find(ARName);
+        GameObject gun_3 = GameObject.Find(ShotgunName);
 
+        if(gun_1 != null) { pistol.SetActive(true); }
+        if(gun_2 != null) { assaultRifle.SetActive(true); }
+        if(gun_3 != null) { shotgun.SetActive(true); }
+    }
     void Start()
     {
         scroll = gunControls.FindActionMap("Gun Controls").FindAction("Scroll");
