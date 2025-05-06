@@ -97,17 +97,17 @@ public class ArsenalFunction : MonoBehaviour
         selectedGun = currentGun;
         if (selectedGun == allGuns[0])
         {
-            pistol = new GameObject("Pistol");
+            pistol = new GameObject("WowPistol");
             DontDestroyOnLoad(pistol);
         }
         else if (selectedGun == allGuns[1])
         {
-            shotgun = new GameObject("Shotgun");
+            shotgun = new GameObject("WowShotgun");
             DontDestroyOnLoad(shotgun);
         }
         else
         {
-            ar = new GameObject("AR");
+            ar = new GameObject("WowAR");
             DontDestroyOnLoad(ar);
         }
 
@@ -117,7 +117,7 @@ public class ArsenalFunction : MonoBehaviour
         }
         else
         {
-            SceneManager.LoadScene("Endless", LoadSceneMode.Single);
+            SceneManager.LoadScene("TEST", LoadSceneMode.Single);
         }
     }
 
