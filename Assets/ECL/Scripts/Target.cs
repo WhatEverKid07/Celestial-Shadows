@@ -12,6 +12,10 @@ public class Target : MonoBehaviour
     [SerializeField] private GameObject shadowAttack;
     [SerializeField] private ParticleSystem deathParticles;
 
+    [Space(20)]
+    [SerializeField] private AudioSource deathSound;
+    [SerializeField] private AudioSource hitSound;
+
     private Coroutine xpGain;
     internal bool canLoseDamage;
     internal bool addXp;
@@ -35,6 +39,7 @@ public class Target : MonoBehaviour
         {
             Debug.Log("Hit! " + amount);
             health -= amount;
+            if (hitSound != null) { hitSound.Play(); }
             if (health <= 0f)
             {
                 Die();
@@ -62,6 +67,7 @@ public class Target : MonoBehaviour
     private IEnumerator Die2(float waitTime)
     {
         yield return new WaitForSeconds(waitTime);
+        if (deathSound != null) { deathSound.Play(); }
         Destroy(gameObject);
     }
 

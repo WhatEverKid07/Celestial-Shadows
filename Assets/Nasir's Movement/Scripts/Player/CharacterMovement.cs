@@ -127,8 +127,8 @@ public class CharacterMovement : MonoBehaviour
     [SerializeField] private float staminaLose;
     public float stamina;
     public bool loseStamina = false;
-    public bool regenStamina = false;
-    public bool isLosingStamina = false;
+    //public bool regenStamina = false;
+    //public bool isLosingStamina = false;
 
     private void Start()
     {
@@ -305,17 +305,25 @@ public class CharacterMovement : MonoBehaviour
 
         if (loseStamina && stamina >= 0)
         {
-            isLosingStamina = true;
+            //isLosingStamina = true;
             stamina -= staminaLose;
         }
         else
         {
             //isLosingStamina = false;
         }
-        if (regenStamina && stamina < maxStamina && !isLosingStamina)
+        if (/*regenStamina &&*/ stamina < maxStamina && !loseStamina)
         {
             stamina += 0.3f;
         }
+        if (staminaBar != null) { UpdateStaminaBar(); }
+
+        if (isRunning) { loseStamina = true; }
+        else if (!isRunning) { loseStamina = false; }
+    }
+    private void UpdateStaminaBar()
+    {
+        staminaBar.value = stamina;
     }
 
     //WALK & RUN FUNCTION
@@ -336,7 +344,7 @@ public class CharacterMovement : MonoBehaviour
 
         bool hasMovementInput = moveDir.magnitude > 0.1f;
 
-        if (run.ReadValue<float>() > 0 && canRun && hasMovementInput && !(crouch.ReadValue<float>() > 0))
+        if (run.ReadValue<float>() > 0 && canRun && hasMovementInput && !(crouch.ReadValue<float>() > 0) && stamina >= 0)
         {
             transform.localScale = new Vector3(transform.localScale.x, startYScale, transform.localScale.z);
 
@@ -508,6 +516,7 @@ public class CharacterMovement : MonoBehaviour
         if (setCoyoteTime > 0f && !isJumping)
         {
             isJumping = true;
+            AudioManager.instance.PlayerJump();
             rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
             rb.AddForce(Vector3.up * jumpPower, ForceMode.VelocityChange);
             exitingSlope = true;
@@ -557,10 +566,11 @@ public class CharacterMovement : MonoBehaviour
     //DASH FUNCTION
     private void Dash()
     {
-        if (!enableDash) return;
+        if (!enableDash || stamina > 20) return;
 
         if (canDash && !isDashing && !isWallRunning)
         {
+            AudioManager.instance.PlayerDash();
             isDashing = true;
 
             dashCoroutine = StartCoroutine(PerformDash());
@@ -604,6 +614,8 @@ public class CharacterMovement : MonoBehaviour
         //CONTINUE VELOCITY IN X,Z DIRECTIONS
         dashMomentum = new (rb.velocity.x, verticalVelocity, rb.velocity.z);
         StartCoroutine(ApplyDashMomentum());
+
+        stamina -= 20f;
 
         isDashing = false;
     }
@@ -768,16 +780,11 @@ public class CharacterMovement : MonoBehaviour
         rb.useGravity = true;
     }
 
-    private void UpdateHealthbar()
-    {
-        staminaBar.value = stamina;
-    }
-
     private IEnumerator RegainStamina()
     {
         yield return new WaitForSeconds(2);
-        if (isLosingStamina || loseStamina) { regenStamina = false; yield break;}
-        if (stamina == maxStamina) { regenStamina = false; yield break;}
-        regenStamina = true;
+        if (/*isLosingStamina ||*/ loseStamina) { /*regenStamina = false;*/ yield break;}
+        if (stamina == maxStamina) { /*regenStamina = false;*/ yield break;}
+        //regenStamina = true;
     }
 }

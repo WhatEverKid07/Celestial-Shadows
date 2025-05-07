@@ -7,7 +7,7 @@ using UnityEngine;
 public class Enemies
 {
     [SerializeField] private GameObject enemy;
-    [SerializeField][Range(0, 100)] private int percentChance;
+    [SerializeField] [Range(0, 100)] private int percentChance;
 
     public GameObject Enemy => enemy;
     public int PercentChance => percentChance;
@@ -16,6 +16,8 @@ public class EnemySpawner : MonoBehaviour
 {
     [SerializeField] private Enemies[] enemies;
     private Dictionary<string, Enemies> enemyDictionary;
+
+    [SerializeField] private AudioSource spawn;
 
     private void Awake()
     {
@@ -41,6 +43,7 @@ public class EnemySpawner : MonoBehaviour
     public void Summon()
     {
         Enemies randomEnemy = GetRandomEnemy();
+        spawn.Play();
         Debug.Log("Randomly selected enemy: " + randomEnemy.Enemy.name + " | Chance: " + randomEnemy.PercentChance + "%");
         SummonEnemy(randomEnemy.Enemy);
     }

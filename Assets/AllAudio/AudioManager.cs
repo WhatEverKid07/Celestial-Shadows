@@ -8,6 +8,7 @@ public class AudioManager : MonoBehaviour
 
     [SerializeField] private AudioSource weaponsAudioSource;
     [SerializeField] private AudioSource playerAudioSource;
+    [SerializeField] private AudioSource playerMoveAudioSource;
     [SerializeField] private AudioSource musicAudioSource;
 
     [Header("Weapons")]
@@ -23,6 +24,12 @@ public class AudioManager : MonoBehaviour
     [Header("Player")]
     [SerializeField] private AudioClip walking;
     [SerializeField] private AudioClip running;
+    [SerializeField] private AudioClip jump;
+    [SerializeField] private AudioClip dash;
+
+    [Header("Music")]
+    [SerializeField] private AudioClip normalMusic;
+    [SerializeField] private AudioClip intenseMusic;
 
 
     private void Awake()
@@ -48,42 +55,46 @@ public class AudioManager : MonoBehaviour
     { weaponsAudioSource.clip = grenadeExplode; weaponsAudioSource.Play(); }
     public void GrenadePinPull()
     { weaponsAudioSource.clip = grenadePinPull; weaponsAudioSource.Play(); }
+    public void PlayerJump()
+    { playerAudioSource.clip = jump; playerAudioSource.Play(); }
+    public void PlayerDash()
+    { playerAudioSource.clip = dash; playerAudioSource.Play(); }
 
     public void PlayerWalking(bool isMoving)
     {
-        playerAudioSource.clip = walking;
+        playerMoveAudioSource.clip = walking;
 
         if (isMoving)
         {
-            if (!playerAudioSource.isPlaying)
+            if (!playerMoveAudioSource.isPlaying)
             {
-                playerAudioSource.Play();
+                playerMoveAudioSource.Play();
             }
         }
         else
         {
-            if (playerAudioSource.isPlaying)
+            if (playerMoveAudioSource.isPlaying)
             {
-                playerAudioSource.Stop();
+                playerMoveAudioSource.Stop();
             }
         }
     }
     public void PlayerRunning(bool isRunning)
     {
-        playerAudioSource.clip = running;
+        playerMoveAudioSource.clip = running;
 
         if (isRunning)
         {
-            if (!playerAudioSource.isPlaying)
+            if (!playerMoveAudioSource.isPlaying)
             {
-                playerAudioSource.Play();
+                playerMoveAudioSource.Play();
             }
         }
         else
         {
-            if (playerAudioSource.isPlaying)
+            if (playerMoveAudioSource.isPlaying)
             {
-                playerAudioSource.Stop();
+                playerMoveAudioSource.Stop();
             }
         }
     }
