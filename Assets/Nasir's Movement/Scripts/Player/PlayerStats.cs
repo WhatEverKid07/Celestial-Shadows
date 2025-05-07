@@ -3,28 +3,26 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using System.Linq;
-using Unity.VisualScripting;
 
 public class PlayerStats : MonoBehaviour
 {
     [Header("PlayerScripts")]
     [SerializeField] private CharacterMovement characterMoveScript;
+    [SerializeField] private PlayerExperience playerXpScript;
     [SerializeField] private NewARScript arScript;
     [SerializeField] private NewPistolScript pistolScript;
     [SerializeField] private NewShotgunScript shotgunScript;
     [SerializeField] private KnifeAnimation knifeScript;
+
+    [Header("Lists")]
     [SerializeField] private List<GameObject> itemScripts;
     [SerializeField] private List<WatchFunction> watchFuncScript;
     [SerializeField] private List<CrocsFunction> crocsFuncScript;
     [SerializeField] private List<SyringeFunction> syringeFuncScript;
-    //[SerializeField] private List<ClipFunction> clipFuncScript;
-
-    [SerializeField] private PlayerExperience playerXpScript;
+    [SerializeField] private List<ClipFunction> clipFuncScript;
 
     [Header("Stats")]
     //Syringe
-    private GameObject currentGun;
-
     private float attackSpeed;
 
     private float arAttack;
@@ -36,10 +34,7 @@ public class PlayerStats : MonoBehaviour
     private float shotgunAttack;
     private float minShotAttackSpeed = 7.5f;
 
-    private float knifeAttack;
     private float setKnifeAttackSpeed = 1f;
-
-    private float grenadeAttack;
     private float setGrenadeAttackSpeed = 1.2f;
 
     //Crocs
@@ -72,18 +67,21 @@ public class PlayerStats : MonoBehaviour
     private float reloadSpeed;
 
     private float arReload;
-    private float minArReload = 3f;
+    private float arDelay;
+    private float maxArReload = 2f;
+    private float minArDelayTime = 3.2f;
 
     private float pistolReload;
-    private float minPistolReload = 1f;
+    private float pistolDelay;
+    private float maxPistolReload = 2f;
+    private float minPistolDelayTime = 1.6f;
 
-    private float shotgunReload;
-    private float minShotReload = 2f;
+    private float shotReload;
+    private float shotDelay;
+    private float maxShotReload = 2f;
+    private float minShotDelay = 2.72f;
 
-    private float knifeReload;
     private float setKnifeReload;
-
-    private float grenadeReload;
     private float setGrenadeReload;
 
     //XP
@@ -137,6 +135,7 @@ public class PlayerStats : MonoBehaviour
         watchImage.enabled = false;
         crocsImage.enabled = false;
         syringeImage.enabled = false;
+        clipImage.enabled = false;
 
         walkSpeed = characterMoveScript.walkSpeed;
         runSpeed = characterMoveScript.runSpeed;
@@ -146,8 +145,16 @@ public class PlayerStats : MonoBehaviour
         dashCooldown = characterMoveScript.dashTime;
 
         arAttack = arScript.fireRate;
+        arReload = arScript.sAnimSpeed;
+        arDelay = arScript.reloadTime;
+
         pistolAttack = pistolScript.fireRate;
+        pistolReload = pistolScript.animSpeed;
+        pistolDelay = pistolScript.reloadTime;
+
         shotgunAttack = shotgunScript.fireRate;
+        shotReload = shotgunScript.sAnimSpeed;
+        shotDelay = shotgunScript.reloadTime;
 
         xp = playerXpScript.currentXp;
         xpLvl = playerXpScript.xpLvl;
@@ -176,6 +183,7 @@ public class PlayerStats : MonoBehaviour
         HashSet<SyringeFunction> currentSyringes = new HashSet<SyringeFunction>();
         HashSet<CrocsFunction> currentCrocs = new HashSet<CrocsFunction>();
         HashSet<WatchFunction> currentWatches = new HashSet<WatchFunction>();
+        HashSet<ClipFunction> currentClips = new HashSet<ClipFunction>();
 
         foreach (GameObject item in itemScripts)
         {
@@ -193,11 +201,17 @@ public class PlayerStats : MonoBehaviour
             {
                 currentWatches.Add(watch);
             }
+
+            if (item.TryGetComponent(out ClipFunction clip))
+            {
+                currentClips.Add(clip);
+            }
         }
 
         syringeFuncScript = currentSyringes.ToList();
         crocsFuncScript = currentCrocs.ToList();
         watchFuncScript = currentWatches.ToList();
+        clipFuncScript = currentClips.ToList();
 
         for (int i = syringeFuncScript.Count - 1; i >= 0; i--)
         {
@@ -225,6 +239,15 @@ public class PlayerStats : MonoBehaviour
                 watchImage.enabled = true;
             }
         }
+
+        for (int i = clipFuncScript.Count - 1; i >= 0; i--)
+        {
+            if (clipFuncScript[i].canUpdateClipStat)
+            {
+                UpdateReloadSpeed();
+                clipImage.enabled = true;
+            }
+        }
     }
 
     private void UpdateCurrentGun()
@@ -232,22 +255,27 @@ public class PlayerStats : MonoBehaviour
         if (arScript.isActiveAndEnabled)
         {
             attackSpeed = arAttack;
+            reloadSpeed = arReload;
         }
         else if (pistolScript.isActiveAndEnabled)
         {
             attackSpeed = pistolAttack;
+            reloadSpeed = pistolReload;
         }
         else if (shotgunScript.isActiveAndEnabled)
         {
             attackSpeed = shotgunAttack;
+            reloadSpeed = shotReload;
         }
         else if (knifeScript.isActiveAndEnabled)
         {
             attackSpeed = setKnifeAttackSpeed;
+            reloadSpeed = setKnifeReload;
         }
         else
         {
             attackSpeed = setGrenadeAttackSpeed;
+            reloadSpeed = setGrenadeReload;
         }
     }
 
@@ -272,6 +300,59 @@ public class PlayerStats : MonoBehaviour
             float newShotgunAttack = shotgunAttack - attackIncrease;
             shotgunAttack = newShotgunAttack;
         }
+    }
+
+    private void UpdateReloadSpeed()
+    {
+        float reloadIncrease = clipValue * clips.Count;
+
+        if (arReload < maxArReload)
+        {
+            float delayDecrease = ((arReload * 2f) - .4f);
+            float newArReload = arReload + reloadIncrease;
+            arReload = newArReload;
+
+            if (clipValue > 0)
+            {
+                float newDelay = arDelay - delayDecrease;
+                arDelay = newDelay;
+            }   
+        }
+
+        if (pistolReload < maxPistolReload)
+        {
+            float delayDecrease = ((pistolReload * 2f) - .4f);
+            float newPistolReload = pistolReload + reloadIncrease;
+            pistolReload = newPistolReload;
+
+            if (clipValue > 0)
+            {
+                float newDelay = pistolDelay - delayDecrease;
+                pistolDelay = newDelay;
+            }
+        }
+
+        if (shotReload < maxShotReload)
+        {
+            float delayDecrease = ((shotReload * 2f) - .4f);
+            float newShotgunReload = shotReload + reloadIncrease;
+            shotReload = newShotgunReload;
+
+            if (clipValue > 0)
+            {
+                float newDelay = shotDelay - delayDecrease;
+                shotDelay = newDelay;
+            }
+        }
+
+        arScript.sAnimSpeed = arReload;
+        arScript.reloadTime = arDelay;
+
+        pistolScript.animSpeed = pistolReload;
+        pistolScript.reloadTime = pistolDelay;
+
+        shotgunScript.sAnimSpeed = shotReload;
+        shotgunScript.reloadTime = shotDelay;
     }
 
     private void UpdateSpeedStat()
@@ -351,6 +432,7 @@ public class PlayerStats : MonoBehaviour
         dashCooldownTxt.text = string.Format("Dash Cooldown: " + dashCooldown);
 
         attackSpeedTxt.text = string.Format("Attack speed: " + attackSpeed);
+        reloadSpeedTxt.text = string.Format("Reload speed: " + reloadSpeed);
 
         xpTxt.text = string.Format("Xp: " +  xp);
         xpLvlTxt.text = string.Format("XpLvl: " + xpLvl);
@@ -371,6 +453,11 @@ public class PlayerStats : MonoBehaviour
         if (syringes.Count > 1)
         {
             syringeCount.text = string.Format("x" + syringes.Count);
+        }
+
+        if (clips.Count > 1)
+        {
+            clipCount.text = string.Format("x" + clips.Count);
         }
     }
 }

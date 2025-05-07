@@ -19,8 +19,6 @@ public class SyringeFunction : MonoBehaviour
     {
         playerStatsScript = FindAnyObjectByType<PlayerStats>();
 
-        syringe = GameObject.Find("Syringe");
-
         originalYPosition = transform.position.y;
     }
 

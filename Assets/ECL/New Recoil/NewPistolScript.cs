@@ -14,7 +14,7 @@ public class NewPistolScript : MonoBehaviour
 
     [Header("Gun Attributes")]
     [SerializeField] private int maxAmmo = 30;
-    [SerializeField] private float reloadTime;
+    [SerializeField] internal float reloadTime;
     [SerializeField] private float coneAngle;
     [SerializeField] private float semiAutoShotDelay = 0.2f;
 
@@ -49,6 +49,9 @@ public class NewPistolScript : MonoBehaviour
     [Space(20)]
     [Header("Animation")]
     [SerializeField] private Animator animator;
+    [SerializeField] internal float animSpeed = 1f;
+    [SerializeField] private float normalAnimSpeed = 1f;
+
     [SerializeField] private string nameOfShootTrigger;
     [SerializeField] private string nameOfReloadTrigger;
 
@@ -123,11 +126,13 @@ public class NewPistolScript : MonoBehaviour
         {
             gunManager.canSwitch = false;
             StartCoroutine(Reload());
+            animator.speed = animSpeed;
         }
         if (currentAmmo == 0 && !isReloading)
         {
             gunManager.canSwitch = false;
             StartCoroutine(Reload());
+            animator.speed = animSpeed;
         }
         if (recoiling > 0)
         {
@@ -156,7 +161,13 @@ public class NewPistolScript : MonoBehaviour
             RecoilPivot.localRotation = Quaternion.Lerp(RecoilPivot.localRotation, originalRotation, fraction);
         }
         if (isReloading)
-            return;
+        { 
+            return; 
+        }
+        else
+        {
+            animator.speed = normalAnimSpeed;
+        }
 
         shoot.performed += ctx =>
         {

@@ -14,7 +14,7 @@ public class NewARScript : MonoBehaviour
 
     [Header("Gun Attributes")]
     [SerializeField] private int maxAmmo = 30;
-    [SerializeField] private float reloadTime = 1f;
+    [SerializeField] internal float reloadTime = 1f;
     [SerializeField] private float coneAngle;
     [SerializeField] private float targetSightZoomFOV = 40f;
     [SerializeField] private float zoomTransitionDuration = 1f;
@@ -51,6 +51,9 @@ public class NewARScript : MonoBehaviour
     [Header("Animation")]
     [SerializeField] private Animator animator;
     [SerializeField] private Animator secondAnimator;
+    [SerializeField] internal float sAnimSpeed = 1f;
+    [SerializeField] private float normalAnimSpeed = 1f;
+
     [SerializeField] private string nameOfReloadAnim;
     [SerializeField] private string nameOfSightAnim;
     [SerializeField] private string nameOfSightAnimReverse;
@@ -104,6 +107,8 @@ public class NewARScript : MonoBehaviour
         UpdateAmmoText();
         shoot.Enable();
         reload.Enable();
+
+        secondAnimator.speed = sAnimSpeed;
     }
     void OnEnable()
     {
@@ -134,19 +139,31 @@ public class NewARScript : MonoBehaviour
         {
             gunManager.canSwitch = false;
             StartCoroutine(Reload());
+            secondAnimator.speed = sAnimSpeed;
         }
+
         if (currentAmmo == 0 && !isReloading && !isSighted)
         {
             gunManager.canSwitch = false;
             StartCoroutine(Reload());
+            secondAnimator.speed = sAnimSpeed;
         }
+
         if (!isFiring && recoilAmount > 0)
         {
             recoilAmount = Mathf.MoveTowards(recoilAmount, 0, RecoveryTime * Time.deltaTime);
             ApplyRecoil();
         }
 
-        if (isReloading) return;
+        if (isReloading)
+        {
+            return;
+        }
+        else
+        {
+            secondAnimator.speed = normalAnimSpeed;
+        }
+
         if (shoot.ReadValue<float>() > 0 && Time.time >= nextTimeToFire)
         {
             nextTimeToFire = Time.time + 1f / fireRate;
@@ -238,9 +255,10 @@ public class NewARScript : MonoBehaviour
     {
         isReloading = true;
         isFiring = false;
-        if (nameOfReloadAnim != "") { secondAnimator.Play(nameOfReloadAnim); }
-        // reloadClip.Play();
-        // gun reload animation
+        if (nameOfReloadAnim != "") 
+        { 
+            secondAnimator.Play(nameOfReloadAnim);
+        }
         currentAmmo = maxAmmo;
         yield return new WaitForSeconds(reloadTime);
         UpdateAmmoText();

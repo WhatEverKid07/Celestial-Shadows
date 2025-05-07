@@ -5,11 +5,6 @@ public class WatchFunction : MonoBehaviour
     [Header("Scripts")]
     [SerializeField] private PlayerStats playerStatsScript;
 
-    [Header("Watch")]
-    private GameObject clock;
-    private GameObject chain;
-    private GameObject time;
-
     private float rotationSpeed = 30f;
     private float bobbingAmplitude = 0.1f;  
     private float bobbingFrequency = 1f;   
@@ -20,10 +15,6 @@ public class WatchFunction : MonoBehaviour
     private void Start()
     {
         playerStatsScript = FindAnyObjectByType<PlayerStats>();
-
-        clock = GameObject.Find("clock");
-        chain = GameObject.Find("chain");
-        time = GameObject.Find("time");
 
         originalYPosition = transform.position.y;
     }
