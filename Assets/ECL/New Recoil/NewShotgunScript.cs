@@ -47,14 +47,12 @@ public class NewShotgunScript : MonoBehaviour
     [SerializeField] internal float fireRate = 15f;
     [SerializeField] private float bulletSpeed = 20f;
 
-    private float nextTimeToFire = 0f;
-
     [Space(20)]
     [Header("Animation")]
     [SerializeField] private Animator animator;
     [SerializeField] private Animator secondAnimator;
-    [SerializeField] internal float sAnimSpeed;
-    [SerializeField] private float normalAnimSpeed;
+    [SerializeField] internal float sAnimSpeed = 1f;
+    [SerializeField] private float normalAnimSpeed = 1f;
     [SerializeField] private string nameOfReloadAnim;
     [SerializeField] private string nameOfShootTrigger;
     [SerializeField] private string nameOfSightAnim;
@@ -134,7 +132,9 @@ public class NewShotgunScript : MonoBehaviour
     void Update()
     {
         if (!gameObject.activeInHierarchy)
-            return;
+        {
+            return; 
+        }
 
         if (reload.ReadValue<float>() > 0 && !isSighted && currentAmmo < maxAmmo)
         {

@@ -107,8 +107,6 @@ public class NewARScript : MonoBehaviour
         UpdateAmmoText();
         shoot.Enable();
         reload.Enable();
-
-        secondAnimator.speed = sAnimSpeed;
     }
     void OnEnable()
     {
@@ -133,9 +131,12 @@ public class NewARScript : MonoBehaviour
     }
     void Update()
     {
-        if (!gameObject.activeInHierarchy) return;
+        if (!gameObject.activeInHierarchy)
+        {
+            return;
+        }
 
-        if (reload.ReadValue<float>() > 0 && !isSighted && currentAmmo < maxAmmo) 
+        if (reload.ReadValue<float>() > 0 && !isSighted && currentAmmo < maxAmmo)
         {
             gunManager.canSwitch = false;
             StartCoroutine(Reload());

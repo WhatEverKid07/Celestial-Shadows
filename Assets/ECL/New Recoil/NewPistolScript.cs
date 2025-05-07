@@ -120,7 +120,9 @@ public class NewPistolScript : MonoBehaviour
     void Update()
     {
         if (!gameObject.activeInHierarchy)
-            return;
+        { 
+            return; 
+        }
 
         if (reload.ReadValue<float>() > 0)
         {

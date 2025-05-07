@@ -78,8 +78,8 @@ public class PlayerStats : MonoBehaviour
 
     private float shotReload;
     private float shotDelay;
-    private float maxShotReload = 2f;
-    private float minShotDelay = 2.72f;
+    private float maxShotReload = 1.6f;
+    private float minShotDelayTime = 1.4f;
 
     private float setKnifeReload;
     private float setGrenadeReload;
@@ -312,7 +312,7 @@ public class PlayerStats : MonoBehaviour
             float newArReload = arReload + reloadIncrease;
             arReload = newArReload;
 
-            if (clipValue > 0)
+            if (clipValue > 0 && arDelay > minArDelayTime)
             {
                 float newDelay = arDelay - delayDecrease;
                 arDelay = newDelay;
@@ -325,7 +325,7 @@ public class PlayerStats : MonoBehaviour
             float newPistolReload = pistolReload + reloadIncrease;
             pistolReload = newPistolReload;
 
-            if (clipValue > 0)
+            if (clipValue > 0 && pistolDelay > minPistolDelayTime)
             {
                 float newDelay = pistolDelay - delayDecrease;
                 pistolDelay = newDelay;
@@ -334,11 +334,11 @@ public class PlayerStats : MonoBehaviour
 
         if (shotReload < maxShotReload)
         {
-            float delayDecrease = ((shotReload * 2f) - .4f);
+            float delayDecrease = ((shotReload * 2f) - 1.2f);
             float newShotgunReload = shotReload + reloadIncrease;
             shotReload = newShotgunReload;
 
-            if (clipValue > 0)
+            if (clipValue > 0 && shotDelay > minShotDelayTime)
             {
                 float newDelay = shotDelay - delayDecrease;
                 shotDelay = newDelay;

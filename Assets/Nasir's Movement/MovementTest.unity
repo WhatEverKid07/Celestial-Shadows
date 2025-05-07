@@ -21889,6 +21889,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 72702145}
     - target: {fileID: 4635908336356522460, guid: a1b2b88e23e82d749b228cc279fbe9a7, type: 3}
+      propertyPath: sAnimSpeed
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4635908336356522460, guid: a1b2b88e23e82d749b228cc279fbe9a7, type: 3}
       propertyPath: camMovement
       value: 
       objectReference: {fileID: 264660288}
@@ -21899,6 +21903,10 @@ PrefabInstance:
     - target: {fileID: 4635908336356522460, guid: a1b2b88e23e82d749b228cc279fbe9a7, type: 3}
       propertyPath: gunAudioSource
       value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 4635908336356522460, guid: a1b2b88e23e82d749b228cc279fbe9a7, type: 3}
+      propertyPath: normalAnimSpeed
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4635908336356522460, guid: a1b2b88e23e82d749b228cc279fbe9a7, type: 3}
       propertyPath: characterMovement
