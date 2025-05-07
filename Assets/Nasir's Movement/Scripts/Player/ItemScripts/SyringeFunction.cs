@@ -37,7 +37,7 @@ public class SyringeFunction : MonoBehaviour
     {
         if (other.gameObject == GameObject.Find("PlayerPhys"))
         {
-            playerStatsScript.syringe.Add(gameObject);
+            playerStatsScript.syringes.Add(gameObject);
             canUpdateSyringeStat = true;
 
             Invoke(nameof(NoMoreUpdates), .0001f);
