@@ -2992,9 +2992,9 @@ GameObject:
   m_Component:
   - component: {fileID: 254405356}
   - component: {fileID: 254405355}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: LightForRecharging
-  m_TagString: Untagged
+  m_TagString: LightRecharger
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3029,7 +3029,7 @@ Transform:
   m_GameObject: {fileID: 254405354}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0.95410675, z: -0, w: -0.29946676}
-  m_LocalPosition: {x: 213.4, y: 126.6, z: 234.1}
+  m_LocalPosition: {x: 212.1, y: 128.3, z: 232.8}
   m_LocalScale: {x: 70.8, y: 70.8, z: 70.8}
   m_ConstrainProportionsScale: 1
   m_Children: []
@@ -12149,6 +12149,14 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3613909374305761631, guid: 7cd0f42f85822264c847a54a12669969, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3613909374305761631, guid: 7cd0f42f85822264c847a54a12669969, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4206533783231806254, guid: 7cd0f42f85822264c847a54a12669969, type: 3}
       propertyPath: ARName
       value: WowAR
@@ -12179,7 +12187,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8404737133062976555, guid: 7cd0f42f85822264c847a54a12669969, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 373
+      value: 350
       objectReference: {fileID: 0}
     - target: {fileID: 8404737133062976555, guid: 7cd0f42f85822264c847a54a12669969, type: 3}
       propertyPath: m_LocalPosition.y
@@ -12187,7 +12195,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8404737133062976555, guid: 7cd0f42f85822264c847a54a12669969, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 289
+      value: 295
       objectReference: {fileID: 0}
     - target: {fileID: 8404737133062976555, guid: 7cd0f42f85822264c847a54a12669969, type: 3}
       propertyPath: m_LocalRotation.w
@@ -12228,7 +12236,10 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 6256487538419083783, guid: 7cd0f42f85822264c847a54a12669969, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1231014582}
   m_SourcePrefab: {fileID: 100100000, guid: 7cd0f42f85822264c847a54a12669969, type: 3}
 --- !u!4 &941990836 stripped
 Transform:
@@ -17008,6 +17019,40 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.009526769, y: 0.1905947, z: 0.00815468}
   m_Center: {x: 0.013041256, y: 0, z: 0.0022993244}
+--- !u!1 &1231014574 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6256487538419083783, guid: 7cd0f42f85822264c847a54a12669969, type: 3}
+  m_PrefabInstance: {fileID: 935234275}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1231014577 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3798308779471526742, guid: 7cd0f42f85822264c847a54a12669969, type: 3}
+  m_PrefabInstance: {fileID: 935234275}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1231014574}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a4a783d8cebc4164ab02da6d81594833, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1231014582
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1231014574}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 21c3c110229f63d42995788b785ada3a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerTargetScript: {fileID: 1231014577}
+  lightRecharger: {fileID: 1511985333}
+  maxLight: 100
+  lightLose: 0.1
+  lightGain: 0.2
+  tagOfLightRecharger: LightRecharger
 --- !u!1 &1232864106
 GameObject:
   m_ObjectHideFlags: 0
@@ -21155,6 +21200,17 @@ Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 5cbe5bf610229c54f9409e30f26625f0, type: 3}
   m_PrefabInstance: {fileID: 617905605}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1511985333 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8320091769455752393, guid: 7cd0f42f85822264c847a54a12669969, type: 3}
+  m_PrefabInstance: {fileID: 935234275}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 67db9e8f0e2ae9c40bc1e2b64352a6b4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1530682250
 GameObject:
   m_ObjectHideFlags: 0

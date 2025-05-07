@@ -13,10 +13,12 @@ public class Target : MonoBehaviour
     [SerializeField] private ParticleSystem deathParticles;
 
     private Coroutine xpGain;
+    internal bool canLoseDamage;
     internal bool addXp;
 
     private void Start()
     {
+        canLoseDamage = true;
         addXp = false;
         health = maxHealth;
         healthBar.maxValue = maxHealth;
@@ -29,11 +31,14 @@ public class Target : MonoBehaviour
 
     public void TakeDamage(float amount)
     {
-        Debug.Log("Hit! " + amount);
-        health -= amount;
-        if (health <= 0f)
+        if (canLoseDamage)
         {
-            Die();
+            Debug.Log("Hit! " + amount);
+            health -= amount;
+            if (health <= 0f)
+            {
+                Die();
+            }
         }
     }
 
