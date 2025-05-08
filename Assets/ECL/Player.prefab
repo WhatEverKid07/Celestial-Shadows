@@ -10224,6 +10224,10 @@ MonoBehaviour:
   running: {fileID: 8300000, guid: cb8dcd87b58843443b0fd77cbbff8bdf, type: 3}
   jump: {fileID: 8300000, guid: 9e7ad82be91e4fc4188d0d127f3840c5, type: 3}
   dash: {fileID: 8300000, guid: 474aede8c1f63d2418a39c7608b406ce, type: 3}
+  gameplayMusic: {fileID: 8300000, guid: a7a4822f93329c54d85caf4baed894f7, type: 3}
+  minVolume: 0.2
+  maxVolume: 1
+  duration: 1
 --- !u!82 &5971773090255220262
 AudioSource:
   m_ObjectHideFlags: 0
@@ -10523,7 +10527,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: -2277200508519448084, guid: 6fe6c90ca9a0e0b4ab52a79a7f860e65, type: 2}
   m_audioClip: {fileID: 0}
-  m_PlayOnAwake: 1
+  m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
   Loop: 0
@@ -12482,6 +12486,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a4a783d8cebc4164ab02da6d81594833, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playerDeath: {fileID: 0}
   maxHealth: 100
   health: 100
   healthBar: {fileID: 2005555728099296423}

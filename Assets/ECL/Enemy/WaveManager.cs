@@ -25,6 +25,7 @@ public class WaveManager : MonoBehaviour
         if (enemies.Count == 0)
         {
             endOfWave = true;
+            AudioManager.instance.ToggleVolume();
             StartCoroutine(SummonNewWave());
         }
     }
@@ -43,12 +44,15 @@ public class WaveManager : MonoBehaviour
         {
             yield return new WaitForSeconds(2);
             script.Summon();
-            waveCount++;
-            waveText.text = "Wave: " + waveCount;
-            yield return new WaitForSeconds(2);
-            GetEnemies();
-            yield return new WaitForSeconds(2);
-            endOfWave = false;
         }
+
+        waveCount++;
+        waveText.text = "Wave: " + waveCount;
+
+        yield return new WaitForSeconds(2);
+        GetEnemies();
+        yield return new WaitForSeconds(2);
+        AudioManager.instance.ToggleVolume();
+        endOfWave = false;
     }
 }

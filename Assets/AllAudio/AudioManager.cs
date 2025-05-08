@@ -28,9 +28,12 @@ public class AudioManager : MonoBehaviour
     [SerializeField] private AudioClip dash;
 
     [Header("Music")]
-    [SerializeField] private AudioClip normalMusic;
-    [SerializeField] private AudioClip intenseMusic;
+    [SerializeField] private AudioClip gameplayMusic;
+    [SerializeField] private float minVolume = 0.01f;
+    [SerializeField] private float maxVolume = 0.05f;
+    [SerializeField] private float duration = 1.0f;
 
+    private bool isIncreasing = true;
 
     private void Awake()
     {
@@ -38,6 +41,8 @@ public class AudioManager : MonoBehaviour
         { instance = this; DontDestroyOnLoad(gameObject); }
         else
         { Destroy(gameObject); }
+
+        musicAudioSource.clip = gameplayMusic; musicAudioSource.Play();
     }
     public void AssaultRifleShoot()
     { weaponsAudioSource.clip = aRShoot; weaponsAudioSource.Play();}
@@ -59,6 +64,30 @@ public class AudioManager : MonoBehaviour
     { playerAudioSource.clip = jump; playerAudioSource.Play(); }
     public void PlayerDash()
     { playerAudioSource.clip = dash; playerAudioSource.Play(); }
+
+
+    public void ToggleVolume()
+    {
+        StopAllCoroutines(); // Stop any existing volume transition
+        if (isIncreasing)
+            StartCoroutine(ChangeVolume(musicAudioSource.volume, maxVolume));
+        else
+            StartCoroutine(ChangeVolume(musicAudioSource.volume, minVolume));
+
+        isIncreasing = !isIncreasing;
+    }
+
+    private IEnumerator ChangeVolume(float start, float end)
+    {
+        float elapsed = 0f;
+        while (elapsed < duration)
+        {
+            musicAudioSource.volume = Mathf.Lerp(start, end, elapsed / duration);
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+        musicAudioSource.volume = end;
+    }
 
     public void PlayerWalking(bool isMoving)
     {

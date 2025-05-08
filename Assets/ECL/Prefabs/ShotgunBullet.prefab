@@ -4923,7 +4923,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6ddaffab1fddb3640b02433ad3eec75e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damage: 20
+  damage: 30
+  arDamage: 50
+  shotDamage: 40
+  pistolDamage: 40
   impactEffect: {fileID: 0}
   lifeTime: 1.2
   ignoredLayers:
