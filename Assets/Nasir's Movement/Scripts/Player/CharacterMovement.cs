@@ -566,7 +566,7 @@ public class CharacterMovement : MonoBehaviour
     //DASH FUNCTION
     private void Dash()
     {
-        if (!enableDash || stamina > 20) return;
+        if (!enableDash || stamina < 20f) return;
 
         if (canDash && !isDashing && !isWallRunning)
         {
