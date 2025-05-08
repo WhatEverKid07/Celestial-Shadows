@@ -5,6 +5,7 @@ using UnityEngine.UI;
 
 public class Target : MonoBehaviour
 {
+    [SerializeField] private PlayerDeathManager playerDeath;
     [SerializeField] private float maxHealth;
     [SerializeField] internal float health;
     [SerializeField] private Slider healthBar;
@@ -68,6 +69,7 @@ public class Target : MonoBehaviour
     {
         yield return new WaitForSeconds(waitTime);
         if (deathSound != null) { deathSound.Play(); }
+        if (playerDeath != null) { playerDeath.ScreenEnable(); }
         Destroy(gameObject);
     }
 

@@ -339,7 +339,7 @@ public class CharacterMovement : MonoBehaviour
         cameraRight.Normalize();
 
         Vector3 move = cameraForward * moveDir.z + cameraRight * moveDir.x;
-
+        Debug.Log(move);
         rb.useGravity = !OnSlope();
 
         bool hasMovementInput = moveDir.magnitude > 0.1f;

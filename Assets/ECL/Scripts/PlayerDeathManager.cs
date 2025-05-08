@@ -20,7 +20,7 @@ public class PlayerDeathManager : MonoBehaviour
             ScreenEnable();
         }
     }
-    private void ScreenEnable()
+    public void ScreenEnable()
     {
         isDead = true;
         playerDeathScreen.enabled = true;
