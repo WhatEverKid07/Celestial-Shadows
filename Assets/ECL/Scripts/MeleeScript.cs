@@ -5,7 +5,7 @@ using static UnityEngine.GraphicsBuffer;
 
 public class MeleeScript : MonoBehaviour
 {
-    [SerializeField] private float damageAmount;
+    [SerializeField] internal float damageAmount;
     [SerializeField] private LayerMask ignoredLayers; // Layers to ignore
 
     private void OnCollisionEnter(Collision collision)

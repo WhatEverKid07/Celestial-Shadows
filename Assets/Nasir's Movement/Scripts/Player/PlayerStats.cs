@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using System.Linq;
+using Unity.VisualScripting;
 
 public class PlayerStats : MonoBehaviour
 {
@@ -13,6 +14,11 @@ public class PlayerStats : MonoBehaviour
     [SerializeField] private NewPistolScript pistolScript;
     [SerializeField] private NewShotgunScript shotgunScript;
     [SerializeField] private KnifeAnimation knifeScript;
+    [SerializeField] private MeleeScript meleeScript;
+
+    [Header("Bullets")]
+    [SerializeField] private List<GameObject> bullets;
+    [SerializeField] private List<Bullet> bulletScript;
 
     [Header("Item Lists")]
     [SerializeField] private List<GameObject> itemScripts;
@@ -56,16 +62,16 @@ public class PlayerStats : MonoBehaviour
     private float damage;
 
     private float arDamage;
-    private float arMaxDamage;
+    private float arMaxDamage = 250f;
 
     private float pistolDamage;
-    private float pistolMaxDamage;
+    private float pistolMaxDamage = 200f;
 
     private float shotDamage;
-    private float shotMaxDamage;
+    private float shotMaxDamage = 100f;
 
     private float knifeDamage;
-    private float maxKnifeDamage;
+    private float knifeMaxDamage = 500f;
 
     private float grenadeDamage;
     private float grenadeMaxDamage;
@@ -105,7 +111,7 @@ public class PlayerStats : MonoBehaviour
     private float xpMulti;
     private float maxXpMulti;
 
-    /*
+
     [Header("StatsDisplay")]
     [SerializeField] private TextMeshProUGUI attackSpeedTxt;
     [SerializeField] private TextMeshProUGUI walkSpeedTxt;
@@ -120,7 +126,6 @@ public class PlayerStats : MonoBehaviour
     [SerializeField] private TextMeshProUGUI xpTxt;
     [SerializeField] private TextMeshProUGUI xpLvlTxt;
     [SerializeField] private TextMeshProUGUI xpMultiTxt;
-    */
     
 
     [Header("ItemUI")]
@@ -171,7 +176,7 @@ public class PlayerStats : MonoBehaviour
         arAttack = arScript.fireRate;
         arReload = arScript.sAnimSpeed;
         arDelay = arScript.reloadTime;
-
+   
         pistolAttack = pistolScript.fireRate;
         pistolReload = pistolScript.animSpeed;
         pistolDelay = pistolScript.reloadTime;
@@ -179,6 +184,8 @@ public class PlayerStats : MonoBehaviour
         shotgunAttack = shotgunScript.fireRate;
         shotReload = shotgunScript.sAnimSpeed;
         shotDelay = shotgunScript.reloadTime;
+
+        knifeDamage = meleeScript.damageAmount;
 
         xp = playerXpScript.currentXp;
         xpLvl = playerXpScript.xpLvl;
@@ -191,13 +198,76 @@ public class PlayerStats : MonoBehaviour
 
     private void LateUpdate()
     {
-        //UpdateStatText();
+        UpdateStatText();
+        UpdateDamage();
         UpdateItemUIText();
         UpdateCurrentGun();
 
         xp = playerXpScript.currentXp;
         xpLvl = playerXpScript.xpLvl;
 
+    }
+
+    private void UpdateDamage()
+    {
+        bullets = GameObject.FindGameObjectsWithTag("Bullet").ToList();
+
+        for (int i = 0; i < bullets.Count; i++)
+        {
+            var bullet = bullets[i].GetComponent<Bullet>();
+            if (!bulletScript.Contains(bullet))
+            {
+                bulletScript.Add(bullet);
+            }
+        }
+
+        foreach (var bullet in bulletScript)
+        {
+            damage = bullet.damage;
+            if (arScript.isActiveAndEnabled)
+            {
+                arDamage = bullet.arDamage;
+            }
+            else if (pistolScript.isActiveAndEnabled)
+            {
+                pistolDamage = bullet.pistolDamage;
+            }
+            else if (shotgunScript.isActiveAndEnabled)
+            {
+                shotDamage = bullet.shotDamage;
+            }
+            else
+            {
+                Debug.Log("Not a weapon.");
+            }
+
+            float damageIncrease = vileValue * viles.Count;
+
+            if (arDamage < arMaxDamage)
+            {
+                float newDamage = bullet.arDamage + damageIncrease;
+                arDamage = newDamage;
+            }
+
+            if (pistolDamage < pistolMaxDamage)
+            {
+                float newDamage = bullet.pistolDamage + damageIncrease;
+                pistolDamage = newDamage;
+            }
+
+            if (shotDamage < shotMaxDamage)
+            {
+                float newDamage = bullet.shotDamage + damageIncrease;
+                shotDamage = newDamage;
+            }
+
+            if (knifeDamage < knifeMaxDamage)
+            {
+                float newDamage = knifeDamage + damageIncrease;
+                knifeDamage = newDamage;
+            }
+
+        }
     }
 
     private void UpdateItemDrops()
@@ -284,41 +354,40 @@ public class PlayerStats : MonoBehaviour
         {
             if (vileFuncScript[i].canUpdateVileStat)
             {
-                UpdateDamage();
                 vileImage.enabled = true;
             }
         }
     }
 
-    private void UpdateDamage()
-    {
-
-    }
-
-    private void UpdateCurrentGun()
+    public void UpdateCurrentGun()
     {
         if (arScript.isActiveAndEnabled)
         {
+            damage = arDamage;
             attackSpeed = arAttack;
             reloadSpeed = arReload;
         }
         else if (pistolScript.isActiveAndEnabled)
         {
+            damage = pistolDamage;
             attackSpeed = pistolAttack;
             reloadSpeed = pistolReload;
         }
         else if (shotgunScript.isActiveAndEnabled)
         {
+            damage = shotDamage;
             attackSpeed = shotgunAttack;
             reloadSpeed = shotReload;
         }
         else if (knifeScript.isActiveAndEnabled)
         {
+            damage = knifeDamage;
             attackSpeed = setKnifeAttackSpeed;
             reloadSpeed = setKnifeReload;
         }
         else
         {
+            damage = grenadeDamage;
             attackSpeed = setGrenadeAttackSpeed;
             reloadSpeed = setGrenadeReload;
         }
@@ -467,7 +536,7 @@ public class PlayerStats : MonoBehaviour
         dashCooldown = characterMoveScript.dashTime;
     }
 
-    /*
+
     private void UpdateStatText()
     {
         walkSpeedTxt.text = string.Format("Walk speed: " + walkSpeed);
@@ -477,13 +546,14 @@ public class PlayerStats : MonoBehaviour
 
         dashCooldownTxt.text = string.Format("Dash Cooldown: " + dashCooldown);
 
+        damageTxt.text = string.Format("Damage: " + damage);
         attackSpeedTxt.text = string.Format("Attack speed: " + attackSpeed);
         reloadSpeedTxt.text = string.Format("Reload speed: " + reloadSpeed);
 
         xpTxt.text = string.Format("Xp: " +  xp);
         xpLvlTxt.text = string.Format("XpLvl: " + xpLvl);
     }
-    */
+
     
 
     private void UpdateItemUIText()
@@ -506,6 +576,11 @@ public class PlayerStats : MonoBehaviour
         if (clips.Count > 1)
         {
             clipCount.text = string.Format("x" + clips.Count);
+        }
+
+        if (viles.Count > 1)
+        {
+            vileCount.text = string.Format("x" + viles.Count);
         }
     }
 }
