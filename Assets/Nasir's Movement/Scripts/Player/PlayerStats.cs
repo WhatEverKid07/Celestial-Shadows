@@ -14,12 +14,13 @@ public class PlayerStats : MonoBehaviour
     [SerializeField] private NewShotgunScript shotgunScript;
     [SerializeField] private KnifeAnimation knifeScript;
 
-    [Header("Lists")]
+    [Header("Item Lists")]
     [SerializeField] private List<GameObject> itemScripts;
     [SerializeField] private List<WatchFunction> watchFuncScript;
     [SerializeField] private List<CrocsFunction> crocsFuncScript;
     [SerializeField] private List<SyringeFunction> syringeFuncScript;
     [SerializeField] private List<ClipFunction> clipFuncScript;
+    [SerializeField] private List<VileFunction> vileFuncScript;
 
     [Header("Stats")]
     //Syringe
@@ -53,7 +54,21 @@ public class PlayerStats : MonoBehaviour
 
     //Vial
     private float damage;
-    private float maxDamage;
+
+    private float arDamage;
+    private float arMaxDamage;
+
+    private float pistolDamage;
+    private float pistolMaxDamage;
+
+    private float shotDamage;
+    private float shotMaxDamage;
+
+    private float knifeDamage;
+    private float maxKnifeDamage;
+
+    private float grenadeDamage;
+    private float grenadeMaxDamage;
 
     //Target
     private float critChance;
@@ -121,17 +136,22 @@ public class PlayerStats : MonoBehaviour
     [SerializeField] private Image clipImage;
     [SerializeField] private TextMeshProUGUI clipCount;
 
+    [SerializeField] private Image vileImage;
+    [SerializeField] private TextMeshProUGUI vileCount;
+
     [Header("ItemLists")]
     [SerializeField] internal List<GameObject> watches;
     [SerializeField] internal List<GameObject> crocs;
     [SerializeField] internal List<GameObject> syringes;
     [SerializeField] internal List<GameObject> clips;
+    [SerializeField] internal List<GameObject> viles;
 
     [Header("ItemValue")]
     [SerializeField] private float watchValue;
     [SerializeField] private float crocValue;
     [SerializeField] private float syringeValue;
     [SerializeField] private float clipValue;
+    [SerializeField] private float vileValue;
 
     private void Start()
     {
@@ -139,6 +159,7 @@ public class PlayerStats : MonoBehaviour
         crocsImage.enabled = false;
         syringeImage.enabled = false;
         clipImage.enabled = false;
+        vileImage.enabled = false;
 
         walkSpeed = characterMoveScript.walkSpeed;
         runSpeed = characterMoveScript.runSpeed;
@@ -187,6 +208,7 @@ public class PlayerStats : MonoBehaviour
         HashSet<CrocsFunction> currentCrocs = new HashSet<CrocsFunction>();
         HashSet<WatchFunction> currentWatches = new HashSet<WatchFunction>();
         HashSet<ClipFunction> currentClips = new HashSet<ClipFunction>();
+        HashSet<VileFunction> currentViles = new HashSet<VileFunction>();
 
         foreach (GameObject item in itemScripts)
         {
@@ -209,12 +231,18 @@ public class PlayerStats : MonoBehaviour
             {
                 currentClips.Add(clip);
             }
+
+            if (item.TryGetComponent(out  VileFunction vile))
+            {
+                currentViles.Add(vile);
+            }
         }
 
         syringeFuncScript = currentSyringes.ToList();
         crocsFuncScript = currentCrocs.ToList();
         watchFuncScript = currentWatches.ToList();
         clipFuncScript = currentClips.ToList();
+        vileFuncScript = currentViles.ToList();
 
         for (int i = syringeFuncScript.Count - 1; i >= 0; i--)
         {
@@ -251,6 +279,20 @@ public class PlayerStats : MonoBehaviour
                 clipImage.enabled = true;
             }
         }
+
+        for (int i = vileFuncScript.Count - 1; i >= 0; i--)
+        {
+            if (vileFuncScript[i].canUpdateVileStat)
+            {
+                UpdateDamage();
+                vileImage.enabled = true;
+            }
+        }
+    }
+
+    private void UpdateDamage()
+    {
+
     }
 
     private void UpdateCurrentGun()

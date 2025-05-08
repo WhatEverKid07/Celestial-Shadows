@@ -3,7 +3,20 @@ using UnityEngine;
 
 public class Bullet : MonoBehaviour
 {
-    [SerializeField] private float damage = 10f;
+    [Header("PlayerScripts")]
+    [SerializeField] private CharacterMovement characterMoveScript;
+    [SerializeField] private PlayerExperience playerXpScript;
+    [SerializeField] private NewARScript arScript;
+    [SerializeField] private NewPistolScript pistolScript;
+    [SerializeField] private NewShotgunScript shotgunScript;
+    [SerializeField] private KnifeAnimation knifeScript;
+
+    [SerializeField] private float damage;
+
+    [SerializeField] private float arDamage = 50f;
+    [SerializeField] private float shotDamage = 20f;
+    [SerializeField] private float pistolDamage = 40f;
+
     [SerializeField] private ParticleSystem impactEffect;
     [SerializeField] private float lifeTime = 5f;
     [SerializeField] private LayerMask ignoredLayers;
@@ -13,6 +26,32 @@ public class Bullet : MonoBehaviour
         Destroy(gameObject, lifeTime);
     }
 
+    private void Update()
+    {
+        //UpdateCurrentGun();
+    }
+
+    /*
+    private void UpdateCurrentGun()
+    {
+        if (arScript.isActiveAndEnabled)
+        {
+            damage = arDamage;
+        }
+        if (pistolScript.isActiveAndEnabled)
+        {
+            damage = pistolDamage;
+        }
+        else if (shotgunScript.isActiveAndEnabled)
+        {
+            damage = shotDamage;
+        }
+        else
+        {
+            Debug.LogWarning("Not a gun!");
+        }
+    }
+    */
     private void OnCollisionEnter(Collision collision)
     {
         // Check if the collided object's layer is in the ignored layers list
