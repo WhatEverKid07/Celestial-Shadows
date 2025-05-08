@@ -54,7 +54,6 @@ public class MainMenu : MonoBehaviour
     private Button settingsButton;
     private Image settingsButtonImage;
 
-    private Canvas modeGrid;
     private Button storyModeButton;
     public bool goToStory { get; private set; }
     public bool goToEndless { get; private set; }
@@ -74,7 +73,6 @@ public class MainMenu : MonoBehaviour
         backGO = GameObject.Find("Back");
         constantMenuGO = GameObject.Find("MenuConstants");
 
-        modeGrid = selectionMenu.GetComponentInChildren<Canvas>();
         settingsMenu = settingsGO.GetComponentInChildren<Canvas>();
         quitMenu = quitGO.GetComponentInChildren<Canvas>();
         constantMenu = constantMenuGO.GetComponentInChildren<Canvas>();
@@ -106,6 +104,27 @@ public class MainMenu : MonoBehaviour
         allButtons = FindObjectsByType<Button>(FindObjectsSortMode.None);
         storyModeButton.interactable = false;
         menus.Add(selectionMenu);
+
+        if (GameObject.Find("WowAR"))
+        {
+            Destroy(GameObject.Find("WowAR"));
+        }
+
+        if (GameObject.Find("WowPistol"))
+        {
+            Destroy(GameObject.Find("WowPistol"));
+        }
+
+        if (GameObject.Find("WowShotgun"))
+        {
+            Destroy(GameObject.Find("WowShotgun"));
+        }
+
+        if (characterMenu == null)
+        {
+            Debug.LogError("CharacterMenu is null — make sure it exists in the scene!");
+            return;
+        }
     }
 
     private void Update()
@@ -117,14 +136,13 @@ public class MainMenu : MonoBehaviour
                 currentMenu = menus[i];
                 previousMenu = menus[menus.Count - 1];
             }
-        
         }
 
         if (canRotate && !isRotating)
         {
             foreach (Button button in allButtons)
             {
-                if (button != exitButton && button != backButton)
+                if (button != exitButton && button != backButton && button != storyModeButton)
                 {
                     button.interactable = false;
                 }
@@ -195,7 +213,11 @@ public class MainMenu : MonoBehaviour
 
         canRotate = true;
         characterMenu.SetActive(true);
-        menus.Add(characterMenu);
+
+        if (menus.Count == 0 || menus[menus.Count - 1] != characterMenu)
+        {
+            menus.Add(characterMenu);
+        }
     }
 
     public void EnterArsenal()
@@ -268,7 +290,10 @@ public class MainMenu : MonoBehaviour
         while (elaspedTime < rotationTime)
         {
             currentMenu.transform.rotation = Quaternion.Slerp(currentMenu.transform.rotation, Quaternion.Euler(0f, currentMenu.transform.rotation.eulerAngles.y - 10f, 0f), (rotationSpeed/2) * Time.deltaTime);
-            previousMenu.transform.rotation = Quaternion.Slerp(previousMenu.transform.rotation, Quaternion.Euler(0f, previousMenu.transform.rotation.eulerAngles.y + 10f, 0f), (rotationSpeed / 2) * Time.deltaTime);
+            if (previousMenu != null)
+            {
+                previousMenu.transform.rotation = Quaternion.Slerp(previousMenu.transform.rotation, Quaternion.Euler(0f, previousMenu.transform.rotation.eulerAngles.y + 10f, 0f), (rotationSpeed / 2) * Time.deltaTime);
+            }
             elaspedTime += Time.deltaTime;
         }
 
