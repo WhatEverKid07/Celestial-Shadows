@@ -90,6 +90,7 @@ public class PlayerStats : MonoBehaviour
     private float xpMulti;
     private float maxXpMulti;
 
+    /*
     [Header("StatsDisplay")]
     [SerializeField] private TextMeshProUGUI attackSpeedTxt;
     [SerializeField] private TextMeshProUGUI walkSpeedTxt;
@@ -104,6 +105,8 @@ public class PlayerStats : MonoBehaviour
     [SerializeField] private TextMeshProUGUI xpTxt;
     [SerializeField] private TextMeshProUGUI xpLvlTxt;
     [SerializeField] private TextMeshProUGUI xpMultiTxt;
+    */
+    
 
     [Header("ItemUI")]
     [SerializeField] private Image watchImage;
@@ -167,7 +170,7 @@ public class PlayerStats : MonoBehaviour
 
     private void LateUpdate()
     {
-        UpdateStatText();
+        //UpdateStatText();
         UpdateItemUIText();
         UpdateCurrentGun();
 
@@ -422,6 +425,7 @@ public class PlayerStats : MonoBehaviour
         dashCooldown = characterMoveScript.dashTime;
     }
 
+    /*
     private void UpdateStatText()
     {
         walkSpeedTxt.text = string.Format("Walk speed: " + walkSpeed);
@@ -437,6 +441,8 @@ public class PlayerStats : MonoBehaviour
         xpTxt.text = string.Format("Xp: " +  xp);
         xpLvlTxt.text = string.Format("XpLvl: " + xpLvl);
     }
+    */
+    
 
     private void UpdateItemUIText()
     {

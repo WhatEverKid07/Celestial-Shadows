@@ -17,6 +17,7 @@ public class PlayerExperience : MonoBehaviour
     [Header("ItemDrops")]
     [SerializeField] private Items[] items;
     private Dictionary<string, Items> itemDictionary;
+    private GameObject itemDropPrefab;
 
     [Header("Enemies")]
     [SerializeField] private List<GameObject> enemies;
@@ -29,6 +30,7 @@ public class PlayerExperience : MonoBehaviour
 
     private void Awake()
     {
+        Debug.Log($"Items array length: {items.Length}");
         itemDictionary = new Dictionary<string, Items>();
 
         for (int i = 0; i < items.Length; i++)
@@ -64,7 +66,6 @@ public class PlayerExperience : MonoBehaviour
 
         foreach (var target in allTargets)
         {
-            Debug.Log(target.addXp);
             if (target.addXp)
             {
                 AddExperience();
@@ -81,7 +82,10 @@ public class PlayerExperience : MonoBehaviour
             currentXp = 0;
             maxXp += 50;
 
-            SummonItem(randomItem.ItemDrops);
+            if (items != null)
+            {
+                SummonItem(randomItem.ItemDrops);
+            }
         }
     }
 
@@ -92,6 +96,12 @@ public class PlayerExperience : MonoBehaviour
 
     private Items GetRandomItem()
     {
+        if (items == null || items.Length == 0)
+        {
+            Debug.LogWarning("No items available to select from.");
+            return null;
+        }
+
         int randomValue = UnityEngine.Random.Range(0, 100);
         int cumulative = 0;
 
@@ -103,11 +113,11 @@ public class PlayerExperience : MonoBehaviour
                 return item;
             }
         }
-        return items[items.Length - 1];
+        return items[^1];
     }
     private void SummonItem(GameObject item)
     {
-        Vector3 spawn = new Vector3(gameObject.transform.position.x + 1f, gameObject.transform.position.y, gameObject.transform.position.z + 1f);
-        Instantiate(item, spawn, item.transform.rotation);
+        Vector3 spawn = new Vector3(gameObject.transform.position.x + 1f, gameObject.transform.position.y - .5f, gameObject.transform.position.z + 1f);
+        itemDropPrefab = Instantiate(item, spawn, item.transform.rotation);
     }
 }
