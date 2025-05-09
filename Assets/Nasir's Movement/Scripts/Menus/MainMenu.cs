@@ -89,6 +89,8 @@ public class MainMenu : MonoBehaviour
         exitButtonImage = exitGO.GetComponentInChildren<Image>();
         backButtonImage = backGO.GetComponentInChildren<Image>();
         settingsButtonImage = settingsButton.GetComponentInChildren<Image>();
+
+        menus.Clear();
     }
 
     private void Start()
@@ -120,6 +122,11 @@ public class MainMenu : MonoBehaviour
             Destroy(GameObject.Find("WowShotgun"));
         }
 
+        if (GameObject.Find("[Debug Updater]"))
+        {
+            Destroy(GameObject.Find("[Debug Updater]"));
+        }
+
         if (characterMenu == null)
         {
             Debug.LogError("CharacterMenu is null — make sure it exists in the scene!");
@@ -133,8 +140,8 @@ public class MainMenu : MonoBehaviour
         {
             for (int i = 0; i < menus.Count; i++)
             {
-                currentMenu = menus[i];
-                previousMenu = menus[menus.Count - 1];
+                currentMenu = menus[menus.Count - 1];
+                previousMenu = menus.Count > 1 ? menus[menus.Count - 2] : null;
             }
         }
 
@@ -214,10 +221,7 @@ public class MainMenu : MonoBehaviour
         canRotate = true;
         characterMenu.SetActive(true);
 
-        if (menus.Count == 0 || menus[menus.Count - 1] != characterMenu)
-        {
-            menus.Add(characterMenu);
-        }
+        menus.Add(characterMenu);
     }
 
     public void EnterArsenal()
@@ -289,6 +293,7 @@ public class MainMenu : MonoBehaviour
 
         while (elaspedTime < rotationTime)
         {
+            Debug.Log(elaspedTime < rotationTime);
             currentMenu.transform.rotation = Quaternion.Slerp(currentMenu.transform.rotation, Quaternion.Euler(0f, currentMenu.transform.rotation.eulerAngles.y - 10f, 0f), (rotationSpeed/2) * Time.deltaTime);
             if (previousMenu != null)
             {
@@ -313,7 +318,7 @@ public class MainMenu : MonoBehaviour
 
         foreach (Button button in allButtons)
         {
-            if (button != exitButton && button != backButton)
+            if (button != exitButton && button != backButton && button != storyModeButton)
             {
                 button.interactable = true;
             }
