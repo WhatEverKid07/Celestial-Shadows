@@ -19,8 +19,11 @@ public class ArsenalFunction : MonoBehaviour
     private GameObject selectedGun;
 
     private GameObject pistol;
+    [SerializeField] private Canvas pistolUI;
     private GameObject shotgun;
+    [SerializeField] private Canvas shotUI;
     private GameObject ar;
+    [SerializeField] private Canvas arUI;
 
     private bool canSwitchUp = false;
     private bool canSwitchDown = false;
@@ -72,6 +75,28 @@ public class ArsenalFunction : MonoBehaviour
         else
         {
             gunCam.transform.position = Vector3.Lerp(gunCam.transform.position, Vector3.zero, switchSpeed * Time.deltaTime);
+        }
+
+        if (mainMenuScript.currentMenu == mainMenuScript.arsenalMenu)
+        {
+            if (currentGun == allGuns[0])
+            {
+                pistolUI.enabled = true;
+            }
+            else if (currentGun == allGuns[1])
+            {
+                shotUI.enabled = true;
+            }
+            else
+            {
+                arUI.enabled = true;
+            }
+        }
+        else
+        {
+            pistolUI.enabled = false;
+            shotUI.enabled = false;
+            arUI.enabled = false;
         }
 
     }
