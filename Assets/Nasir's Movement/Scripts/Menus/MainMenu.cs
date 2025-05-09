@@ -225,7 +225,6 @@ public class MainMenu : MonoBehaviour
 
         menus.Add(characterMenu);
     }
-
     public void EnterArsenal()
     {
         canRotate = true;
