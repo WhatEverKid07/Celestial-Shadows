@@ -2372,6 +2372,9 @@ MonoBehaviour:
   - {fileID: 434541158}
   - {fileID: 349888176}
   - {fileID: 1177267381}
+  pistolUI: {fileID: 127923247}
+  shotUI: {fileID: 215117365}
+  arUI: {fileID: 1149375907}
   switchSpeed: 5
 --- !u!114 &468004350
 MonoBehaviour:
