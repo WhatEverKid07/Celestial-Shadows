@@ -132,6 +132,8 @@ public class MainMenu : MonoBehaviour
             Debug.LogError("CharacterMenu is null — make sure it exists in the scene!");
             return;
         }
+
+        Time.timeScale = 1.0f;
     }
 
     private void Update()

@@ -21002,6 +21002,14 @@ PrefabInstance:
       propertyPath: activeWeapons.Array.size
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5361679777710914405, guid: 7cd0f42f85822264c847a54a12669969, type: 3}
+      propertyPath: sAnimSpeed
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5361679777710914405, guid: 7cd0f42f85822264c847a54a12669969, type: 3}
+      propertyPath: normalAnimSpeed
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5453285350459676523, guid: 7cd0f42f85822264c847a54a12669969, type: 3}
       propertyPath: m_Name
       value: Player
@@ -29186,7 +29194,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1229645340
 Transform:
   m_ObjectHideFlags: 0
@@ -29456,7 +29464,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1232864107
 Transform:
   m_ObjectHideFlags: 0
