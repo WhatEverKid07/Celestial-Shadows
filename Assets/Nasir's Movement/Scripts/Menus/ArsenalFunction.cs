@@ -82,14 +82,20 @@ public class ArsenalFunction : MonoBehaviour
             if (currentGun == allGuns[0])
             {
                 pistolUI.enabled = true;
+                shotUI.enabled = false;
+                arUI.enabled = false;
             }
             else if (currentGun == allGuns[1])
             {
                 shotUI.enabled = true;
+                pistolUI.enabled = false;
+                arUI.enabled = false;
             }
             else
             {
                 arUI.enabled = true;
+                pistolUI.enabled = false;
+                shotUI.enabled = false;
             }
         }
         else
@@ -165,7 +171,7 @@ public class ArsenalFunction : MonoBehaviour
 
 
             isSwitching = true;
-            switchUpCoroutine = StartCoroutine(SwitchGunUp());
+            switchUpCoroutine = StartCoroutine(SwitchGun());
         }
     }
 
@@ -178,7 +184,7 @@ public class ArsenalFunction : MonoBehaviour
             nextGun = currentIndex - 2 >= 0 ? allGuns[currentIndex - 2] : null;
 
             isSwitching = true;
-            switchDownCoroutine = StartCoroutine(SwitchGunDown());
+            switchDownCoroutine = StartCoroutine(SwitchGun());
         }
         else
         {
@@ -187,7 +193,7 @@ public class ArsenalFunction : MonoBehaviour
 
     }
 
-    private IEnumerator SwitchGunUp()
+    private IEnumerator SwitchGun()
     {
         float rotationTime = 1f;
         float elapsedTime = 0f;
@@ -200,26 +206,6 @@ public class ArsenalFunction : MonoBehaviour
 
 
             yield return null;
-        }
-
-        isSwitching = false;
-    }
-
-    private IEnumerator SwitchGunDown()
-    {
-        if (mainMenuScript.currentMenu == mainMenuScript.arsenalMenu)
-        {
-            float rotationTime = 1f;
-            float elapsedTime = 0f;
-
-            while (elapsedTime < rotationTime)
-            {
-
-                gunCam.transform.position = Vector3.Lerp(gunCam.transform.position, new Vector3(currentGun.transform.position.x, currentGun.transform.position.y, currentGun.transform.position.z + 150f), switchSpeed * Time.deltaTime);
-                elapsedTime += Time.deltaTime;
-
-                yield return null;
-            }
         }
 
         isSwitching = false;
