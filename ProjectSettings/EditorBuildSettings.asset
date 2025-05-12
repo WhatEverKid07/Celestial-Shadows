@@ -6,6 +6,9 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
+    path: Assets/ECL/Cutscene.unity
+    guid: f45d1a6fd10e9cb489b5a86f9e5137bf
+  - enabled: 1
     path: Assets/Nasir's Movement/MainMenu.unity
     guid: 8e8d034d187f7684d956fffc12af314a
   - enabled: 1
