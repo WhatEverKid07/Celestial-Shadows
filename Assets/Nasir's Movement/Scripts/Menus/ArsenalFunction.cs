@@ -80,6 +80,8 @@ public class ArsenalFunction : MonoBehaviour
 
         if (mainMenuScript.currentMenu == mainMenuScript.arsenalMenu)
         {
+            characterFuncScript.selected = true;
+
             if (currentGun == allGuns[0])
             {
                 pistolUI.enabled = true;
@@ -101,6 +103,7 @@ public class ArsenalFunction : MonoBehaviour
         }
         else
         {
+            characterFuncScript.selected = false;
             pistolUI.enabled = false;
             shotUI.enabled = false;
             arUI.enabled = false;
