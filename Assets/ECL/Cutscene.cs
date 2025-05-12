@@ -15,6 +15,6 @@ public class Cutscene : MonoBehaviour
     private IEnumerator CutsceneEnd()
     {
         yield return new WaitForSeconds((float)cutscene.clip.length);
-        SceneManager.LoadScene("TEST");
+        SceneManager.LoadScene("MainMenu");
     }
 }
