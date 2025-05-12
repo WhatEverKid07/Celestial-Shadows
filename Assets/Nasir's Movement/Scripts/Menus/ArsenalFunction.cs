@@ -133,7 +133,7 @@ public class ArsenalFunction : MonoBehaviour
         if (selectedGun == allGuns[0])
         {
             pistol = new GameObject("WowPistol");
-            if (SceneManager.GetActiveScene() == SceneManager.GetSceneByBuildIndex(0))
+            if (SceneManager.GetActiveScene() == SceneManager.GetSceneByBuildIndex(1))
             {
                 DontDestroyOnLoad(pistol);
             }
@@ -141,7 +141,7 @@ public class ArsenalFunction : MonoBehaviour
         else if (selectedGun == allGuns[1])
         {
             shotgun = new GameObject("WowShotgun");
-            if (SceneManager.GetActiveScene() == SceneManager.GetSceneByBuildIndex(0))
+            if (SceneManager.GetActiveScene() == SceneManager.GetSceneByBuildIndex(1))
             {
                 DontDestroyOnLoad(shotgun);
             }
@@ -149,7 +149,7 @@ public class ArsenalFunction : MonoBehaviour
         else
         {
             ar = new GameObject("WowAR");
-            if (SceneManager.GetActiveScene() == SceneManager.GetSceneByBuildIndex(0))
+            if (SceneManager.GetActiveScene() == SceneManager.GetSceneByBuildIndex(1))
             {
                 DontDestroyOnLoad(ar);
             }

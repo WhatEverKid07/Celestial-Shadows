@@ -149,9 +149,6 @@ public class MainMenu : MonoBehaviour
             }
         }
 
-        Debug.Log("Current menu: " + currentMenu);
-        Debug.Log("Previous menu: " + previousMenu);
-
         if (canRotate && !isRotating && !rotateBack)
         {
             foreach (Button button in allButtons)
@@ -257,7 +254,6 @@ public class MainMenu : MonoBehaviour
         if (!canRotate && !rotateBack && !isRotating && currentMenu != selectionMenu)
         {
             rotateBack = true;
-            //menus.Remove(currentMenu);
         }
 
         if (currentMenu == characterMenu)

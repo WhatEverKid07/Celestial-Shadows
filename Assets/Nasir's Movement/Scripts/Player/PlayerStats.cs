@@ -111,23 +111,6 @@ public class PlayerStats : MonoBehaviour
     private float xpMulti;
     private float maxXpMulti;
 
-
-    [Header("StatsDisplay")]
-    [SerializeField] private TextMeshProUGUI attackSpeedTxt;
-    [SerializeField] private TextMeshProUGUI walkSpeedTxt;
-    [SerializeField] private TextMeshProUGUI runSpeedTxt;
-    [SerializeField] private TextMeshProUGUI wallRunSpeedTxt;
-    [SerializeField] private TextMeshProUGUI dashPowerTxt;
-    [SerializeField] private TextMeshProUGUI dashCooldownTxt;
-    [SerializeField] private TextMeshProUGUI damageTxt;
-    [SerializeField] private TextMeshProUGUI critChanceTxt;
-    [SerializeField] private TextMeshProUGUI critDamageTxt;
-    [SerializeField] private TextMeshProUGUI reloadSpeedTxt;
-    [SerializeField] private TextMeshProUGUI xpTxt;
-    [SerializeField] private TextMeshProUGUI xpLvlTxt;
-    [SerializeField] private TextMeshProUGUI xpMultiTxt;
-    
-
     [Header("ItemUI")]
     [SerializeField] private Image watchImage;
     [SerializeField] private TextMeshProUGUI watchCount;
@@ -198,7 +181,6 @@ public class PlayerStats : MonoBehaviour
 
     private void LateUpdate()
     {
-        UpdateStatText();
         UpdateDamage();
         UpdateItemUIText();
         UpdateCurrentGun();
@@ -534,27 +516,7 @@ public class PlayerStats : MonoBehaviour
         float newDashCooldown = dashCooldown - dashReduction;
         characterMoveScript.dashTime = newDashCooldown;
         dashCooldown = characterMoveScript.dashTime;
-    }
-
-
-    private void UpdateStatText()
-    {
-        walkSpeedTxt.text = string.Format("Walk speed: " + walkSpeed);
-        runSpeedTxt.text = string.Format("Run Speed: " + runSpeed);
-        wallRunSpeedTxt.text = string.Format("Wall Run Speed: " + wallRunSpeed);
-        dashPowerTxt.text = string.Format("Dash Power: " + dashPower);
-
-        dashCooldownTxt.text = string.Format("Dash Cooldown: " + dashCooldown);
-
-        damageTxt.text = string.Format("Damage: " + damage);
-        attackSpeedTxt.text = string.Format("Attack speed: " + attackSpeed);
-        reloadSpeedTxt.text = string.Format("Reload speed: " + reloadSpeed);
-
-        xpTxt.text = string.Format("Xp: " +  xp);
-        xpLvlTxt.text = string.Format("XpLvl: " + xpLvl);
-    }
-
-    
+    } 
 
     private void UpdateItemUIText()
     {
