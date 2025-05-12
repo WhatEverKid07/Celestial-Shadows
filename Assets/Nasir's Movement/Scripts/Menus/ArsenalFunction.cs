@@ -5,6 +5,7 @@ public class ArsenalFunction : MonoBehaviour
 {
     [Header("Scripts")]
     [SerializeField] private MainMenu mainMenuScript;
+    [SerializeField] private CharacterFunction characterFuncScript;
 
     [Header("Camera")]
     [SerializeField] private Transform gunCam;

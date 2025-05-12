@@ -409,6 +409,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: colosseum
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 0247078eb9fc79c488a3f2fb22af5e6f, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
