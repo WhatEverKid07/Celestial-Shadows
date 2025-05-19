@@ -61,13 +61,13 @@ public class PlayerStats : MonoBehaviour
     //Vial
     private float damage;
 
-    private float arDamage;
+    internal float arDamage;
     private float arMaxDamage = 250f;
 
-    private float pistolDamage;
+    internal float pistolDamage;
     private float pistolMaxDamage = 200f;
 
-    private float shotDamage;
+    internal float shotDamage;
     private float shotMaxDamage = 100f;
 
     private float knifeDamage;
@@ -110,6 +110,10 @@ public class PlayerStats : MonoBehaviour
     private int xpLvl;
     private float xpMulti;
     private float maxXpMulti;
+
+    [Header("StatText")]
+    [SerializeField] private TextMeshProUGUI lvlText;
+    [SerializeField] private TextMeshProUGUI xPText;
 
     [Header("ItemUI")]
     [SerializeField] private Image watchImage;
@@ -187,6 +191,7 @@ public class PlayerStats : MonoBehaviour
 
         xp = playerXpScript.currentXp;
         xpLvl = playerXpScript.xpLvl;
+        UpdateText();
 
     }
 
@@ -224,23 +229,36 @@ public class PlayerStats : MonoBehaviour
             }
 
             float damageIncrease = vileValue * viles.Count;
+            float lvlDamageIncrease = 10f;
 
             if (arDamage < arMaxDamage)
             {
                 float newDamage = bullet.arDamage + damageIncrease;
+                float lvlnewDamage = bullet.arDamage + lvlDamageIncrease;
+
+                if (playerXpScript.increaseArDmg)
+                {
+                    arDamage = lvlnewDamage;
+                    bullet.arDamage = arDamage;
+                }
+
                 arDamage = newDamage;
+                bullet.arDamage = arDamage;
+
             }
 
             if (pistolDamage < pistolMaxDamage)
             {
                 float newDamage = bullet.pistolDamage + damageIncrease;
                 pistolDamage = newDamage;
+                bullet.pistolDamage = pistolDamage;
             }
 
             if (shotDamage < shotMaxDamage)
             {
                 float newDamage = bullet.shotDamage + damageIncrease;
                 shotDamage = newDamage;
+                bullet.shotDamage = shotDamage;
             }
 
             if (knifeDamage < knifeMaxDamage)
@@ -544,5 +562,11 @@ public class PlayerStats : MonoBehaviour
         {
             vileCount.text = string.Format("x" + viles.Count);
         }
+    }
+
+    private void UpdateText()
+    {
+        lvlText.text = string.Format("Lvl: " + xpLvl);
+        xPText.text = string.Format("Xp: " + xp);
     }
 }

@@ -14,6 +14,21 @@ public class Items
 }
 public class PlayerExperience : MonoBehaviour
 {
+    [Header("Scripts")]
+    [SerializeField] private PlayerStats playerStatScript;
+    [SerializeField] private NewARScript arScript;
+    [SerializeField] private NewPistolScript pistolScript;
+    [SerializeField] private NewShotgunScript shotgunScript;
+
+    [Header("Weapons")]
+    private int arAmmo;
+    private int pistolAmmo;
+    private int shotgunAmmo;
+
+    internal bool increaseArDmg;
+    internal bool increasePistolDmg;
+    internal bool increaseShotDmg;
+
     [Header("ItemDrops")]
     [SerializeField] private Items[] items;
     private Dictionary<string, Items> itemDictionary;
@@ -50,6 +65,10 @@ public class PlayerExperience : MonoBehaviour
         xpLvl = 0;
         currentXp = 0;
         maxXp = 100;
+
+        arAmmo = arScript.maxAmmo;
+        pistolAmmo = pistolScript.maxAmmo;
+        shotgunAmmo = shotgunScript.maxAmmo;
     }
 
     private void Update()
@@ -82,11 +101,56 @@ public class PlayerExperience : MonoBehaviour
             currentXp = 0;
             maxXp += 50;
 
+            //mag size
+            //
+
             if (items != null)
             {
                 SummonItem(randomItem.ItemDrops);
             }
+
+            if (arScript.isActiveAndEnabled)
+            {
+                int ammo = arAmmo + 5;
+                arAmmo = ammo;
+                arScript.maxAmmo = arAmmo;
+
+                increaseArDmg = true;
+                increasePistolDmg = false;
+                increaseShotDmg = false;
+
+                Invoke(nameof(UpdateBool), .001f);
+            }
+            else if (pistolScript.isActiveAndEnabled)
+            {
+                int ammo = pistolAmmo + 5;
+                pistolScript.maxAmmo = ammo;
+
+                increasePistolDmg = true;
+                increaseArDmg = false;
+                increaseShotDmg = false;
+            }
+            else if (shotgunScript.isActiveAndEnabled)
+            {
+                int ammo = shotgunAmmo + 2;
+                shotgunScript.maxAmmo = ammo;
+
+                increaseShotDmg = true;
+                increaseArDmg = false;
+                increasePistolDmg = false;
+            }
+            else
+            {
+                Debug.Log("Not a weapon.");
+            }
         }
+    }
+
+    private void UpdateBool()
+    {
+        increaseArDmg = false;
+        increasePistolDmg = false;
+        increaseShotDmg = false;
     }
 
     private void AddExperience()

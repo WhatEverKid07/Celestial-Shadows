@@ -12,7 +12,7 @@ public class NewARScript : MonoBehaviour
     [SerializeField] private CharacterMovement characterMovement;
 
     [Header("Gun Attributes")]
-    [SerializeField] private int maxAmmo = 30;
+    [SerializeField] internal int maxAmmo = 30;
     [SerializeField] internal float reloadTime = 1f;
     [SerializeField] private float coneAngle;
     [SerializeField] private float targetSightZoomFOV = 40f;

@@ -13,7 +13,7 @@ public class NewPistolScript : MonoBehaviour
     [SerializeField] private CharacterMovement characterMovement;
 
     [Header("Gun Attributes")]
-    [SerializeField] private int maxAmmo = 30;
+    [SerializeField] internal int maxAmmo = 30;
     [SerializeField] internal float reloadTime;
     [SerializeField] private float coneAngle;
     [SerializeField] private float semiAutoShotDelay = 0.2f;
