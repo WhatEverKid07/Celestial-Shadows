@@ -11,7 +11,7 @@ public class EnemyAI : MonoBehaviour
     public GameObject target;
     public GameObject player;
     [SerializeField] private float rotationSpeed;
-    [SerializeField] private float speed;
+    [SerializeField] internal float speed = 4f;
     [SerializeField] private float acceleration;
     [SerializeField] private float detectionRange = 10f;
     [SerializeField] private float fieldOfViewAngle = 120f;

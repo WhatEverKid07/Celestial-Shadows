@@ -5574,7 +5574,7 @@ MonoBehaviour:
   target: {fileID: 0}
   player: {fileID: 0}
   rotationSpeed: 5
-  speed: 1.8
+  speed: 5
   acceleration: 15
   detectionRange: 40
   fieldOfViewAngle: 180
@@ -5643,6 +5643,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a4a783d8cebc4164ab02da6d81594833, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playerDeath: {fileID: 0}
   maxHealth: 500
   health: 500
   healthBar: {fileID: 8698366590368253962}

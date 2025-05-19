@@ -14,6 +14,8 @@ public class Enemies
 }
 public class EnemySpawner : MonoBehaviour
 {
+    public EnemyAI enemyAIScript;
+
     [SerializeField] private Enemies[] enemies;
     private Dictionary<string, Enemies> enemyDictionary;
 
@@ -33,19 +35,21 @@ public class EnemySpawner : MonoBehaviour
         {
             Debug.Log($"{entry.Key}: {entry.Value.Enemy.name}, {entry.Value.PercentChance}%");
         }
+        Summon(0);
     }
 
     private void Start()
     {
-        Summon();
+
     }
 
-    public void Summon()
+    public void Summon(float extraSpeedLink)
     {
         Enemies randomEnemy = GetRandomEnemy();
         spawn.Play();
         Debug.Log("Randomly selected enemy: " + randomEnemy.Enemy.name + " | Chance: " + randomEnemy.PercentChance + "%");
-        SummonEnemy(randomEnemy.Enemy);
+        SummonEnemy(randomEnemy.Enemy, extraSpeedLink);
+
     }
 
     private Enemies GetRandomEnemy()
@@ -64,8 +68,10 @@ public class EnemySpawner : MonoBehaviour
         return enemies[enemies.Length - 1];
     }
 
-    private void SummonEnemy(GameObject enemy)
+    private void SummonEnemy(GameObject enemy, float extraSpeed)
     {
-        Instantiate(enemy, gameObject.transform.position, gameObject.transform.rotation);
+        GameObject enemyPrefab = Instantiate(enemy, gameObject.transform.position, gameObject.transform.rotation);
+        enemyAIScript = enemyPrefab.gameObject.GetComponent<EnemyAI>();
+        enemyAIScript.speed = 4 + extraSpeed;
     }
-}
+}   
